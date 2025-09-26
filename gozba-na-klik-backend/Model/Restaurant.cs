@@ -8,10 +8,10 @@
         public string Description { get; set; }
         public int Capacity { get; set; }
         public int RestaurantOwnerId { get; set; }
-        public User RestaurantOwner { get; set; }
-        public List<Meal> MealsOnMenu { get; set; }
-        public List<WorkingHours> WorkingHours {  get; set; }
-        List<NonWorkingDate> nonWorkingDates { get; set; }
+        public User? RestaurantOwner { get; set; }
+        public List<Meal>? MealsOnMenu { get; set; } = new List<Meal>();
+        public List<WorkingHours>? WorkingHours {  get; set; } = new List<WorkingHours> ();
+        public List<NonWorkingDate>? NonWorkingDates { get; set; } = new List<NonWorkingDate>();
 
     }
 }
