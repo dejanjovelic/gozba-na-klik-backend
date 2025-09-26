@@ -1,5 +1,6 @@
 
 using gozba_na_klik_backend.Model;
+using gozba_na_klik_backend.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace gozba_na_klik_backend
@@ -29,7 +30,7 @@ namespace gozba_na_klik_backend
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
+        
             var app = builder.Build();
             app.UseCors("AllowAllOrigins");
 
