@@ -3,8 +3,8 @@
     public class WorkingHours
     {
         public int Id { get; set; }
-        public string DayOfTheWeek { get; set; }
+        public DayOfWeek DayOfTheWeek { get; set; }
         public TimeSpan StartingTime { get; set; }
-        public DateTime EndingTime { get; set; }= DateTime.MinValue;
+        public TimeSpan EndingTime { get; set; }
     }
 }
