@@ -67,6 +67,10 @@ namespace gozba_na_klik_backend.Model
                 new Employee { Id = 42, Name = "Ella", Surname = "Hill", Email = "ella.hill@example.com", Username = "employee42", Password = "emp123", ProfileImageUrl = "https://example.com/employee42.png", ContactNumber = "+381641112456" },
                 new Employee { Id = 43, Name = "Michael", Surname = "Scott", Email = "michael.scott@example.com", Username = "employee43", Password = "emp123", ProfileImageUrl = "https://example.com/employee43.png", ContactNumber = "+381611231111" }
             );
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
         }
     }
 }
