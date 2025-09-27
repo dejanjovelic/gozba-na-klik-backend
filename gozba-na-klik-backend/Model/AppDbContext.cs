@@ -5,16 +5,16 @@ namespace gozba_na_klik_backend.Model
     public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
         public DbSet<User> Users { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-            //SEED
             modelBuilder.Entity<Administrator>().HasData(
-   new Administrator { Id = 1, Name = "Ashley", Surname = "Diaz", Email = "walkerlaura@example.net", Username = "admin1", Password = "admin123", ProfileImageUrl = "https://example.com/admin1.png", ContactNumber = "+381601112223" },
-   new Administrator { Id = 2, Name = "Michelle", Surname = "Nguyen", Email = "davidmullins@example.org", Username = "admin2", Password = "admin123", ProfileImageUrl = "https://example.com/admin2.png", ContactNumber = "+381611234567" },
-   new Administrator { Id = 3, Name = "Robert", Surname = "Barton", Email = "andersonnicholas@example.com", Username = "admin3", Password = "admin123", ProfileImageUrl = "https://example.com/admin3.png", ContactNumber = "+381641234890" }
-);
+                new Administrator { Id = 1, Name = "Ashley", Surname = "Diaz", Email = "walkerlaura@example.net", Username = "admin1", Password = "admin123", ProfileImageUrl = "https://example.com/admin1.png", ContactNumber = "+381601112223" },
+                new Administrator { Id = 2, Name = "Michelle", Surname = "Nguyen", Email = "davidmullins@example.org", Username = "admin2", Password = "admin123", ProfileImageUrl = "https://example.com/admin2.png", ContactNumber = "+381611234567" },
+                new Administrator { Id = 3, Name = "Robert", Surname = "Barton", Email = "andersonnicholas@example.com", Username = "admin3", Password = "admin123", ProfileImageUrl = "https://example.com/admin3.png", ContactNumber = "+381641234890" }
+            );
 
             modelBuilder.Entity<Customer>().HasData(
                 new Customer { Id = 4, Name = "Ashley", Surname = "Green", Email = "caseymaria@example.com", Username = "customer4", Password = "cust123", ProfileImageUrl = "https://example.com/customer4.png", ContactNumber = "+381621112223" },
@@ -67,7 +67,6 @@ namespace gozba_na_klik_backend.Model
                 new Employee { Id = 42, Name = "Ella", Surname = "Hill", Email = "ella.hill@example.com", Username = "employee42", Password = "emp123", ProfileImageUrl = "https://example.com/employee42.png", ContactNumber = "+381641112456" },
                 new Employee { Id = 43, Name = "Michael", Surname = "Scott", Email = "michael.scott@example.com", Username = "employee43", Password = "emp123", ProfileImageUrl = "https://example.com/employee43.png", ContactNumber = "+381611231111" }
             );
-
         }
     }
 }
