@@ -37,5 +37,18 @@ namespace gozba_na_klik_backend.Controllers
                 Role = user.Role.ToString()
             });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            try
+            {
+                return Ok(await _userRepository.GetAllAsync());
+            }
+            catch (Exception ex)
+            {
+                return Problem("An error occured while fetching users.");
+            }
+        }
     }
 }

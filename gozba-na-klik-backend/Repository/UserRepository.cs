@@ -16,5 +16,10 @@ namespace gozba_na_klik_backend.Repository
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
         }
+
+        public async Task<List<User>> GetAllAsync()
+        {
+            return await _context.Users.ToListAsync();
+        }
     }
 }
