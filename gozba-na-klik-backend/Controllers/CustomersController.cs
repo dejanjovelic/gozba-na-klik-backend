@@ -11,10 +11,12 @@ namespace gozba_na_klik_backend.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly CustomerRepository _customerRepository;
+        private readonly AddressRepository _addressRepository;
 
         public CustomersController(AppDbContext context) 
         {
             _customerRepository = new CustomerRepository(context);
+            _addressRepository = new AddressRepository(context);
         }
 
         //POST api/customers
@@ -36,6 +38,18 @@ namespace gozba_na_klik_backend.Controllers
                 return Problem("An error occured while creating Customer.");
             }
 
+        }
+        [HttpGet("{customerId}/addresses")]
+        public async Task<IActionResult> GetAddressesAsync(int customerId)
+        {
+            try
+            {
+                return Ok(await _addressRepository.GetAddressesByCustomerIdAsync(customerId));
+            }
+            catch (Exception ex)
+            {
+                return Problem("An error occured while fetching addresses.");
+            }
         }
 
     }
