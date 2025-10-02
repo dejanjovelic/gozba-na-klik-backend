@@ -17,11 +17,10 @@ namespace gozba_na_klik_backend.Repository
             return await _context.Allergens.ToListAsync();
         }
 
-        public async Task<List<Allergen>> GetAllCustomersAllergentsAsync(List<int> allergentsIds)
+        public async Task<List<Allergen>> GetAllSelectedAllergentsAsync(List<int> allergentsIds)
         {
             return await _context.Allergens
-                .Where(allergen => allergentsIds
-                .Contains(allergen.Id))
+                .Where(allergen => allergentsIds.Contains(allergen.Id))
                 .ToListAsync();
         }
 

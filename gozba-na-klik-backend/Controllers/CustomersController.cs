@@ -39,22 +39,61 @@ namespace gozba_na_klik_backend.Controllers
             }
 
         }
-        //PUT api/customers/customerId/allergens
-        [HttpPut("{customersId}/allergens")]
-        public async Task<IActionResult> UpdateCustomerAllergensAsync(int customersId, [FromBody] List<int> allergenIds)
+
+        //GET api/customers/5
+        [HttpGet("{customerId}")]
+        public async Task<IActionResult> GetByIdAsync(int customerId)
         {
             try
             {
-                Customer customer = await _customerRepository.GetByIdAsync(customersId);
+                Customer customer = await _customerRepository.GetByIdAsync(customerId);
+                return Ok(customer);
+            }
+            catch (Exception ex)
+            {
+                return Problem("An error occured while fetching customer.");
+            }
+        }
+
+        //GET api/customers/5/allergens
+        [HttpGet("{customerId}/allergens")]
+        public async Task<IActionResult> GetAllCustomerAllergens(int customerId)
+        {
+            try
+            {
+                Customer customer = await _customerRepository.GetByIdAsync(customerId);
                 if (customer == null)
                 {
-                    return NotFound($"Custome with ID {customersId} not found.");
+                    return NotFound($"An Cutomer with ID{customerId} not found.");
+                }
+                return Ok(customer.Allergens);
+            }
+            catch (Exception ex)
+            {
+                return Problem("An error occured while fetching Customers allergens.");
+            }
+
+        }
+
+        //PUT api/customers/5/allergens
+        [HttpPut("{customerId}/allergens")]
+        public async Task<IActionResult> UpdateCustomerAllergensAsync(int customerId, [FromBody] List<int> allergenIds)
+        {
+            try
+            {
+                Customer customer = await _customerRepository.GetByIdAsync(customerId);
+                if (customer == null)
+                {
+                    return NotFound($"Customer with ID {customerId} not found.");
                 }
 
-                List<Allergen> allergens = await _allergenRepository.GetAllCustomersAllergentsAsync(allergenIds);
+                List<Allergen> allergens = await _allergenRepository.GetAllSelectedAllergentsAsync(allergenIds);
 
                 if (allergens.Count != allergenIds.Count)
+                {
                     return BadRequest("One or more allergens do not exist.");
+                }
+                    
 
                 Customer updatedCustomer = await _customerRepository.UpdateCustomerAllergensAsync(customer, allergens);
                 return Ok(updatedCustomer);
@@ -63,6 +102,7 @@ namespace gozba_na_klik_backend.Controllers
             {
                 return Problem("An error occured while updating customer allergens.");
             }
+
 
         }
 
