@@ -11,10 +11,12 @@ namespace gozba_na_klik_backend.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly CustomerRepository _customerRepository;
+        private readonly AllergenRepository _allergenRepository;
 
-        public CustomersController(AppDbContext context) 
+        public CustomersController(AppDbContext context)
         {
             _customerRepository = new CustomerRepository(context);
+            _allergenRepository = new AllergenRepository(context);
         }
 
         //POST api/customers
@@ -37,6 +39,32 @@ namespace gozba_na_klik_backend.Controllers
             }
 
         }
+        //PUT api/customers/customerId/allergens
+        [HttpPut("{customersId}/allergens")]
+        public async Task<IActionResult> UpdateCustomerAllergensAsync(int customersId, [FromBody] List<int> allergenIds)
+        {
+            try
+            {
+                Customer customer = await _customerRepository.GetByIdAsync(customersId);
+                if (customer == null)
+                {
+                    return NotFound($"Custome with ID {customersId} not found.");
+                }
+
+                List<Allergen> allergens = await _allergenRepository.GetAllCustomersAllergentsAsync(allergenIds);
+
+                if (allergens.Count != allergenIds.Count)
+                    return BadRequest("One or more allergens do not exist.");
+
+                Customer updatedCustomer = await _customerRepository.UpdateCustomerAllergensAsync(customer, allergens);
+                return Ok(updatedCustomer);
+            }
+            catch (Exception ex)
+            {
+                return Problem("An error occured while updating customer allergens.");
+            }
+
+        }
 
     }
-}    
+}
