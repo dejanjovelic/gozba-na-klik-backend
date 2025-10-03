@@ -87,7 +87,7 @@ namespace gozba_na_klik_backend.Controllers
                     return NotFound($"Customer with ID {customerId} not found.");
                 }
 
-                List<Allergen> allergens = await _allergenRepository.GetAllSelectedAllergentsAsync(allergenIds);
+                List<Allergen> allergens = await _allergenRepository.GetAllSelectedAllergensAsync(allergenIds);
 
                 if (allergens.Count != allergenIds.Count)
                 {

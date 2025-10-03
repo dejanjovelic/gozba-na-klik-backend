@@ -17,7 +17,7 @@ namespace gozba_na_klik_backend.Repository
             return await _context.Allergens.ToListAsync();
         }
 
-        public async Task<List<Allergen>> GetAllSelectedAllergentsAsync(List<int> allergenIds)
+        public async Task<List<Allergen>> GetAllSelectedAllergensAsync(List<int> allergenIds)
         {
             return await _context.Allergens
                 .Where(allergen => allergenIds.Contains(allergen.Id))
