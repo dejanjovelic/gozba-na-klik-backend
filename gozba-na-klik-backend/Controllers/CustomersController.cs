@@ -11,10 +11,12 @@ namespace gozba_na_klik_backend.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly CustomerRepository _customerRepository;
+        private readonly AddressRepository _addressRepository;
 
         public CustomersController(AppDbContext context) 
         {
             _customerRepository = new CustomerRepository(context);
+            _addressRepository = new AddressRepository(context);
         }
 
         //POST api/customers
@@ -36,6 +38,129 @@ namespace gozba_na_klik_backend.Controllers
                 return Problem("An error occured while creating Customer.");
             }
 
+        }
+
+        //GET api/customers/5
+        [HttpGet("{customerId}")]
+        public async Task<IActionResult> GetByIdAsync(int customerId)
+        {
+            try
+            {
+                Customer customer = await _customerRepository.GetByIdAsync(customerId);
+                return Ok(customer);
+            }
+            catch (Exception ex)
+            {
+                return Problem("An error occured while fetching customer.");
+            }
+        }
+
+        [HttpGet("{customerId}/addresses")]
+        public async Task<IActionResult> GetAddressesAsync(int customerId)
+        {
+            try
+            {
+                Customer customer = await _customerRepository.GetByIdAsync(customerId);
+                if (customer == null)
+                {
+                    return NotFound($"Customer with ID: {customerId} not found.");
+                }
+                return Ok(await _addressRepository.GetByCustomerIdAsync(customerId));
+            }
+            catch (Exception ex)
+            {
+                return Problem("An error occured while fetching addresses.");
+            }
+        }
+
+        [HttpPost("{customerId}/addresses")]
+        public async Task<IActionResult> CreateAddressAsync(int customerId, [FromBody] Address address)
+        {
+            if (address == null)
+            {
+                return BadRequest("Invalid data.");
+            }
+
+            address.CustomerId = customerId;
+
+            try
+            {
+                Customer customer = await _customerRepository.GetByIdAsync(customerId);
+                if (customer == null)
+                {
+                    return NotFound($"Customer with ID: {customerId} not found.");
+                }
+
+                await _addressRepository.CreateAsync(address);
+                return Ok(address);
+            }
+            catch (Exception ex)
+            {
+                return Problem("An error occured while creating address.");
+            }
+        }
+
+        [HttpPut("{customerId}/addresses/{addressId}")]
+        public async Task<IActionResult> UpdateAddressAsync(int customerId, int addressId, [FromBody] Address updatedAddress)
+        {
+            if (updatedAddress == null || addressId != updatedAddress.Id)
+            {
+                return BadRequest("Address ID mismatch");
+            }
+
+            try
+            {
+                Customer customer = await _customerRepository.GetByIdAsync(customerId);
+                if (customer == null)
+                {
+                    return NotFound($"Customer with ID: {customerId} not found.");
+                }
+
+                Address existingAddress = await _addressRepository.GetByIdAsync(addressId);
+
+                if (existingAddress == null)
+                {
+                    return NotFound($"Address with ID: {addressId} not found.");
+                }
+
+                existingAddress.CustomerId = customerId;
+                existingAddress.Street = updatedAddress.Street;
+                existingAddress.StreetNumber = updatedAddress.StreetNumber;
+                existingAddress.City = updatedAddress.City;
+                existingAddress.ZipCode = updatedAddress.ZipCode;
+            
+                await _addressRepository.UpdateAsync(existingAddress);
+                return Ok(existingAddress);
+            }
+            catch (Exception ex)
+            {
+                return Problem("An error occured while updating address.");
+            }
+        }
+
+        [HttpDelete("{customerId}/addresses/{addressId}")]
+        public async Task<IActionResult> DeleteAddressAsync(int customerId, int addressId)
+        {
+            try
+            {
+                Customer customer = await _customerRepository.GetByIdAsync(customerId);
+                if (customer == null)
+                {
+                    return NotFound($"Customer with ID: {customerId} not found.");
+                }
+
+                bool result = await _addressRepository.DeleteAsync(addressId);
+
+                if (!result)
+                {
+                    return NotFound($"Address with ID: {addressId} not found");
+                }
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return Problem($"An error occured while deleting Address with ID: {addressId}");
+            }
         }
 
     }
