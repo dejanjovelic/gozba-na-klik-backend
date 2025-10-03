@@ -47,6 +47,10 @@ namespace gozba_na_klik_backend.Controllers
             try
             {
                 Customer customer = await _customerRepository.GetByIdAsync(customerId);
+                if (customer == null)
+                {
+                    return NotFound($"Customer with ID{customerId} not found.");
+                }
                 return Ok(customer);
             }
             catch (Exception ex)
@@ -102,7 +106,6 @@ namespace gozba_na_klik_backend.Controllers
             {
                 return Problem("An error occured while updating customer allergens.");
             }
-
 
         }
 
