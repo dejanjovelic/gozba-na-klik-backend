@@ -40,11 +40,31 @@ namespace gozba_na_klik_backend.Controllers
 
         }
 
+        //GET api/customers/5
+        [HttpGet("{customerId}")]
+        public async Task<IActionResult> GetByIdAsync(int customerId)
+        {
+            try
+            {
+                Customer customer = await _customerRepository.GetByIdAsync(customerId);
+                return Ok(customer);
+            }
+            catch (Exception ex)
+            {
+                return Problem("An error occured while fetching customer.");
+            }
+        }
+
         [HttpGet("{customerId}/addresses")]
         public async Task<IActionResult> GetAddressesAsync(int customerId)
         {
             try
             {
+                Customer customer = await _customerRepository.GetByIdAsync(customerId);
+                if (customer == null)
+                {
+                    return NotFound($"Customer with ID: {customerId} not found.");
+                }
                 return Ok(await _addressRepository.GetByCustomerIdAsync(customerId));
             }
             catch (Exception ex)
@@ -65,6 +85,12 @@ namespace gozba_na_klik_backend.Controllers
 
             try
             {
+                Customer customer = await _customerRepository.GetByIdAsync(customerId);
+                if (customer == null)
+                {
+                    return NotFound($"Customer with ID: {customerId} not found.");
+                }
+
                 await _addressRepository.CreateAsync(address);
                 return Ok(address);
             }
@@ -84,6 +110,12 @@ namespace gozba_na_klik_backend.Controllers
 
             try
             {
+                Customer customer = await _customerRepository.GetByIdAsync(customerId);
+                if (customer == null)
+                {
+                    return NotFound($"Customer with ID: {customerId} not found.");
+                }
+
                 Address existingAddress = await _addressRepository.GetByIdAsync(addressId);
 
                 if (existingAddress == null)
@@ -111,6 +143,12 @@ namespace gozba_na_klik_backend.Controllers
         {
             try
             {
+                Customer customer = await _customerRepository.GetByIdAsync(customerId);
+                if (customer == null)
+                {
+                    return NotFound($"Customer with ID: {customerId} not found.");
+                }
+
                 bool result = await _addressRepository.DeleteAsync(addressId);
 
                 if (!result)
