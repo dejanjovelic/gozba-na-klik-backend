@@ -2,20 +2,20 @@
 
 namespace gozba_na_klik_backend.Repository
 {
-    public class CourierRepository
+    public class RestaurantOwnerRepository
     {
         public AppDbContext _context;
 
-        public CourierRepository(AppDbContext context)
+        public RestaurantOwnerRepository(AppDbContext context)
         {
             this._context = context;
         }
 
-        public async Task<Courier> CreateAsync(Courier courier) 
+        public async Task<RestaurantOwner> CreateAsync(RestaurantOwner restaurantOwner) 
         {
-            _context.Add(courier);
+            _context.Add(restaurantOwner);
             await _context.SaveChangesAsync();
-            return courier;
+            return restaurantOwner;
         }
     }
 }

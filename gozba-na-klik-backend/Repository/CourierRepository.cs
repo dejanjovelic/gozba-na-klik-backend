@@ -1,21 +1,39 @@
 ﻿using gozba_na_klik_backend.Model;
-
+using Microsoft.EntityFrameworkCore;
 namespace gozba_na_klik_backend.Repository
 {
-    public class RestaurantOwnerRepository
+    public class CourierRepository
     {
         public AppDbContext _context;
 
-        public RestaurantOwnerRepository(AppDbContext context)
+        public CourierRepository(AppDbContext context)
         {
             this._context = context;
         }
 
-        public async Task<RestaurantOwner> CreateAsync(RestaurantOwner restaurantOwner) 
+        public async Task<Courier> CreateAsync(Courier courier) 
         {
-            _context.Add(restaurantOwner);
+            _context.Add(courier);
             await _context.SaveChangesAsync();
-            return restaurantOwner;
+            return courier;
+        }
+        public async Task<Courier?> GetByIdAsync(int courierId)
+        {
+            return await _context.Users
+                .OfType<Courier>()
+                .Include(c => c.WorkingHours)
+                .FirstOrDefaultAsync(c => c.Id == courierId);
+        }
+
+        public async Task UpdateWorkingHoursAsync(int courierId, List<WorkingHours> workingHours)
+        {
+            var courier = await GetByIdAsync(courierId);
+            if (courier == null) return;
+
+            courier.WorkingHours.Clear();
+            courier.WorkingHours = workingHours;
+
+            await _context.SaveChangesAsync();
         }
     }
 }

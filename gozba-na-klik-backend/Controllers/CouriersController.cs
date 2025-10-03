@@ -36,5 +36,39 @@ namespace gozba_na_klik_backend.Controllers
             }
 
         }
+        [HttpPut("{courierId}/working-hours")]
+        public async Task<IActionResult> UpdateWorkingHours(int courierId, [FromBody] List<WorkingHours> workingHours)
+        {
+            var existingCourier = await _courierRepository.GetByIdAsync(courierId);
+            if (existingCourier == null)
+            {
+                return NotFound(new { Message = "Courier not found" });
+            }
+
+            await _courierRepository.UpdateWorkingHoursAsync(courierId, workingHours);
+
+            return Ok(new { Message = "Working hours updated successfully" });
+        }
+        [HttpGet("{courierId}")]
+        public async Task<IActionResult> GetCourierById(int courierId)
+        {
+            var courier = await _courierRepository.GetByIdAsync(courierId);
+            if (courier == null)
+                return NotFound(new { Message = "Courier not found" });
+
+            return Ok(new
+            {
+                Id = courier.Id,
+                Username = courier.Username,
+                Name = courier.Name,
+                Surname = courier.Surname,
+                WorkingHours = courier.WorkingHours.Select(wh => new
+                {
+                    DayOfTheWeek = wh.DayOfTheWeek.ToString(),
+                    StartingTime = wh.StartingTime.ToString(@"hh\:mm\:ss"),
+                    EndingTime = wh.EndingTime.ToString(@"hh\:mm\:ss")
+                })
+            });
+        }
     }
 }
