@@ -8,9 +8,17 @@ namespace gozba_na_klik_backend.Model
 
         public DbSet<User> Users { get; set; }
         public DbSet<Allergen> Allergens { get; set; }
+        public DbSet<Address> Addresses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Customer>()
+                .HasMany(customer => customer.Addresses)
+                .WithOne()
+                .HasForeignKey(address => address.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
             modelBuilder.Entity<Administrator>().HasData(
                 new Administrator { Id = 1, Name = "Ashley", Surname = "Diaz", Email = "walkerlaura@example.net", Username = "admin1", Password = "admin123", ProfileImageUrl = "https://example.com/admin1.png", ContactNumber = "+381601112223" },
                 new Administrator { Id = 2, Name = "Michelle", Surname = "Nguyen", Email = "davidmullins@example.org", Username = "admin2", Password = "admin123", ProfileImageUrl = "https://example.com/admin2.png", ContactNumber = "+381611234567" },
@@ -106,6 +114,44 @@ namespace gozba_na_klik_backend.Model
                 j => j.HasOne<Allergen>().WithMany().HasForeignKey("AllergenId").OnDelete(DeleteBehavior.Cascade),
                 j => j.HasOne<Customer>().WithMany().HasForeignKey("CustomerId").OnDelete(DeleteBehavior.Cascade)
                 );
+
+            modelBuilder.Entity<Address>().HasData(
+                // Ashley (CustomerId = 4)
+                new Address { Id = 1, Street = "Main Street", StreetNumber = 12, City = "Belgrade", ZipCode = "11000", CustomerId = 4 },
+                new Address { Id = 2, Street = "Green Avenue", StreetNumber = 3, City = "Novi Sad", ZipCode = "21000", CustomerId = 4 },
+
+                // Emily (CustomerId = 5)
+                new Address { Id = 3, Street = "Sunset Blvd", StreetNumber = 44, City = "Niš", ZipCode = "18000", CustomerId = 5 },
+
+                // Wendy (CustomerId = 6)
+                new Address { Id = 4, Street = "Kralja Petra", StreetNumber = 8, City = "Belgrade", ZipCode = "11000", CustomerId = 6 },
+                new Address { Id = 5, Street = "Vojvode Stepe", StreetNumber = 126, City = "Belgrade", ZipCode = "11010", CustomerId = 6 },
+                new Address { Id = 6, Street = "Cara Dušana", StreetNumber = 22, City = "Zemun", ZipCode = "11080", CustomerId = 6 },
+
+                // Kimberly (CustomerId = 7)
+                new Address { Id = 7, Street = "Ruzveltova", StreetNumber = 33, City = "Belgrade", ZipCode = "11120", CustomerId = 7 },
+
+                // David (CustomerId = 8)
+                new Address { Id = 8, Street = "Bulevar Oslobođenja", StreetNumber = 99, City = "Novi Sad", ZipCode = "21000", CustomerId = 8 },
+                new Address { Id = 9, Street = "Zmaj Jovina", StreetNumber = 11, City = "Novi Sad", ZipCode = "21000", CustomerId = 8 },
+
+                // Christine (CustomerId = 9)
+                new Address { Id = 10, Street = "Nemanjina", StreetNumber = 5, City = "Belgrade", ZipCode = "11000", CustomerId = 9 },
+
+                // William (CustomerId = 10)
+                new Address { Id = 11, Street = "Gogoljeva", StreetNumber = 15, City = "Subotica", ZipCode = "24000", CustomerId = 10 },
+                new Address { Id = 12, Street = "Matije Gupca", StreetNumber = 2, City = "Subotica", ZipCode = "24000", CustomerId = 10 },
+
+                // Ryan (CustomerId = 11)
+                new Address { Id = 13, Street = "Partizanska", StreetNumber = 66, City = "Kragujevac", ZipCode = "34000", CustomerId = 11 },
+
+                // Sean (CustomerId = 12)
+                new Address { Id = 14, Street = "Vladimira Nazora", StreetNumber = 7, City = "Čačak", ZipCode = "32000", CustomerId = 12 },
+                new Address { Id = 15, Street = "Trg Oslobođenja", StreetNumber = 1, City = "Čačak", ZipCode = "32000", CustomerId = 12 },
+
+                // Timothy (CustomerId = 13)
+                new Address { Id = 16, Street = "Industrijska", StreetNumber = 10, City = "Pančevo", ZipCode = "26000", CustomerId = 13 }
+            );
         }
     }
 }

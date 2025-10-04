@@ -42,5 +42,6 @@ namespace gozba_na_klik_backend.Repository
             await _context.SaveChangesAsync();
             return customer;
         }
+
     }
 }
