@@ -11,11 +11,13 @@ namespace gozba_na_klik_backend.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly CustomerRepository _customerRepository;
+        private readonly AllergenRepository _allergenRepository;
         private readonly AddressRepository _addressRepository;
 
-        public CustomersController(AppDbContext context) 
+        public CustomersController(AppDbContext context)
         {
             _customerRepository = new CustomerRepository(context);
+            _allergenRepository = new AllergenRepository(context);
             _addressRepository = new AddressRepository(context);
         }
 
@@ -47,6 +49,10 @@ namespace gozba_na_klik_backend.Controllers
             try
             {
                 Customer customer = await _customerRepository.GetByIdAsync(customerId);
+                if (customer == null)
+                {
+                    return NotFound($"Customer with ID{customerId} not found.");
+                }
                 return Ok(customer);
             }
             catch (Exception ex)
@@ -55,6 +61,28 @@ namespace gozba_na_klik_backend.Controllers
             }
         }
 
+        //GET api/customers/5/allergens
+        [HttpGet("{customerId}/allergens")]
+        public async Task<IActionResult> GetAllCustomerAllergens(int customerId)
+        {
+            try
+            {
+                Customer customer = await _customerRepository.GetByIdAsync(customerId);
+                if (customer == null)
+                {
+                    return NotFound($"An Cutomer with ID{customerId} not found.");
+                }
+                return Ok(customer.Allergens);
+            }
+            catch (Exception ex)
+            {
+                return Problem("An error occured while fetching Customers allergens.");
+            }
+
+        }
+
+
+        //GET api/customers/5/addresses
         [HttpGet("{customerId}/addresses")]
         public async Task<IActionResult> GetAddressesAsync(int customerId)
         {
@@ -67,12 +95,44 @@ namespace gozba_na_klik_backend.Controllers
                 }
                 return Ok(await _addressRepository.GetByCustomerIdAsync(customerId));
             }
-            catch (Exception ex)
+                catch (Exception ex)
             {
                 return Problem("An error occured while fetching addresses.");
             }
         }
 
+        //PUT api/customers/5/allergens
+        [HttpPut("{customerId}/allergens")]
+       public async Task<IActionResult> UpdateCustomerAllergensAsync(int customerId, [FromBody] List<int> allergenIds)
+        {
+            try
+            {
+                Customer customer = await _customerRepository.GetByIdAsync(customerId);
+                if (customer == null)
+                {
+                    return NotFound($"Customer with ID {customerId} not found.");
+                }
+
+                List<Allergen> allergens = await _allergenRepository.GetAllSelectedAllergensAsync(allergenIds);
+                 
+                 if (allergens.Count != allergenIds.Count)
+                {
+                    return BadRequest("One or more allergens do not exist.");
+                }
+
+
+                Customer updatedCustomer = await _customerRepository.UpdateCustomerAllergensAsync(customer, allergens);
+                return Ok(updatedCustomer);
+            }
+            catch (Exception ex)
+            {
+                return Problem("An error occured while updating customer allergens.");
+            }
+
+
+        }
+
+        
         [HttpPost("{customerId}/addresses")]
         public async Task<IActionResult> CreateAddressAsync(int customerId, [FromBody] Address address)
         {
@@ -80,7 +140,6 @@ namespace gozba_na_klik_backend.Controllers
             {
                 return BadRequest("Invalid data.");
             }
-
             address.CustomerId = customerId;
 
             try
@@ -99,6 +158,7 @@ namespace gozba_na_klik_backend.Controllers
                 return Problem("An error occured while creating address.");
             }
         }
+
 
         [HttpPut("{customerId}/addresses/{addressId}")]
         public async Task<IActionResult> UpdateAddressAsync(int customerId, int addressId, [FromBody] Address updatedAddress)
@@ -138,7 +198,7 @@ namespace gozba_na_klik_backend.Controllers
             }
         }
 
-        [HttpDelete("{customerId}/addresses/{addressId}")]
+         [HttpDelete("{customerId}/addresses/{addressId}")]
         public async Task<IActionResult> DeleteAddressAsync(int customerId, int addressId)
         {
             try
@@ -164,4 +224,4 @@ namespace gozba_na_klik_backend.Controllers
         }
 
     }
-}    
+    }

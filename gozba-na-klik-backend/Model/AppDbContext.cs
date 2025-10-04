@@ -7,7 +7,7 @@ namespace gozba_na_klik_backend.Model
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
-        
+        public DbSet<Allergen> Allergens { get; set; }
         public DbSet<Address> Addresses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -76,6 +76,44 @@ namespace gozba_na_klik_backend.Model
                 new Employee { Id = 42, Name = "Ella", Surname = "Hill", Email = "ella.hill@example.com", Username = "employee42", Password = "emp123", ProfileImageUrl = "https://example.com/employee42.png", ContactNumber = "+381641112456" },
                 new Employee { Id = 43, Name = "Michael", Surname = "Scott", Email = "michael.scott@example.com", Username = "employee43", Password = "emp123", ProfileImageUrl = "https://example.com/employee43.png", ContactNumber = "+381611231111" }
             );
+            modelBuilder.Entity<Allergen>().HasData(
+                new Allergen { Id = 1, Name = "wheat" },
+                new Allergen { Id = 2, Name = "rye" },
+                new Allergen { Id = 3, Name = "barley" },
+                new Allergen { Id = 4, Name = "oats" },
+                new Allergen { Id = 5, Name = "crabs" },
+                new Allergen { Id = 6, Name = "lobsters" },
+                new Allergen { Id = 7, Name = "prawns" },
+                new Allergen { Id = 8, Name = "eggs" },
+                new Allergen { Id = 9, Name = "fish" },
+                new Allergen { Id = 10, Name = "milk" },
+                new Allergen { Id = 11, Name = "peanuts" },
+                new Allergen { Id = 12, Name = "soybean" },
+                new Allergen { Id = 13, Name = "almonds" },
+                new Allergen { Id = 14, Name = "hazelnuts" },
+                new Allergen { Id = 15, Name = "walnuts" },
+                new Allergen { Id = 16, Name = "cashews" },
+                new Allergen { Id = 17, Name = "pecan nuts" },
+                new Allergen { Id = 18, Name = "Brazil nuts" },
+                new Allergen { Id = 19, Name = "pistachios" },
+                new Allergen { Id = 20, Name = "macadamia nuts" },
+                new Allergen { Id = 21, Name = "Queensland nuts" },
+                new Allergen { Id = 22, Name = "celery" },
+                new Allergen { Id = 23, Name = "mustard" },
+                new Allergen { Id = 24, Name = "Lupin" },
+                new Allergen { Id = 25, Name = "mussels" },
+                new Allergen { Id = 26, Name = "oysters" },
+                new Allergen { Id = 27, Name = "squid" }
+                );
+
+            modelBuilder.Entity<Customer>()
+                .HasMany(customer => customer.Allergens)
+                .WithMany("Customers")
+                .UsingEntity<Dictionary<string, object>>(
+                "CustomerAllergens",
+                j => j.HasOne<Allergen>().WithMany().HasForeignKey("AllergenId").OnDelete(DeleteBehavior.Cascade),
+                j => j.HasOne<Customer>().WithMany().HasForeignKey("CustomerId").OnDelete(DeleteBehavior.Cascade)
+                );
 
             modelBuilder.Entity<Address>().HasData(
                 // Ashley (CustomerId = 4)
