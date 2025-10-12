@@ -34,6 +34,7 @@ namespace gozba_na_klik_backend.Controllers
                 Username = user.Username,
                 Name = user.Name,
                 Surname = user.Surname,
+                ProfileImageUrl = user.ProfileImageUrl,
                 Role = user.Role.ToString()
             });
         }
