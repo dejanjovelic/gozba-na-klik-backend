@@ -25,9 +25,8 @@ namespace gozba_na_klik_backend.Repository
                 .FirstOrDefaultAsync(c => c.Id == courierId);
         }
 
-        public async Task UpdateWorkingHoursAsync(int courierId, List<WorkingHours> workingHours)
+        public async Task UpdateWorkingHoursAsync(Courier courier, List<WorkingHours> workingHours)
         {
-            var courier = await GetByIdAsync(courierId);
             if (courier == null) return;
 
             courier.WorkingHours.Clear();
