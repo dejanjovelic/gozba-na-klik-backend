@@ -1,4 +1,6 @@
-﻿namespace gozba_na_klik_backend.Model
+﻿using System.Text.Json.Serialization;
+
+namespace gozba_na_klik_backend.Model
 {
     public class WorkingHours
     {

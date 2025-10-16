@@ -36,5 +36,62 @@ namespace gozba_na_klik_backend.Controllers
             }
 
         }
+        [HttpPut("{courierId}/working-hours")]
+        public async Task<IActionResult> UpdateWorkingHours(int courierId, [FromBody] List<WorkingHours> workingHours)
+        {
+            if (courierId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid courier ID" });
+            }
+            try
+            {
+                var existingCourier = await _courierRepository.GetByIdAsync(courierId);
+                if (existingCourier == null)
+                {
+                    return NotFound(new { Message = "Courier not found" });
+                }
+
+                await _courierRepository.UpdateWorkingHoursAsync(existingCourier, workingHours);
+                return Ok(new { Message = "Working hours updated successfully" });
+            }
+            catch (Exception)
+            {
+                return Problem("An error occurred while updating working hours");
+            }
+        }
+        
+        
+        [HttpGet("{courierId}")]
+        public async Task<IActionResult> GetCourierById(int courierId)
+        {
+            if (courierId <= 0)
+            {
+                return BadRequest(new { Message = "Invalid courier ID" });
+            }
+            try
+            {
+                var courier = await _courierRepository.GetByIdAsync(courierId);
+                if (courier == null)
+                    return NotFound(new { Message = "Courier not found" });
+
+                return Ok(new
+                {
+                    Id = courier.Id,
+                    Username = courier.Username,
+                    Name = courier.Name,
+                    Surname = courier.Surname,
+                    WorkingHours = courier.WorkingHours.Select(wh => new
+                    {
+                        DayOfTheWeek = wh.DayOfTheWeek.ToString(),
+                        StartingTime = wh.StartingTime.ToString(@"hh\:mm\:ss"),
+                        EndingTime = wh.EndingTime.ToString(@"hh\:mm\:ss")
+                    })
+                });
+            }
+            catch (Exception)
+            {
+                return Problem("An error occurred while getting courier by his Id");
+            }
+        }
     }
 }
