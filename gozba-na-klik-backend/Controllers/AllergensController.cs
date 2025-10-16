@@ -1,5 +1,6 @@
 ﻿using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Repository;
+using gozba_na_klik_backend.Servises.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,26 +10,17 @@ namespace gozba_na_klik_backend.Controllers
     [ApiController]
     public class AllergensController : ControllerBase
     {
-        private readonly AllergenRepository _allergenRepository;
+        private readonly IAllergenService _allergenService;
 
-        public AllergensController(AppDbContext context)
+        public AllergensController(IAllergenService allergenService)
         {
-            this._allergenRepository = new AllergenRepository(context);
+            this._allergenService = allergenService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
-            try
-            {
-                List<Allergen> allergens = await _allergenRepository.GetAllAsync();
-                return Ok(allergens);
-            }
-            catch (Exception)
-            {
-
-                return Problem("An error occured while fetching allergens.");
-            }
+            return Ok(await _allergenService.GetAllAsync());
         }
     }
 }

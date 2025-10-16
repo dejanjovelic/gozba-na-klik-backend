@@ -1,9 +1,10 @@
 ﻿using gozba_na_klik_backend.Model;
+using gozba_na_klik_backend.Model.IRepositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace gozba_na_klik_backend.Repository
 {
-    public class AllergenRepository
+    public class AllergenRepository : IAllergenRepository
     {
         private readonly AppDbContext _context;
 

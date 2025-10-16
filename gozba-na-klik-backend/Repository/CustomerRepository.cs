@@ -1,10 +1,11 @@
 ﻿using gozba_na_klik_backend.Model;
+using gozba_na_klik_backend.Model.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace gozba_na_klik_backend.Repository
 {
-    public class CustomerRepository
+    public class CustomerRepository : ICustomerRepository
     {
         public AppDbContext _context;
 
@@ -23,8 +24,8 @@ namespace gozba_na_klik_backend.Repository
         {
             return await _context.Users
                 .OfType<Customer>()
-                .Include(customer=> customer.Allergens)
-                .Include(customer=>customer.Addresses)
+                .Include(customer => customer.Allergens)
+                .Include(customer => customer.Addresses)
                 .FirstOrDefaultAsync(customer => customer.Id == customerId);
         }
 

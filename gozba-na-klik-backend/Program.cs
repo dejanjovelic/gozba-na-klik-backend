@@ -1,6 +1,10 @@
 
 using gozba_na_klik_backend.Model;
+using gozba_na_klik_backend.Model.IRepositories;
 using gozba_na_klik_backend.Repository;
+using gozba_na_klik_backend.Servises;
+using gozba_na_klik_backend.Servises.IServices;
+using gozba_na_klik_backend.Settings;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -32,6 +36,17 @@ namespace gozba_na_klik_backend
                 {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
+
+            builder.Services.AddTransient<ExceptionHandlingMiddleware>();
+
+            builder.Services.AddScoped<ICustomerService, CustomerService>();
+            builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+            builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+            builder.Services.AddScoped<IAllergenService, AllergenService>();
+            builder.Services.AddScoped<IAllergenRepository, AllergenRepository>();
+
+
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -48,7 +63,7 @@ namespace gozba_na_klik_backend
 
             app.UseAuthorization();
 
-
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.MapControllers();
 
             app.Run();
