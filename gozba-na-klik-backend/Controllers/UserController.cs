@@ -1,5 +1,6 @@
 ﻿using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Repository;
+using gozba_na_klik_backend.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace gozba_na_klik_backend.Controllers
@@ -8,11 +9,11 @@ namespace gozba_na_klik_backend.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly UserRepository _userRepository;
+        private readonly IUserService _userService;
 
-        public UserController(AppDbContext context)
+        public UserController(IUserService userService)
         {
-            _userRepository = new UserRepository(context);
+            _userService = userService;
         }
 
         [HttpPost("login")]
@@ -21,7 +22,7 @@ namespace gozba_na_klik_backend.Controllers
             var username = body["username"];
             var password = body["password"];
 
-            var user = await _userRepository.GetByUsernameAsync(username);
+            var user = await _userService.GetByUsernameAsync(username);
 
             if (user == null || user.Password != password)
             {
@@ -44,7 +45,7 @@ namespace gozba_na_klik_backend.Controllers
         {
             try
             {
-                return Ok(await _userRepository.GetAllAsync());
+                return Ok(await _userService.GetAllAsync());
             }
             catch (Exception ex)
             {
