@@ -1,8 +1,9 @@
 ﻿using gozba_na_klik_backend.Model;
+using gozba_na_klik_backend.Model.IRepositories;
 using Microsoft.EntityFrameworkCore;
 namespace gozba_na_klik_backend.Repository
 {
-    public class CourierRepository
+    public class CourierRepository:ICourierRepository
     {
         public AppDbContext _context;
 

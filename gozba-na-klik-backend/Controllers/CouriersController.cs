@@ -2,6 +2,8 @@
 using gozba_na_klik_backend.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using gozba_na_klik_backend.Services.IServices;
+using gozba_na_klik_backend.Services;
 
 namespace gozba_na_klik_backend.Controllers
 {
@@ -9,11 +11,11 @@ namespace gozba_na_klik_backend.Controllers
     [ApiController]
     public class CouriersController : ControllerBase
     {
-        private readonly CourierRepository _courierRepository;
+        private readonly ICourierService _courierService;
 
-        public CouriersController(AppDbContext context)
+        public CouriersController(ICourierService courierService)
         {
-            _courierRepository = new CourierRepository(context);
+            _courierService = courierService;
         }
 
         //POST api/couriers
@@ -27,7 +29,7 @@ namespace gozba_na_klik_backend.Controllers
 
             try
             {
-                await _courierRepository.CreateAsync(courier);
+                await _courierService.CreateAsync(courier);
                 return Ok(courier);
             }
             catch (Exception ex)
@@ -45,13 +47,13 @@ namespace gozba_na_klik_backend.Controllers
             }
             try
             {
-                var existingCourier = await _courierRepository.GetByIdAsync(courierId);
+                var existingCourier = await _courierService.GetByIdAsync(courierId);
                 if (existingCourier == null)
                 {
                     return NotFound(new { Message = "Courier not found" });
                 }
 
-                await _courierRepository.UpdateWorkingHoursAsync(existingCourier, workingHours);
+                await _courierService.UpdateWorkingHoursAsync(existingCourier, workingHours);
                 return Ok(new { Message = "Working hours updated successfully" });
             }
             catch (Exception)
@@ -70,7 +72,7 @@ namespace gozba_na_klik_backend.Controllers
             }
             try
             {
-                var courier = await _courierRepository.GetByIdAsync(courierId);
+                var courier = await _courierService.GetByIdAsync(courierId);
                 if (courier == null)
                     return NotFound(new { Message = "Courier not found" });
 
