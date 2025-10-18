@@ -1,12 +1,24 @@
-﻿namespace gozba_na_klik_backend.Model
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace gozba_na_klik_backend.Model
 {
     public class Restaurant
     {
         public int Id { get; set; }
+        [Required]
+        [MinLength(2)]
         public string Name { get; set; }
+        [Required]
         public string Address { get; set; }
+        [Required]
+        public string City { get; set; }
+        [Required]
         public string Description { get; set; }
+        [Required]
         public int Capacity { get; set; }
+        [Required]
+        public double AverageRating { get; set; } = 5;
+        [Required]
         public int RestaurantOwnerId { get; set; }
         public User? RestaurantOwner { get; set; }
         public List<Meal>? MealsOnMenu { get; set; } = new List<Meal>();
