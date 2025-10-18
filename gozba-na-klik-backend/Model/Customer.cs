@@ -1,6 +1,4 @@
-﻿using gozba_na_klik_backend.Enum;
-
-namespace gozba_na_klik_backend.Model
+﻿namespace gozba_na_klik_backend.Model
 {
     public class Customer : User
     {

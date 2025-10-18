@@ -1,4 +1,4 @@
-﻿namespace gozba_na_klik_backend.Enum
+﻿namespace gozba_na_klik_backend.Model
 {
     public enum DayOfTheWeek
     {
