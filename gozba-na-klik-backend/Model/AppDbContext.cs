@@ -163,27 +163,27 @@ namespace gozba_na_klik_backend.Model
             );
 
             modelBuilder.Entity<Restaurant>().HasData(
-                new Restaurant { Id = 1, Name = "Bistro Nova", Address = "Kralja Petra 12", City = "Belgrade", Description = "Modern Serbian cuisine with a twist.", Capacity = 60, RestaurantOwnerId = 24 },
-                new Restaurant { Id = 2, Name = "La Tavola", Address = "Cara Dušana 45", City = "Novi Sad", Description = "Authentic Italian trattoria.", Capacity = 80, RestaurantOwnerId = 24 },
-                new Restaurant { Id = 3, Name = "Sakura Zen", Address = "Bulevar Oslobođenja 88", City = "Niš", Description = "Japanese sushi bar with minimalist ambiance.", Capacity = 40, RestaurantOwnerId = 24 },
-                new Restaurant { Id = 4, Name = "Grill & Chill", Address = "Trg Slobode 3", City = "Subotica", Description = "American-style BBQ with craft beers.", Capacity = 100, RestaurantOwnerId = 24 },
-                new Restaurant { Id = 5, Name = "Green Wave", Address = "Njegoševa 21", City = "Belgrade", Description = "Vegan restaurant with organic dishes.", Capacity = 50, RestaurantOwnerId = 25 },
-                new Restaurant { Id = 6, Name = "Casa del Mar", Address = "Obala 7", City = "Herceg Novi", Description = "Mediterranean cuisine with a sea view.", Capacity = 90, RestaurantOwnerId = 25 },
-                new Restaurant { Id = 7, Name = "Grandma's Kitchen", Address = "Vojvode Mišića 14", City = "Kragujevac", Description = "Traditional homemade Serbian food.", Capacity = 70, RestaurantOwnerId = 26 },
-                new Restaurant { Id = 8, Name = "Urban Spoon", Address = "Zmaj Jovina 9", City = "Novi Sad", Description = "Fusion cuisine in a modern setting.", Capacity = 85, RestaurantOwnerId = 27 },
-                new Restaurant { Id = 9, Name = "Le Petit Café", Address = "Francuska 5", City = "Belgrade", Description = "French bistro with croissants and wine.", Capacity = 45, RestaurantOwnerId = 27 },
-                new Restaurant { Id = 10, Name = "Tandoori Flame", Address = "Đure Jakšića 33", City = "Zrenjanin", Description = "Indian cuisine with authentic spices.", Capacity = 60, RestaurantOwnerId = 28 },
-                new Restaurant { Id = 11, Name = "Burger Lab", Address = "Miletićeva 18", City = "Pančevo", Description = "Gourmet burgers with homemade sauces.", Capacity = 55, RestaurantOwnerId = 29 },
-                new Restaurant { Id = 12, Name = "Fish Pot", Address = "Dunavska 2", City = "Sombor", Description = "Seafood specialties and river fish.", Capacity = 75, RestaurantOwnerId = 30 },
-                new Restaurant { Id = 13, Name = "Pasta Mia", Address = "Kneza Miloša 27", City = "Belgrade", Description = "Fresh pasta and Italian desserts.", Capacity = 65, RestaurantOwnerId = 31 },
-                new Restaurant { Id = 14, Name = "Orient Express", Address = "Nikole Pašića 10", City = "Niš", Description = "Asian cuisine with wok and curry dishes.", Capacity = 80, RestaurantOwnerId = 32 },
-                new Restaurant { Id = 15, Name = "Steakhouse 21", Address = "Bulevar Evrope 21", City = "Novi Sad", Description = "Premium steaks and fine wines.", Capacity = 95, RestaurantOwnerId = 33 },
-                new Restaurant { Id = 16, Name = "Nest", Address = "Gundulićeva 6", City = "Belgrade", Description = "Rustic ambiance with local specialties.", Capacity = 70, RestaurantOwnerId = 32 },
-                new Restaurant { Id = 17, Name = "Tapas Bar", Address = "Petrovaradinska 4", City = "Novi Sad", Description = "Spanish tapas and sangria.", Capacity = 60, RestaurantOwnerId = 28 },
-                new Restaurant { Id = 18, Name = "Marko's Tavern", Address = "Glavna 1", City = "Valjevo", Description = "Authentic tavern with live folk music.", Capacity = 100, RestaurantOwnerId = 28 },
-                new Restaurant { Id = 19, Name = "Thai Orchid", Address = "Vojvode Stepe 19", City = "Belgrade", Description = "Thai cuisine with exotic flavors.", Capacity = 50, RestaurantOwnerId = 29 },
-                new Restaurant { Id = 20, Name = "Nordic Table", Address = "Skandinavska 3", City = "Novi Sad", Description = "Nordic cuisine with minimalist design.", Capacity = 40, RestaurantOwnerId = 30 }
-            );
+                 new Restaurant { Id = 1, Name = "Bistro Nova", Address = "Kralja Petra 12", City = "Belgrade", Description = "Modern Serbian cuisine with a twist.", Capacity = 60, AverageRating = 6.5, RestaurantOwnerId = 24 },
+                 new Restaurant { Id = 2, Name = "La Tavola", Address = "Cara Dušana 45", City = "Novi Sad", Description = "Authentic Italian trattoria.", Capacity = 80, AverageRating = 9.5, RestaurantOwnerId = 24 },
+                 new Restaurant { Id = 3, Name = "Sakura Zen", Address = "Bulevar Oslobođenja 88", City = "Niš", Description = "Japanese sushi bar with minimalist ambiance.", Capacity = 40, AverageRating = 8.2, RestaurantOwnerId = 24 },
+                 new Restaurant { Id = 4, Name = "Grill & Chill", Address = "Trg Slobode 3", City = "Subotica", Description = "American-style BBQ with craft beers.", Capacity = 100, AverageRating = 3.8, RestaurantOwnerId = 24 },
+                 new Restaurant { Id = 5, Name = "Green Wave", Address = "Njegoševa 21", City = "Belgrade", Description = "Vegan restaurant with organic dishes.", Capacity = 50, AverageRating = 5, RestaurantOwnerId = 25 },
+                 new Restaurant { Id = 6, Name = "Casa del Mar", Address = "Obala 7", City = "Herceg Novi", Description = "Mediterranean cuisine with a sea view.", Capacity = 90, AverageRating = 5, RestaurantOwnerId = 25 },
+                 new Restaurant { Id = 7, Name = "Grandma's Kitchen", Address = "Vojvode Mišića 14", City = "Kragujevac", Description = "Traditional homemade Serbian food.", Capacity = 70, AverageRating = 5, RestaurantOwnerId = 26 },
+                 new Restaurant { Id = 8, Name = "Urban Spoon", Address = "Zmaj Jovina 9", City = "Novi Sad", Description = "Fusion cuisine in a modern setting.", Capacity = 85, AverageRating = 5, RestaurantOwnerId = 27 },
+                 new Restaurant { Id = 9, Name = "Le Petit Café", Address = "Francuska 5", City = "Belgrade", Description = "French bistro with croissants and wine.", Capacity = 45, AverageRating = 8, RestaurantOwnerId = 27 },
+                 new Restaurant { Id = 10, Name = "Tandoori Flame", Address = "Đure Jakšića 33", City = "Zrenjanin", Description = "Indian cuisine with authentic spices.", Capacity = 60, AverageRating = 9, RestaurantOwnerId = 28 },
+                 new Restaurant { Id = 11, Name = "Burger Lab", Address = "Miletićeva 18", City = "Pančevo", Description = "Gourmet burgers with homemade sauces.", Capacity = 55, AverageRating = 7, RestaurantOwnerId = 29 },
+                 new Restaurant { Id = 12, Name = "Fish Pot", Address = "Dunavska 2", City = "Sombor", Description = "Seafood specialties and river fish.", Capacity = 75, AverageRating = 5, RestaurantOwnerId = 30 },
+                 new Restaurant { Id = 13, Name = "Pasta Mia", Address = "Kneza Miloša 27", City = "Belgrade", Description = "Fresh pasta and Italian desserts.", Capacity = 65, AverageRating = 5.4, RestaurantOwnerId = 31 },
+                 new Restaurant { Id = 14, Name = "Orient Express", Address = "Nikole Pašića 10", City = "Niš", Description = "Asian cuisine with wok and curry dishes.", Capacity = 80, AverageRating = 6.7, RestaurantOwnerId = 32 },
+                 new Restaurant { Id = 15, Name = "Steakhouse 21", Address = "Bulevar Evrope 21", City = "Novi Sad", Description = "Premium steaks and fine wines.", Capacity = 95, AverageRating = 8.6, RestaurantOwnerId = 33 },
+                 new Restaurant { Id = 16, Name = "Nest", Address = "Gundulićeva 6", City = "Belgrade", Description = "Rustic ambiance with local specialties.", Capacity = 70, AverageRating = 5, RestaurantOwnerId = 32 },
+                 new Restaurant { Id = 17, Name = "Tapas Bar", Address = "Petrovaradinska 4", City = "Novi Sad", Description = "Spanish tapas and sangria.", Capacity = 60, AverageRating = 5, RestaurantOwnerId = 28 },
+                 new Restaurant { Id = 18, Name = "Marko's Tavern", Address = "Glavna 1", City = "Valjevo", Description = "Authentic tavern with live folk music.", Capacity = 100, AverageRating = 5, RestaurantOwnerId = 28 },
+                 new Restaurant { Id = 19, Name = "Thai Orchid", Address = "Vojvode Stepe 19", City = "Belgrade", Description = "Thai cuisine with exotic flavors.", Capacity = 50, AverageRating = 5, RestaurantOwnerId = 29 },
+                 new Restaurant { Id = 20, Name = "Nordic Table", Address = "Skandinavska 3", City = "Novi Sad", Description = "Nordic cuisine with minimalist design.", Capacity = 40, AverageRating = 5, RestaurantOwnerId = 30 }
+             );
 
             modelBuilder.Entity<Meal>().HasData(
                 new Meal { Id = 1, MealName = "Stuffed Peppers", Description = "Homemade peppers stuffed with minced meat and rice.", Price = 6.5, MealImageUrl = null, RestaurantId = 1 },

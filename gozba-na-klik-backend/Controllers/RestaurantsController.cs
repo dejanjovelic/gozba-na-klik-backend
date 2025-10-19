@@ -8,11 +8,11 @@ namespace gozba_na_klik_backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RestaurantController : ControllerBase
+    public class RestaurantsController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
 
-        public RestaurantController(IRestaurantService restaurantService)
+        public RestaurantsController(IRestaurantService restaurantService)
         {
             _restaurantService = restaurantService;
         }

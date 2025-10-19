@@ -22,10 +22,10 @@ namespace gozba_na_klik_backend_Tests
         public async Task GettingCustomerAllergens_throwsNotFoundException_whenCustomerDoesNotExist(int id)
         {
             var stubRepository = createRepository();
-            var allergenMockRepo = new Mock<IAllergenRepository>();
+            var allergenMockService = new Mock<IAllergenService>();
             var addressMockRepo = new Mock<IAddressRepository>();
 
-            var servise = new CustomerService(stubRepository, allergenMockRepo.Object, addressMockRepo.Object);
+            var servise = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object);
 
             var ex = await Assert.ThrowsAsync<NotFoundException>(() => servise.GetAllCustomerAllergensAsync(id));
             ex.Message.ShouldContain($"Customer with ID: {id} not found.");
@@ -36,10 +36,10 @@ namespace gozba_na_klik_backend_Tests
         public async Task GetAllCustomerAllergensAsync_ShouldReturnAllergens_WhenCustomerExists(int id)
         {
             var stubRepository = createRepository();
-            var allergenMockRepo = new Mock<IAllergenRepository>();
+            var allergenMockService = new Mock<IAllergenService>();
             var addressMockRepo = new Mock<IAddressRepository>();
 
-            var service = new CustomerService(stubRepository, allergenMockRepo.Object, addressMockRepo.Object);
+            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object);
 
             var result = await service.GetAllCustomerAllergensAsync(id);
             result.ShouldNotBeNull();
@@ -52,9 +52,9 @@ namespace gozba_na_klik_backend_Tests
         public async Task GetAllCustomerAllergensAsync_ShouldReturnEmptyList_WhenCustomerHasNoAllergens(int id)
         {
             var stubRepository = createRepository();
-            var allergenMockRepo = new Mock<IAllergenRepository>();
+            var allergenMockService = new Mock<IAllergenService>();
             var addressMockRepo = new Mock<IAddressRepository>();
-            var service = new CustomerService(stubRepository, allergenMockRepo.Object, addressMockRepo.Object);
+            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object);
 
             var result = await service.GetAllCustomerAllergensAsync(id);
 
@@ -73,10 +73,10 @@ namespace gozba_na_klik_backend_Tests
         public async Task UpdateCustomerAllergensAsync_ShouldThrowNotFoundException_WhenCustomerDoesNotExist(int customerId, List<int> allergenIds)
         {
             var stubRepository = createRepository();
-            var allergenMockRepo = new Mock<IAllergenRepository>();
+            var allergenMockService = new Mock<IAllergenService>();
             var addressMockRepo = new Mock<IAddressRepository>();
 
-            var service = new CustomerService(stubRepository, allergenMockRepo.Object, addressMockRepo.Object);
+            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object);
 
             await Assert.ThrowsAsync<NotFoundException>(() => service.UpdateCustomerAllergensAsync(customerId, allergenIds));
         }
@@ -92,19 +92,19 @@ namespace gozba_na_klik_backend_Tests
         public async Task UpdateCustomerAllergensAsync_ShouldThrowBadRequestException_WhenAllergenFromListDoesNotExist(int customerId, List<int> allergenIds)
         {
             var stubRepository = createRepository();
-            var allergenMockRepo = new Mock<IAllergenRepository>();
+            var allergenMockService = new Mock<IAllergenService>();
             var addressMockRepo = new Mock<IAddressRepository>();
-            allergenMockRepo
-            .Setup(repo => repo.GetAllSelectedAllergensAsync(It.IsAny<List<int>>()))
+            allergenMockService
+            .Setup(service => service.GetAllSelectedAllergensAsync(It.IsAny<List<int>>()))
             .ReturnsAsync((List<int> allergenIds) =>
             allergenIds.Where(id => id != 2)
            .Select(id => new Allergen { Id = id, Name = $"Allergen{id}" })
            .ToList());
 
 
-            var service = new CustomerService(stubRepository, allergenMockRepo.Object, addressMockRepo.Object);
-
+            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object);
             await Assert.ThrowsAsync<BadRequestException>(() => service.UpdateCustomerAllergensAsync(customerId, allergenIds));
+
         }
 
 
@@ -113,18 +113,19 @@ namespace gozba_na_klik_backend_Tests
         public async Task UpdateCustomerAllergensAsync_ShouldReturnListOfAllergen_WhenAllAllergensFromListExist(int customerId, List<int> allergenIds)
         {
             var stubRepository = createRepository();
-            var allergenMockRepo = new Mock<IAllergenRepository>();
+            var allergenMockService = new Mock<IAllergenService>();
             var addressMockRepo = new Mock<IAddressRepository>();
-            allergenMockRepo
-           .Setup(repo => repo.GetAllSelectedAllergensAsync(It.IsAny<List<int>>()))
+            allergenMockService
+           .Setup(allergenService => allergenService.GetAllSelectedAllergensAsync(It.IsAny<List<int>>()))
            .ReturnsAsync((List<int> allergenIds) => allergenIds
            .Select(id => new Allergen { Id = id, Name = $"Allergen{id}" })
            .ToList());
 
-            var service = new CustomerService(stubRepository, allergenMockRepo.Object, addressMockRepo.Object);
+            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object);
 
             Customer result = await service.UpdateCustomerAllergensAsync(customerId, allergenIds);
 
+           
             result.ShouldNotBeNull();
             result.Allergens.ShouldNotBeNull();
             result.Allergens.Count.ShouldBe(3);

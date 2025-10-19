@@ -82,6 +82,14 @@ namespace gozba_na_klik_backend.Services
             {
                 restaurants = restaurants.Where(restaurant => restaurant.Capacity <= filter.CapcityTo);
             }
+            if (filter.AverageRatingform != null && filter.AverageRatingform > 0)
+            {
+                restaurants = restaurants.Where(restaurant => restaurant.AverageRating >= filter.AverageRatingform);
+            }
+            if (filter.AverageRatingTo != null)
+            {
+                restaurants = restaurants.Where(restaurants => restaurants.AverageRating <= filter.AverageRatingTo);
+            }
             return restaurants;
         }
 
@@ -93,7 +101,9 @@ namespace gozba_na_klik_backend.Services
                 (int)RestaurantSortType.NAME_DESC => restaurants.OrderByDescending(restaurant => restaurant.Name),
                 (int)RestaurantSortType.CAPACITY_ASC => restaurants.OrderBy(restaurant => restaurant.Capacity),
                 (int)RestaurantSortType.CAPACITY_DESC => restaurants.OrderByDescending(restaurant => restaurant.Capacity),
-                _ => restaurants.OrderBy(restaurant => restaurant.Name),
+                (int)RestaurantSortType.AVERAGE_RATING_ASC => restaurants.OrderBy(restaurant => restaurant.AverageRating),
+                (int)RestaurantSortType.AVERAGE_RATING_DECS => restaurants.OrderByDescending(restaurant => restaurant.AverageRating),
+                _ => restaurants.OrderBy(restaurant => restaurant.Name)
             };
         }
     }

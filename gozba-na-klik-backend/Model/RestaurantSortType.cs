@@ -5,6 +5,8 @@
         NAME_ASC, 
         NAME_DESC,
         CAPACITY_ASC,
-        CAPACITY_DESC
+        CAPACITY_DESC,
+        AVERAGE_RATING_ASC,
+        AVERAGE_RATING_DECS
     }
 }
