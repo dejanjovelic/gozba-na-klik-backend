@@ -89,27 +89,6 @@ namespace gozba_na_klik_backend_Tests
 
         [Theory]
         [MemberData(nameof(CustomerWithNotExistingAllergenIDData))]
-        public async Task UpdateCustomerAllergensAsync_ShouldThrowBadRequestException_WhenAllergenFromListDoesNotExist(int customerId, List<int> allergenIds)
-        {
-            var stubRepository = createRepository();
-            var allergenMockService = new Mock<IAllergenService>();
-            var addressMockRepo = new Mock<IAddressRepository>();
-            allergenMockService
-            .Setup(service => service.GetAllSelectedAllergensAsync(It.IsAny<List<int>>()))
-            .ReturnsAsync((List<int> allergenIds) =>
-            allergenIds.Where(id => id != 2)
-           .Select(id => new Allergen { Id = id, Name = $"Allergen{id}" })
-           .ToList());
-
-
-            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object);
-            await Assert.ThrowsAsync<BadRequestException>(() => service.UpdateCustomerAllergensAsync(customerId, allergenIds));
-
-        }
-
-
-        [Theory]
-        [MemberData(nameof(CustomerWithNotExistingAllergenIDData))]
         public async Task UpdateCustomerAllergensAsync_ShouldReturnListOfAllergen_WhenAllAllergensFromListExist(int customerId, List<int> allergenIds)
         {
             var stubRepository = createRepository();

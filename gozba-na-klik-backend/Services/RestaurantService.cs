@@ -74,15 +74,15 @@ namespace gozba_na_klik_backend.Services
             {
                 restaurants = restaurants.Where(restaurant => restaurant.City.ToLower().Contains(filter.City.ToLower()));
             }
-            if (filter.CapcityFrom != null && filter.CapcityFrom > 0)
+            if (filter.CapacityFrom != null )
             {
-                restaurants = restaurants.Where(restaurant => restaurant.Capacity >= filter.CapcityFrom);
+                restaurants = restaurants.Where(restaurant => restaurant.Capacity >= filter.CapacityFrom);
             }
-            if (filter.CapcityTo != null && filter.CapcityTo > 0)
+            if (filter.CapacityTo != null )
             {
-                restaurants = restaurants.Where(restaurant => restaurant.Capacity <= filter.CapcityTo);
+                restaurants = restaurants.Where(restaurant => restaurant.Capacity <= filter.CapacityTo);
             }
-            if (filter.AverageRatingform != null && filter.AverageRatingform > 0)
+            if (filter.AverageRatingform != null)
             {
                 restaurants = restaurants.Where(restaurant => restaurant.AverageRating >= filter.AverageRatingform);
             }
