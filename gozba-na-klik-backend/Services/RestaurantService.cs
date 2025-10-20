@@ -6,16 +6,19 @@ using gozba_na_klik_backend.Model.IRepositories;
 using gozba_na_klik_backend.Exceptions;
 using gozba_na_klik_backend.Services.IServices;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace gozba_na_klik_backend.Services
 {
     public class RestaurantService : IRestaurantService
     {
         private readonly IRestaurantRepository _restaurantRepository;
+        private readonly IMapper _mapper;
 
-        public RestaurantService(IRestaurantRepository restaurantRepository)
+        public RestaurantService(IRestaurantRepository restaurantRepository, IMapper mapper)
         {
             _restaurantRepository = restaurantRepository;
+            _mapper = mapper;
         }
 
         public async Task<PaginatedListDto<Restaurant>> GetAllRestaurantsPaginatedAsync(int page, int pageSize)
@@ -105,6 +108,18 @@ namespace gozba_na_klik_backend.Services
                 (int)RestaurantSortType.AVERAGE_RATING_DECS => restaurants.OrderByDescending(restaurant => restaurant.AverageRating),
                 _ => restaurants.OrderBy(restaurant => restaurant.Name)
             };
+        }
+
+        public async Task<RestaurantWithMealsDto> GetRestaurantWithMealsAsync(int restaurantId)
+        {
+            Restaurant restaurant = await _restaurantRepository.GetRestaurantByIdAsync(restaurantId);
+
+            if (restaurant == null)
+            {
+                throw new NotFoundException($"Restaurant with ID {restaurantId} not found.");
+            }
+
+            return _mapper.Map<RestaurantWithMealsDto>(restaurant);
         }
     }
 }

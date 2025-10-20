@@ -37,5 +37,12 @@ namespace gozba_na_klik_backend.Repository
         {
             return await _context.Restaurants.CountAsync();
         }
+
+        public async Task<Restaurant?> GetRestaurantByIdAsync(int restaurantId)
+        {
+            return await _context.Restaurants
+                .Include(r => r.MealsOnMenu)
+                .FirstOrDefaultAsync(r => r.Id == restaurantId);
+        }
     }
 }
