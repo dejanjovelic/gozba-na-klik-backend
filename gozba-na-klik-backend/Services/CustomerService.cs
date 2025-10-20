@@ -4,19 +4,20 @@ using gozba_na_klik_backend.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using gozba_na_klik_backend.Model.IRepositories;
 using gozba_na_klik_backend.Servises.IServices;
+using gozba_na_klik_backend.Services.IServices;
 
 namespace gozba_na_klik_backend.Servises
 {
     public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository;
-        private readonly IAllergenRepository _allergenRepository; //treba prebaciti na Iterface
+        private readonly IAllergenService _allergenService; //treba prebaciti na Iterface
         private readonly IAddressRepository _addressRepository;
 
-        public CustomerService(ICustomerRepository customerRepository, IAllergenRepository allergenRepository, IAddressRepository addressRepository)
+        public CustomerService(ICustomerRepository customerRepository, IAllergenService allergenService, IAddressRepository addressRepository)
         {
             _customerRepository = customerRepository;
-            _allergenRepository = allergenRepository;
+            _allergenService = allergenService;
             _addressRepository = addressRepository;
         }
         public async Task<Customer> CreateAsync(Customer customer)
@@ -66,13 +67,8 @@ namespace gozba_na_klik_backend.Servises
                 throw new NotFoundException($"Customer with ID {customerId} not found.");
             }
 
-            List<Allergen> allergens = await _allergenRepository.GetAllSelectedAllergensAsync(allergenIds);
-
-            if (allergens.Count != allergenIds.Count)
-            {
-                throw new BadRequestException("One or more allergens do not exist.");
-            }
-
+            List<Allergen> allergens = await _allergenService.GetAllSelectedAllergensAsync(allergenIds);
+            
             Customer updatedCustomer = await _customerRepository.UpdateCustomerAllergensAsync(customer, allergens);
             return updatedCustomer;
         }
@@ -143,7 +139,5 @@ namespace gozba_na_klik_backend.Servises
                 throw new NotFoundException($"Address with ID: {addressId} not found");
             }
         }
-
     }
-
 }
