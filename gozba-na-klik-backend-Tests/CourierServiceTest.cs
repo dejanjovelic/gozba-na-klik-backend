@@ -61,31 +61,35 @@ namespace gozba_na_klik_backend_Tests
             var mockRepo = new Mock<ICourierRepository>();
             var service = new CourierService(mockRepo.Object);
 
-            var courier = new Courier { Id = 14, Name = "Jessica" };
+            var courierId = 14;
             var workingHours = new List<WorkingHours>
-            {
-                new WorkingHours
-                {
-                    DayOfTheWeek = DayOfWeek.Monday,
-                    StartingTime = TimeSpan.FromHours(9),  
-                    EndingTime = TimeSpan.FromHours(16)    
-                },
-                new WorkingHours
-                {
-                    DayOfTheWeek = DayOfWeek.Tuesday,
-                    StartingTime = TimeSpan.FromHours(10),
-                    EndingTime = TimeSpan.FromHours(18)
-                }
-            };
+    {
+        new WorkingHours
+        {
+            DayOfTheWeek = DayOfWeek.Monday,
+            StartingTime = TimeSpan.FromHours(9),
+            EndingTime = TimeSpan.FromHours(16)
+        }
+    };
+
+            mockRepo.Setup(r => r.GetByIdAsync(courierId))
+                    .ReturnsAsync(new Courier { Id = courierId, Name = "Jessica" });
+
+            mockRepo.Setup(r => r.UpdateWorkingHoursAsync(It.IsAny<Courier>(), It.IsAny<List<WorkingHours>>()))
+                    .Returns(Task.CompletedTask);
 
             // Act
-            await service.UpdateWorkingHoursAsync(courier, workingHours);
+            await service.UpdateWorkingHoursAsync(courierId, workingHours);
 
             // Assert
-            mockRepo.Verify(r => r.UpdateWorkingHoursAsync(courier, workingHours), Times.Once);
-
+            mockRepo.Verify(
+                r => r.UpdateWorkingHoursAsync(
+                    It.Is<Courier>(c => c.Id == courierId),
+                    workingHours),
+                Times.Once
+            );
         }
-        
+
         private static ICourierRepository createRepository()
         {
             var _Couriers = new List<Courier>

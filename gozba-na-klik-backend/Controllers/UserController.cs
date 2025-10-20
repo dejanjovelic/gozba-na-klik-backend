@@ -22,35 +22,15 @@ namespace gozba_na_klik_backend.Controllers
             var username = body["username"];
             var password = body["password"];
 
-            var user = await _userService.GetByUsernameAsync(username);
-
-            if (user == null || user.Password != password)
-            {
-                return Unauthorized(new { Message = "Invalid username or password" });
-            }
-
-            return Ok(new
-            {
-                Id = user.Id,
-                Username = user.Username,
-                Name = user.Name,
-                Surname = user.Surname,
-                ProfileImageUrl = user.ProfileImageUrl,
-                Role = user.Role.ToString()
-            });
+            var user = await _userService.LoginAsync(username, password);
+            return Ok(user);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
-            try
-            {
-                return Ok(await _userService.GetAllAsync());
-            }
-            catch (Exception ex)
-            {
-                return Problem("An error occured while fetching users.");
-            }
+            var users = await _userService.GetAllAsync();
+            return Ok(users);
         }
     }
 }
