@@ -1,4 +1,6 @@
 
+using Castle.Core.Resource;
+using gozba_na_klik_backend.Exceptions;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
 using gozba_na_klik_backend.Servises;
@@ -36,6 +38,30 @@ namespace gozba_na_klik_backend_Tests
             result.ShouldBeEmpty();
         }
 
+        public static IEnumerable<object[]> AllergenIdData =>
+        new List<object[]>
+        {
+            new object[]{ new List<int> {1,2,3,4} }
+        };
+
+
+        [Theory]
+        [MemberData(nameof(AllergenIdData))]
+        public async Task GetAllSelectedAllergensAsync_ShouldThrowBadRequestException_WhenAllergenIdDoesNotExist(List<int> allergenIds)
+        {
+            var stubRepository = createRepository();
+            var service = new AllergenService(stubRepository);
+
+
+            var result = await service.GetAllSelectedAllergensAsync(allergenIds);
+
+            result.ShouldNotBeNull();
+            result.Count.ShouldBe(allergenIds.Count);
+            result.ShouldContain(result.FirstOrDefault(allergen=>allergen.Id==1));
+            result.ShouldContain(result.FirstOrDefault(allergen => allergen.Name.ToLower() == "oats"));
+        }
+
+
 
         private static IAllergenRepository createRepository()
         {
@@ -51,6 +77,11 @@ namespace gozba_na_klik_backend_Tests
 
             var stubRepository = new Mock<IAllergenRepository>();
             stubRepository.Setup(a => a.GetAllAsync()).ReturnsAsync(allergens);
+
+            stubRepository
+                .Setup(r => r.GetAllSelectedAllergensAsync(It.IsAny<List<int>>()))
+                .ReturnsAsync((List<int> allergenIds) => allergens.Where(allergen => allergenIds.Contains(allergen.Id)).ToList());
+
             return stubRepository.Object;
         }
     }
