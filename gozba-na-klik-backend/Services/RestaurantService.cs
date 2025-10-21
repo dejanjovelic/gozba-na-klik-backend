@@ -41,6 +41,7 @@ namespace gozba_na_klik_backend.Services
             }
             return restaurantSortTypeOptions;
         }
+
         public async Task<PaginatedListDto<Restaurant>> GetAllFilteredAndSortedAndPagedAsync(RestaurantFilterDto restaurantFilter, int sortType, int page, int pageSize)
         {
             if (page < 1)
