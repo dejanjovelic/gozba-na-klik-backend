@@ -46,6 +46,10 @@ namespace gozba_na_klik_backend
             builder.Services.AddScoped<IAddressRepository, AddressRepository>();
             builder.Services.AddScoped<IAllergenService, AllergenService>();
             builder.Services.AddScoped<IAllergenRepository, AllergenRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<ICourierRepository, CourierRepository>();
+            builder.Services.AddScoped<ICourierService, CourierService>();
             builder.Services.AddScoped<IRestaurantService, RestaurantService>();
             builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
 
