@@ -11,6 +11,7 @@ namespace gozba_na_klik_backend.Model
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<Meal> Meals { get; set; }
+        public DbSet<Courier> Couriers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

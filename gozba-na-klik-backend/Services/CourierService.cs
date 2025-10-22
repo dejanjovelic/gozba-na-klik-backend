@@ -63,5 +63,27 @@ namespace gozba_na_klik_backend.Services
             }
             await _courierRepository.UpdateWorkingHoursAsync(courier, workingHours);               
         }
+        public async Task UpdateCourierStatusAsync()
+        {
+            try
+            {
+                await _courierRepository.UpdateCourierStatusAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Unexpected error while updating courier statuses.", ex);
+            }
+        }
+        public async Task<List<Courier>> GetAllAsync()
+        {
+            try
+            {
+                return await _courierRepository.GetAllAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Unexpected error while updating courier statuses.", ex);
+            }
+        }
     }
 }

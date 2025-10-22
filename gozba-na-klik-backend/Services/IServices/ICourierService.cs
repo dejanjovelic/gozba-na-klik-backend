@@ -8,5 +8,7 @@ namespace gozba_na_klik_backend.Services.IServices
         Task<Courier> CreateAsync(Courier courier);
         Task<CourierDto> GetByIdAsync(int courierId);
         Task UpdateWorkingHoursAsync(int courierId, List<WorkingHours> workingHours);
+        Task<List<Courier>> GetAllAsync();
+        Task UpdateCourierStatusAsync();
     }
 }
