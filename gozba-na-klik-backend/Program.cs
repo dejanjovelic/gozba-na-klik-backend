@@ -4,8 +4,8 @@ using gozba_na_klik_backend.Model.IRepositories;
 using gozba_na_klik_backend.Repository;
 using gozba_na_klik_backend.Services;
 using gozba_na_klik_backend.Services.IServices;
-using gozba_na_klik_backend.Servises;
-using gozba_na_klik_backend.Servises.IServices;
+using gozba_na_klik_backend.Services;
+using gozba_na_klik_backend.Services.IServices;
 using gozba_na_klik_backend.Settings;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -48,6 +48,13 @@ namespace gozba_na_klik_backend
             builder.Services.AddScoped<IAllergenRepository, AllergenRepository>();
             builder.Services.AddScoped<IRestaurantService, RestaurantService>();
             builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
+            builder.Services.AddScoped<IMealService, MealService>();
+            builder.Services.AddScoped<IMealRepository, MealRepository>();
+
+            builder.Services.AddAutoMapper(cfg =>
+            {
+                cfg.AddProfile<MealProfile>();
+            });
 
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

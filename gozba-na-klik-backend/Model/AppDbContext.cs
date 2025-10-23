@@ -29,6 +29,15 @@ namespace gozba_na_klik_backend.Model
                 j => j.HasOne<Customer>().WithMany().HasForeignKey("CustomerId").OnDelete(DeleteBehavior.Cascade)
                 );
 
+            modelBuilder.Entity<Meal>()
+                .HasMany(meal => meal.Allergens)
+                .WithMany("Meals")
+                .UsingEntity<Dictionary<string, object>>(
+                "MealAllergens",
+                j=>j.HasOne<Allergen>().WithMany().HasForeignKey("AllergenId").OnDelete(DeleteBehavior.Cascade),
+                j=>j.HasOne<Meal>().WithMany().HasForeignKey("MealId").OnDelete(DeleteBehavior.Cascade)
+                );
+
             modelBuilder.Entity<Restaurant>()
                 .HasMany(restaurant=> restaurant.MealsOnMenu)
                 .WithOne()
@@ -163,27 +172,27 @@ namespace gozba_na_klik_backend.Model
             );
 
             modelBuilder.Entity<Restaurant>().HasData(
-                 new Restaurant { Id = 1, Name = "Bistro Nova", Address = "Kralja Petra 12", City = "Belgrade", Description = "Modern Serbian cuisine with a twist.", Capacity = 60, AverageRating = 6.5, RestaurantOwnerId = 24 },
-                 new Restaurant { Id = 2, Name = "La Tavola", Address = "Cara Dušana 45", City = "Novi Sad", Description = "Authentic Italian trattoria.", Capacity = 80, AverageRating = 9.5, RestaurantOwnerId = 24 },
-                 new Restaurant { Id = 3, Name = "Sakura Zen", Address = "Bulevar Oslobođenja 88", City = "Niš", Description = "Japanese sushi bar with minimalist ambiance.", Capacity = 40, AverageRating = 8.2, RestaurantOwnerId = 24 },
-                 new Restaurant { Id = 4, Name = "Grill & Chill", Address = "Trg Slobode 3", City = "Subotica", Description = "American-style BBQ with craft beers.", Capacity = 100, AverageRating = 3.8, RestaurantOwnerId = 24 },
-                 new Restaurant { Id = 5, Name = "Green Wave", Address = "Njegoševa 21", City = "Belgrade", Description = "Vegan restaurant with organic dishes.", Capacity = 50, AverageRating = 5, RestaurantOwnerId = 25 },
-                 new Restaurant { Id = 6, Name = "Casa del Mar", Address = "Obala 7", City = "Herceg Novi", Description = "Mediterranean cuisine with a sea view.", Capacity = 90, AverageRating = 5, RestaurantOwnerId = 25 },
-                 new Restaurant { Id = 7, Name = "Grandma's Kitchen", Address = "Vojvode Mišića 14", City = "Kragujevac", Description = "Traditional homemade Serbian food.", Capacity = 70, AverageRating = 5, RestaurantOwnerId = 26 },
-                 new Restaurant { Id = 8, Name = "Urban Spoon", Address = "Zmaj Jovina 9", City = "Novi Sad", Description = "Fusion cuisine in a modern setting.", Capacity = 85, AverageRating = 5, RestaurantOwnerId = 27 },
-                 new Restaurant { Id = 9, Name = "Le Petit Café", Address = "Francuska 5", City = "Belgrade", Description = "French bistro with croissants and wine.", Capacity = 45, AverageRating = 8, RestaurantOwnerId = 27 },
-                 new Restaurant { Id = 10, Name = "Tandoori Flame", Address = "Đure Jakšića 33", City = "Zrenjanin", Description = "Indian cuisine with authentic spices.", Capacity = 60, AverageRating = 9, RestaurantOwnerId = 28 },
-                 new Restaurant { Id = 11, Name = "Burger Lab", Address = "Miletićeva 18", City = "Pančevo", Description = "Gourmet burgers with homemade sauces.", Capacity = 55, AverageRating = 7, RestaurantOwnerId = 29 },
-                 new Restaurant { Id = 12, Name = "Fish Pot", Address = "Dunavska 2", City = "Sombor", Description = "Seafood specialties and river fish.", Capacity = 75, AverageRating = 5, RestaurantOwnerId = 30 },
-                 new Restaurant { Id = 13, Name = "Pasta Mia", Address = "Kneza Miloša 27", City = "Belgrade", Description = "Fresh pasta and Italian desserts.", Capacity = 65, AverageRating = 5.4, RestaurantOwnerId = 31 },
-                 new Restaurant { Id = 14, Name = "Orient Express", Address = "Nikole Pašića 10", City = "Niš", Description = "Asian cuisine with wok and curry dishes.", Capacity = 80, AverageRating = 6.7, RestaurantOwnerId = 32 },
-                 new Restaurant { Id = 15, Name = "Steakhouse 21", Address = "Bulevar Evrope 21", City = "Novi Sad", Description = "Premium steaks and fine wines.", Capacity = 95, AverageRating = 8.6, RestaurantOwnerId = 33 },
-                 new Restaurant { Id = 16, Name = "Nest", Address = "Gundulićeva 6", City = "Belgrade", Description = "Rustic ambiance with local specialties.", Capacity = 70, AverageRating = 5, RestaurantOwnerId = 32 },
-                 new Restaurant { Id = 17, Name = "Tapas Bar", Address = "Petrovaradinska 4", City = "Novi Sad", Description = "Spanish tapas and sangria.", Capacity = 60, AverageRating = 5, RestaurantOwnerId = 28 },
-                 new Restaurant { Id = 18, Name = "Marko's Tavern", Address = "Glavna 1", City = "Valjevo", Description = "Authentic tavern with live folk music.", Capacity = 100, AverageRating = 5, RestaurantOwnerId = 28 },
-                 new Restaurant { Id = 19, Name = "Thai Orchid", Address = "Vojvode Stepe 19", City = "Belgrade", Description = "Thai cuisine with exotic flavors.", Capacity = 50, AverageRating = 5, RestaurantOwnerId = 29 },
-                 new Restaurant { Id = 20, Name = "Nordic Table", Address = "Skandinavska 3", City = "Novi Sad", Description = "Nordic cuisine with minimalist design.", Capacity = 40, AverageRating = 5, RestaurantOwnerId = 30 }
-             );
+                 new Restaurant { Id = 1, Name = "Bistro Nova", Address = "Kralja Petra 12", City = "Belgrade", Description = "Modern Serbian cuisine with a twist.", Capacity = 60, AverageRating = 6.5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760980868/1701656104-Le-Petiti-Bistro-Blue-Centar-13_adciqg.jpg", RestaurantOwnerId = 24 },
+                 new Restaurant { Id = 2, Name = "La Tavola", Address = "Cara Dušana 45", City = "Novi Sad", Description = "Authentic Italian trattoria.", Capacity = 80, AverageRating = 9.5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981334/caption_e52wiq.jpg", RestaurantOwnerId = 24 },
+                 new Restaurant { Id = 3, Name = "Sakura Zen", Address = "Bulevar Oslobođenja 88", City = "Niš", Description = "Japanese sushi bar with minimalist ambiance.", Capacity = 40, AverageRating = 8.2, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981371/348s_o6zhl9.jpg", RestaurantOwnerId = 24 },
+                 new Restaurant { Id = 4, Name = "Grill & Chill", Address = "Trg Slobode 3", City = "Subotica", Description = "American-style BBQ with craft beers.", Capacity = 100, AverageRating = 3.8, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981740/348s_jvrtl3.jpg", RestaurantOwnerId = 24 },
+                 new Restaurant { Id = 5, Name = "Green Wave", Address = "Njegoševa 21", City = "Belgrade", Description = "Vegan restaurant with organic dishes.", Capacity = 50, AverageRating = 5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981837/AC9h4noKhAJV-_f5ucmgN7g1uu9vls7RQwFmyblYG2NoZPvK95_Go_jejqToiFswNCJ4-_fS2fTYgpCI5WdS_gfmLhjPLdx3iAPbXUCdeikQHC9o-ZPvLnI8UwM-jWS6mxXZ_bgEMXao_s680-w680-h510-rw_jdbfsp.webp", RestaurantOwnerId = 25 },
+                 new Restaurant { Id = 6, Name = "Casa del Mar", Address = "Obala 7", City = "Herceg Novi", Description = "Mediterranean cuisine with a sea view.", Capacity = 90, AverageRating = 5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981920/LaDama_10881_20_1_ojaujg.jpg", RestaurantOwnerId = 25 },
+                 new Restaurant { Id = 7, Name = "Grandma's Kitchen", Address = "Vojvode Mišića 14", City = "Kragujevac", Description = "Traditional homemade Serbian food.", Capacity = 70, AverageRating = 5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981760/im-65599456_e7zznz.jpg", RestaurantOwnerId = 26 },
+                 new Restaurant { Id = 8, Name = "Urban Spoon", Address = "Zmaj Jovina 9", City = "Novi Sad", Description = "Fusion cuisine in a modern setting.", Capacity = 85, AverageRating = 5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760982086/5dc498fe695b58645d6f1dbc_jexb15.png", RestaurantOwnerId = 27 },
+                 new Restaurant { Id = 9, Name = "Le Petit Café", Address = "Francuska 5", City = "Belgrade", Description = "French bistro with croissants and wine.", Capacity = 45, AverageRating = 8, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981871/images_yybf2j.jpg", RestaurantOwnerId = 27 },
+                 new Restaurant { Id = 10, Name = "Tandoori Flame", Address = "Đure Jakšića 33", City = "Zrenjanin", Description = "Indian cuisine with authentic spices.", Capacity = 60, AverageRating = 9, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985797/a-chef-is-cooking-in-his-restaurants-kitchen_gfpjj0.jpg", RestaurantOwnerId = 28 },
+                 new Restaurant { Id = 11, Name = "Burger Lab", Address = "Miletićeva 18", City = "Pančevo", Description = "Gourmet burgers with homemade sauces.", Capacity = 55, AverageRating = 7, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985725/premium_photo-1661883237884-263e8de8869b_fhmc5u.jpg", RestaurantOwnerId = 29 },
+                 new Restaurant { Id = 12, Name = "Fish Pot", Address = "Dunavska 2", City = "Sombor", Description = "Seafood specialties and river fish.", Capacity = 75, AverageRating = 5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981672/348s_gedljh.jpg", RestaurantOwnerId = 30 },
+                 new Restaurant { Id = 13, Name = "Pasta Mia", Address = "Kneza Miloša 27", City = "Belgrade", Description = "Fresh pasta and Italian desserts.", Capacity = 65, AverageRating = 5.4, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985883/348s_fheyvs.jpg", RestaurantOwnerId = 31 },
+                 new Restaurant { Id = 14, Name = "Orient Express", Address = "Nikole Pašića 10", City = "Niš", Description = "Asian cuisine with wok and curry dishes.", Capacity = 80, AverageRating = 6.7, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985977/348s_pumoab.jpg", RestaurantOwnerId = 32 },
+                 new Restaurant { Id = 15, Name = "Steakhouse 21", Address = "Bulevar Evrope 21", City = "Novi Sad", Description = "Premium steaks and fine wines.", Capacity = 95, AverageRating = 8.6, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760986014/ejhsj8xcmjuwdsi8qdmj.jpg", RestaurantOwnerId = 33 },
+                 new Restaurant { Id = 16, Name = "Nest", Address = "Gundulićeva 6", City = "Belgrade", Description = "Rustic ambiance with local specialties.", Capacity = 70, AverageRating = 5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985649/Most_Beautiful_Restaurants_scotland_December23_PR_Global_pafswr.jpg", RestaurantOwnerId = 32 },
+                 new Restaurant { Id = 17, Name = "Tapas Bar", Address = "Petrovaradinska 4", City = "Novi Sad", Description = "Spanish tapas and sangria.", Capacity = 60, AverageRating = 5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760970771/slikaRestorana1_hibuiy.png", RestaurantOwnerId = 28 },
+                 new Restaurant { Id = 18, Name = "Marko's Tavern", Address = "Glavna 1", City = "Valjevo", Description = "Authentic tavern with live folk music.", Capacity = 100, AverageRating = 5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985542/07best-restaurants-nashville15-jbkq-videoSixteenByNineJumbo1600_ns15cb.jpg", RestaurantOwnerId = 28 },
+                 new Restaurant { Id = 19, Name = "Thai Orchid", Address = "Vojvode Stepe 19", City = "Belgrade", Description = "Thai cuisine with exotic flavors.", Capacity = 50, AverageRating = 5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760986076/ix3atyp8yzjh6a25r2ms.jpg", RestaurantOwnerId = 29 },
+                 new Restaurant { Id = 20, Name = "Nordic Table", Address = "Skandinavska 3", City = "Novi Sad", Description = "Nordic cuisine with minimalist design.", Capacity = 40, AverageRating = 5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760986113/Hakkaiza-industrial-restaurant-design2_vyopcv.jpg", RestaurantOwnerId = 30 }
+            );
 
             modelBuilder.Entity<Meal>().HasData(
                 new Meal { Id = 1, MealName = "Stuffed Peppers", Description = "Homemade peppers stuffed with minced meat and rice.", Price = 6.5, MealImageUrl = null, RestaurantId = 1 },
@@ -207,6 +216,87 @@ namespace gozba_na_klik_backend.Model
                 new Meal { Id = 19, MealName = "Tom Yum Soup", Description = "Spicy Thai soup with shrimp, lemongrass, and chili.", Price = 7.5, MealImageUrl = null, RestaurantId = 8 },
                 new Meal { Id = 20, MealName = "Croque Monsieur", Description = "French toasted sandwich with ham and melted cheese.", Price = 6.0, MealImageUrl = null, RestaurantId = 9 }
                 );
+            modelBuilder.Entity("MealAllergens").HasData(
+                // Jelo 1: Stuffed Peppers (Id=1) - Pšenica (1), Celer (22)
+                new { MealId = 1, AllergenId = 1 },
+                new { MealId = 1, AllergenId = 22 },
+
+                // Jelo 2: Capricciosa Pizza (Id=2) - Pšenica (1), Mleko (10)
+                new { MealId = 2, AllergenId = 1 },
+                new { MealId = 2, AllergenId = 10 },
+
+                // Jelo 3: Sushi Mix (Id=3) - Riba (9), Soja (12)
+                new { MealId = 3, AllergenId = 9 },
+                new { MealId = 3, AllergenId = 12 },
+
+                // Jelo 4: BBQ Ribs (Id=4) - Senf (23) (u sosu), Pšenica (1) (u marinadi/hleb)
+                new { MealId = 4, AllergenId = 23 },
+                new { MealId = 4, AllergenId = 1 },
+
+                // Jelo 5: Falafel Bowl (Id=5) - Pšenica (1) (u falafelu ili lepinji)
+                new { MealId = 5, AllergenId = 1 },
+                new { MealId = 5, AllergenId = 12 }, // Soja
+
+                // Jelo 6: Grilled Sea Bream (Id=6) - Riba (9)
+                new { MealId = 6, AllergenId = 9 },
+
+                // Jelo 7: Cabbage Rolls (Id=7) - Pšenica (1), Celer (22)
+                new { MealId = 7, AllergenId = 1 },
+                new { MealId = 7, AllergenId = 22 },
+
+                // Jelo 8: Pad Thai (Id=8) - Kikiriki (11), Jaja (8), Soja (12)
+                new { MealId = 8, AllergenId = 11 },
+                new { MealId = 8, AllergenId = 8 },
+                new { MealId = 8, AllergenId = 12 },
+
+                // Jelo 9: Quiche Lorraine (Id=9) - Pšenica (1), Jaja (8), Mleko (10)
+                new { MealId = 9, AllergenId = 1 },
+                new { MealId = 9, AllergenId = 8 },
+                new { MealId = 9, AllergenId = 10 },
+
+                // Jelo 10: Chicken Tikka Masala (Id=10) - Mleko (10) (u jogurtu/sosu), Bademi (13) (ukras)
+                new { MealId = 10, AllergenId = 10 },
+                new { MealId = 10, AllergenId = 13 },
+
+                // Jelo 11: Classic Burger (Id=11) - Pšenica (1) (zemička), Mleko (10) (sir/sos), Jaja (8) (majonez)
+                new { MealId = 11, AllergenId = 1 },
+                new { MealId = 11, AllergenId = 10 },
+                new { MealId = 11, AllergenId = 8 },
+
+                // Jelo 12: Fish Soup (Id=12) - Riba (9), Celer (22)
+                new { MealId = 12, AllergenId = 9 },
+                new { MealId = 12, AllergenId = 22 },
+
+                // Jelo 13: Pasta Carbonara (Id=13) - Pšenica (1), Jaja (8), Mleko (10)
+                new { MealId = 13, AllergenId = 1 },
+                new { MealId = 13, AllergenId = 8 },
+                new { MealId = 13, AllergenId = 10 },
+
+                // Jelo 14: Wok Veggies (Id=14) - Soja (12)
+                new { MealId = 14, AllergenId = 12 },
+
+                // Jelo 15: Peppercorn Steak (Id=15) - Mleko (10) (u sosu)
+                new { MealId = 15, AllergenId = 10 },
+
+                // Jelo 16: Vegan Lasagna (Id=16) - Pšenica (1), Soja (12) (u tofuu/zameni za sir)
+                new { MealId = 16, AllergenId = 1 },
+                new { MealId = 16, AllergenId = 12 },
+
+                // Jelo 17: Tuna Steak (Id=17) - Riba (9)
+                new { MealId = 17, AllergenId = 9 },
+
+                // Jelo 18: Ćevapi with Onion (Id=18) - Pšenica (1) (u hlebu)
+                new { MealId = 18, AllergenId = 1 },
+                new { MealId = 18, AllergenId = 10 }, // Mleko (ako se koristi kajmak)
+
+                // Jelo 19: Tom Yum Soup (Id=19) - Škampi (5, iz grupe rakovi), Riba (9) (riblji sos)
+                new { MealId = 19, AllergenId = 5 },
+                new { MealId = 19, AllergenId = 9 },
+
+                // Jelo 20: Croque Monsieur (Id=20) - Pšenica (1), Mleko (10)
+                new { MealId = 20, AllergenId = 1 },
+                new { MealId = 20, AllergenId = 10 }
+            );
 
         }
     }

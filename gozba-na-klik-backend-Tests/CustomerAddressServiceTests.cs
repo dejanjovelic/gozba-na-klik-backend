@@ -1,8 +1,8 @@
 ﻿using gozba_na_klik_backend.Exceptions;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
-using gozba_na_klik_backend.Servises;
-using gozba_na_klik_backend.Servises.IServices;
+using gozba_na_klik_backend.Services;
+using gozba_na_klik_backend.Services.IServices;
 using Moq;
 using Shouldly;
 using System;
@@ -179,9 +179,9 @@ namespace gozba_na_klik_backend_Tests
         private static CustomerService CreateCustomerService()
         {
             var (customerStubRepository, addressStubRepository) = CreateRepositories();
-            var allergenRepo = new Mock<IAllergenRepository>();
+            var allergenService = new Mock<IAllergenService>();
 
-            var service = new CustomerService(customerStubRepository, allergenRepo.Object, addressStubRepository);
+            var service = new CustomerService(customerStubRepository, allergenService.Object, addressStubRepository);
 
             return service;
         }

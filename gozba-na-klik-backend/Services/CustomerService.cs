@@ -3,15 +3,15 @@ using gozba_na_klik_backend.Repository;
 using gozba_na_klik_backend.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using gozba_na_klik_backend.Model.IRepositories;
-using gozba_na_klik_backend.Servises.IServices;
 using gozba_na_klik_backend.Services.IServices;
 
-namespace gozba_na_klik_backend.Servises
+
+namespace gozba_na_klik_backend.Services
 {
     public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository;
-        private readonly IAllergenService _allergenService; //treba prebaciti na Iterface
+        private readonly IAllergenService _allergenService;
         private readonly IAddressRepository _addressRepository;
 
         public CustomerService(ICustomerRepository customerRepository, IAllergenService allergenService, IAddressRepository addressRepository)
@@ -68,7 +68,7 @@ namespace gozba_na_klik_backend.Servises
             }
 
             List<Allergen> allergens = await _allergenService.GetAllSelectedAllergensAsync(allergenIds);
-            
+
             Customer updatedCustomer = await _customerRepository.UpdateCustomerAllergensAsync(customer, allergens);
             return updatedCustomer;
         }
