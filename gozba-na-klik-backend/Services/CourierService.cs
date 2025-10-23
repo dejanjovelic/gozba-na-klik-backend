@@ -63,5 +63,13 @@ namespace gozba_na_klik_backend.Services
             }
             await _courierRepository.UpdateWorkingHoursAsync(courier, workingHours);               
         }
+        public async Task UpdateCourierStatusAsync()
+        {          
+            await _courierRepository.UpdateCourierStatusAsync();            
+        }
+        public async Task<List<Courier>> GetAllAsync()
+        {   
+            return await _courierRepository.GetAllAsync();
+        }
     }
 }
