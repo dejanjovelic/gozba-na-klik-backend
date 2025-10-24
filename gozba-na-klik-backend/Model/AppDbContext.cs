@@ -195,27 +195,28 @@ namespace gozba_na_klik_backend.Model
             );
 
             modelBuilder.Entity<Meal>().HasData(
-                new Meal { Id = 1, MealName = "Stuffed Peppers", Description = "Homemade peppers stuffed with minced meat and rice.", Price = 6.5, MealImageUrl = null, RestaurantId = 1 },
-                new Meal { Id = 2, MealName = "Capricciosa Pizza", Description = "Classic pizza with ham, mushrooms, and cheese.", Price = 8.0, MealImageUrl = null, RestaurantId = 2 },
-                new Meal { Id = 3, MealName = "Sushi Mix", Description = "Assorted nigiri, maki, and sashimi rolls.", Price = 12.5, MealImageUrl = null, RestaurantId = 3 },
-                new Meal { Id = 4, MealName = "BBQ Ribs", Description = "Smoked pork ribs with homemade BBQ sauce.", Price = 14.0, MealImageUrl = null, RestaurantId = 4 },
-                new Meal { Id = 5, MealName = "Falafel Bowl", Description = "Vegan bowl with falafel, hummus, and fresh veggies.", Price = 7.5, MealImageUrl = null, RestaurantId = 5 },
-                new Meal { Id = 6, MealName = "Grilled Sea Bream", Description = "Fresh sea bream with lemon and herbs.", Price = 13.0, MealImageUrl = null, RestaurantId = 6 },
-                new Meal { Id = 7, MealName = "Cabbage Rolls", Description = "Traditional Serbian rolls with meat and rice.", Price = 6.0, MealImageUrl = null, RestaurantId = 7 },
-                new Meal { Id = 8, MealName = "Pad Thai", Description = "Thai noodles with peanuts, eggs, and vegetables.", Price = 9.5, MealImageUrl = null, RestaurantId = 8 },
-                new Meal { Id = 9, MealName = "Quiche Lorraine", Description = "French tart with eggs, cheese, and bacon.", Price = 7.0, MealImageUrl = null, RestaurantId = 9 },
-                new Meal { Id = 10, MealName = "Chicken Tikka Masala", Description = "Chicken in creamy Indian tomato sauce.", Price = 10.5, MealImageUrl = null, RestaurantId = 10 },
-                new Meal { Id = 11, MealName = "Classic Burger", Description = "Beef burger with cheese, lettuce, and sauce.", Price = 8.5, MealImageUrl = null, RestaurantId = 1 },
-                new Meal { Id = 12, MealName = "Fish Soup", Description = "Traditional soup made from river fish.", Price = 5.5, MealImageUrl = null, RestaurantId = 6 },
-                new Meal { Id = 13, MealName = "Pasta Carbonara", Description = "Pasta with pancetta, eggs, and parmesan.", Price = 9.0, MealImageUrl = null, RestaurantId = 2 },
-                new Meal { Id = 14, MealName = "Wok Veggies", Description = "Mixed vegetables stir-fried in soy sauce.", Price = 7.0, MealImageUrl = null, RestaurantId = 8 },
-                new Meal { Id = 15, MealName = "Peppercorn Steak", Description = "Premium beef steak with creamy pepper sauce.", Price = 15.5, MealImageUrl = null, RestaurantId = 4 },
-                new Meal { Id = 16, MealName = "Vegan Lasagna", Description = "Lasagna with zucchini, eggplant, and tofu.", Price = 8.0, MealImageUrl = null, RestaurantId = 5 },
-                new Meal { Id = 17, MealName = "Tuna Steak", Description = "Grilled tuna fillet with lime and arugula.", Price = 13.5, MealImageUrl = null, RestaurantId = 6 },
-                new Meal { Id = 18, MealName = "Ćevapi with Onion", Description = "Traditional grilled minced meat served with flatbread and chopped onion.", Price = 6.5, MealImageUrl = null, RestaurantId = 7 },
-                new Meal { Id = 19, MealName = "Tom Yum Soup", Description = "Spicy Thai soup with shrimp, lemongrass, and chili.", Price = 7.5, MealImageUrl = null, RestaurantId = 8 },
-                new Meal { Id = 20, MealName = "Croque Monsieur", Description = "French toasted sandwich with ham and melted cheese.", Price = 6.0, MealImageUrl = null, RestaurantId = 9 }
-                );
+                new Meal { Id = 1, MealName = "Stuffed Peppers", Description = "Homemade peppers stuffed with minced meat and rice.", Price = 6.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219190/Stuffed_20Peppers_20-_20NCBA_20Beef_20Aug_20202431717_zkimq0.jpg", RestaurantId = 1 },
+                new Meal { Id = 2, MealName = "Capricciosa Pizza", Description = "Classic pizza with ham, mushrooms, and cheese.", Price = 8.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219263/Pizza-Capricciosa_8_raj5pt.jpg", RestaurantId = 2 },
+                new Meal { Id = 3, MealName = "Sushi Mix", Description = "Assorted nigiri, maki, and sashimi rolls.", Price = 12.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219415/omatsuri-2_c0esac.jpg", RestaurantId = 3 },
+                new Meal { Id = 4, MealName = "BBQ Ribs", Description = "Smoked pork ribs with homemade BBQ sauce.", Price = 14.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219452/Barbecue-Ribs-Recipe-7_ikifom.jpg", RestaurantId = 4 },
+                new Meal { Id = 5, MealName = "Falafel Bowl", Description = "Vegan bowl with falafel, hummus, and fresh veggies.", Price = 7.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219475/Bol_falafels_a18c8367-1a60-4132-8e78-0f8a3f363288_p2ayhu.jpg", RestaurantId = 5 },
+                new Meal { Id = 6, MealName = "Grilled Sea Bream", Description = "Fresh sea bream with lemon and herbs.", Price = 13.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219536/Gegrillte-Dorade-Rezept-ELAG-Grillplatte-Induktionskochfeld-2020-1-2_elvevn.jpg", RestaurantId = 6 },
+                new Meal { Id = 7, MealName = "Cabbage Rolls", Description = "Traditional Serbian rolls with meat and rice.", Price = 6.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219553/image_vb4wvf.jpg", RestaurantId = 7 },
+                new Meal { Id = 8, MealName = "Pad Thai", Description = "Thai noodles with peanuts, eggs, and vegetables.", Price = 9.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219579/Authentic-Pad-Thai_square-1908_tufobi.jpg", RestaurantId = 8 },
+                new Meal { Id = 9, MealName = "Quiche Lorraine", Description = "French tart with eggs, cheese, and bacon.", Price = 7.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219644/8-quiche-500x500_uvgs6y.webp", RestaurantId = 9 },
+                new Meal { Id = 10, MealName = "Chicken Tikka Masala", Description = "Chicken in creamy Indian tomato sauce.", Price = 10.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219669/Chicken-Tikka-Masala_0-SQ_cqaxop.jpg", RestaurantId = 10 },
+                new Meal { Id = 11, MealName = "Classic Burger", Description = "Beef burger with cheese, lettuce, and sauce.", Price = 8.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219720/frenchs_burger_styled-image_800x800_pqivq6.png", RestaurantId = 1 },
+                new Meal { Id = 12, MealName = "Fish Soup", Description = "Traditional soup made from river fish.", Price = 5.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219766/fish-soup-in-a-white-bowl-square-e1691445762883_pvfccd.jpg", RestaurantId = 6 },
+                new Meal { Id = 13, MealName = "Pasta Carbonara", Description = "Pasta with pancetta, eggs, and parmesan.", Price = 9.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219822/Spaghetti-carbonara-1-500x500_ummyjp.jpg", RestaurantId = 2 },
+                new Meal { Id = 14, MealName = "Wok Veggies", Description = "Mixed vegetables stir-fried in soy sauce.", Price = 7.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219892/vegetable_stir_fry_hn87jz.jpg", RestaurantId = 8 },
+                new Meal { Id = 15, MealName = "Peppercorn Steak", Description = "Premium beef steak with creamy pepper sauce.", Price = 15.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219939/Peppercorn-Steak_ae5dkp.jpg", RestaurantId = 4 },
+                new Meal { Id = 16, MealName = "Vegan Lasagna", Description = "Lasagna with zucchini, eggplant, and tofu.", Price = 8.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219985/Vegan-Lasagna-17_sq4o7j.jpg", RestaurantId = 5 },
+                new Meal { Id = 17, MealName = "Tuna Steak", Description = "Grilled tuna fillet with lime and arugula.", Price = 13.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761220032/close-up-of-grilled-sliced-tuna-steak-medium-rare-1_zpdonx.jpg", RestaurantId = 6 },
+                new Meal { Id = 18, MealName = "Ćevapi with Onion", Description = "Traditional grilled minced meat served with flatbread and chopped onion.", Price = 6.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761220073/cevapi-with-onion-on-oval-plater-middle-eastern-cuisine-salad-plates-and-lavash-bread_tlphkv.jpg", RestaurantId = 7 },
+                new Meal { Id = 19, MealName = "Tom Yum Soup", Description = "Spicy Thai soup with shrimp, lemongrass, and chili.", Price = 7.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761220108/Tom-Yum-soup_2_ti1rim.jpg", RestaurantId = 8 },
+                new Meal { Id = 20, MealName = "Croque Monsieur", Description = "French toasted sandwich with ham and melted cheese.", Price = 6.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761220177/croque-monsieur-66a219aa5f0b2.jpg_h29478.jpg", RestaurantId = 9 }
+            );
+
             modelBuilder.Entity("MealAllergens").HasData(
                 // Jelo 1: Stuffed Peppers (Id=1) - Pšenica (1), Celer (22)
                 new { MealId = 1, AllergenId = 1 },
