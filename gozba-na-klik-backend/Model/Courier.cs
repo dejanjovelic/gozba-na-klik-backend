@@ -4,5 +4,7 @@
     {
         public override Role Role => Role.Courier;
         public List<WorkingHours>? WorkingHours { get; set; } = new List<WorkingHours>();
+        public bool active { get; set; }
+
     }
 }
