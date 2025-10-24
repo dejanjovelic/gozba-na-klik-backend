@@ -38,5 +38,12 @@ namespace gozba_na_klik_backend.Controllers
             return Ok(await _restaurantService.GetAllFilteredAndSortedAndPagedAsync(restaurantFilter, sortType, page, pageSize));
         }
 
+        //GET api/restaurants/id/meals
+        [HttpGet("{restaurantId}/meals")]
+        public async Task<IActionResult> GetRestaurantWithMealsAsync(int restaurantId)
+        {
+            return Ok(await _restaurantService.GetRestaurantWithMealsAsync(restaurantId));
+        }
+
     }
 }

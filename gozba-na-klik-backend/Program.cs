@@ -53,6 +53,8 @@ namespace gozba_na_klik_backend
             builder.Services.AddScoped<IRestaurantService, RestaurantService>();
             builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
 
+            builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
+
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
