@@ -12,6 +12,7 @@ namespace gozba_na_klik_backend.Model
         public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<Meal> Meals { get; set; }
         public DbSet<Courier> Couriers { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,6 +37,45 @@ namespace gozba_na_klik_backend.Model
                 .HasForeignKey(restauant=>restauant.RestaurantId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Order>(entity =>
+            {
+                entity.HasKey(o => o.Id);
+
+                entity.HasOne(o => o.customer)
+                      .WithMany() 
+                      .HasForeignKey(o => o.CustomerId)
+                      .OnDelete(DeleteBehavior.Restrict); 
+
+                entity.HasOne(o => o.Restaurant)
+                      .WithMany() // or .WithMany(r => r.Orders) if you add List<Order> to Restaurant
+                      .HasForeignKey(o => o.RestaurantId)
+                      .OnDelete(DeleteBehavior.Restrict);
+             
+                entity.HasMany(o => o.orderItems)
+                      .WithMany()
+                      .UsingEntity<Dictionary<string, object>>(
+                          "OrderMeal",
+                          j => j.HasOne<Meal>()
+                                .WithMany()
+                                .HasForeignKey("MealId")
+                                .OnDelete(DeleteBehavior.Cascade),
+                          j => j.HasOne<Order>()
+                                .WithMany()
+                                .HasForeignKey("OrderId")
+                                .OnDelete(DeleteBehavior.Cascade),
+                          j =>
+                          {
+                              j.HasKey("OrderId", "MealId");
+                              j.ToTable("OrderMeals");
+                          });
+       
+                entity.Property(o => o.orderTime)
+                      .IsRequired();
+
+                entity.Property(o => o.Status)
+                      .HasConversion<int>() 
+                      .IsRequired();
+            });
 
 
             modelBuilder.Entity<Administrator>().HasData(
