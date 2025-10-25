@@ -2,7 +2,6 @@
 using gozba_na_klik_backend.Model.IRepositories;
 using gozba_na_klik_backend.Services;
 using gozba_na_klik_backend.Services.IServices;
-using gozba_na_klik_backend.Servises;
 using Moq;
 using Shouldly;
 using System;
