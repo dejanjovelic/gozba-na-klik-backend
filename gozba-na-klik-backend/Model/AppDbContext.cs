@@ -38,44 +38,43 @@ namespace gozba_na_klik_backend.Model
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Order>(entity =>
-            {
-                entity.HasKey(o => o.Id);
+    {
+        entity.HasKey(o => o.Id);
 
-                entity.HasOne(o => o.customer)
-                      .WithMany() 
-                      .HasForeignKey(o => o.CustomerId)
-                      .OnDelete(DeleteBehavior.Restrict); 
+        entity.HasOne(o => o.Customer)
+              .WithMany(c => c.Orders)
+              .HasForeignKey(o => o.CustomerId)
+              .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasOne(o => o.Restaurant)
-                      .WithMany() // or .WithMany(r => r.Orders) if you add List<Order> to Restaurant
-                      .HasForeignKey(o => o.RestaurantId)
-                      .OnDelete(DeleteBehavior.Restrict);
-             
-                entity.HasMany(o => o.orderItems)
-                      .WithMany()
-                      .UsingEntity<Dictionary<string, object>>(
-                          "OrderMeal",
-                          j => j.HasOne<Meal>()
-                                .WithMany()
-                                .HasForeignKey("MealId")
-                                .OnDelete(DeleteBehavior.Cascade),
-                          j => j.HasOne<Order>()
-                                .WithMany()
-                                .HasForeignKey("OrderId")
-                                .OnDelete(DeleteBehavior.Cascade),
-                          j =>
-                          {
-                              j.HasKey("OrderId", "MealId");
-                              j.ToTable("OrderMeals");
-                          });
-       
-                entity.Property(o => o.orderTime)
-                      .IsRequired();
+        entity.HasOne(o => o.Restaurant)
+              .WithMany(r => r.Orders)
+              .HasForeignKey(o => o.RestaurantId)
+              .OnDelete(DeleteBehavior.Restrict);
 
-                entity.Property(o => o.Status)
-                      .HasConversion<int>() 
-                      .IsRequired();
-            });
+        entity.Property(o => o.OrderTime).IsRequired(false); 
+
+        entity.Property(o => o.Status)
+              .HasConversion<int>()
+              .IsRequired();
+    });
+
+    // OrderMeal (join entity to track quantity)
+    modelBuilder.Entity<OrderMeal>(entity =>
+    {
+        entity.HasKey(om => new { om.OrderId, om.MealId });
+
+        entity.HasOne(om => om.Order)
+              .WithMany(o => o.OrderItems)
+              .HasForeignKey(om => om.OrderId)
+              .OnDelete(DeleteBehavior.Cascade);
+
+        entity.HasOne(om => om.Meal)
+              .WithMany(m => m.OrderMeals)
+              .HasForeignKey(om => om.MealId)
+              .OnDelete(DeleteBehavior.Cascade);
+
+        entity.Property(om => om.Quantity).IsRequired();
+    });
 
 
             modelBuilder.Entity<Administrator>().HasData(
@@ -221,9 +220,9 @@ namespace gozba_na_klik_backend.Model
                  new Restaurant { Id = 15, Name = "Steakhouse 21", Address = "Bulevar Evrope 21", City = "Novi Sad", Description = "Premium steaks and fine wines.", Capacity = 95, AverageRating = 8.6, RestaurantOwnerId = 33 },
                  new Restaurant { Id = 16, Name = "Nest", Address = "Gundulićeva 6", City = "Belgrade", Description = "Rustic ambiance with local specialties.", Capacity = 70, AverageRating = 5, RestaurantOwnerId = 32 },
                  new Restaurant { Id = 17, Name = "Tapas Bar", Address = "Petrovaradinska 4", City = "Novi Sad", Description = "Spanish tapas and sangria.", Capacity = 60, AverageRating = 5, RestaurantOwnerId = 28 },
-                 new Restaurant { Id = 18, Name = "Marko's Tavern", Address = "Glavna 1", City = "Valjevo", Description = "Authentic tavern with live folk music.", Capacity = 100, AverageRating = 5, RestaurantOwnerId = 28 },
-                 new Restaurant { Id = 19, Name = "Thai Orchid", Address = "Vojvode Stepe 19", City = "Belgrade", Description = "Thai cuisine with exotic flavors.", Capacity = 50, AverageRating = 5, RestaurantOwnerId = 29 },
-                 new Restaurant { Id = 20, Name = "Nordic Table", Address = "Skandinavska 3", City = "Novi Sad", Description = "Nordic cuisine with minimalist design.", Capacity = 40, AverageRating = 5, RestaurantOwnerId = 30 }
+                 new Restaurant { Id = 18, Name = "Marko's Tavern", Address = "Glavna 1", City = "Valjevo", Description = "Authentic tavern with live folk music.", Capacity = 100, AverageRating = 5, RestaurantOwnerId = 24 },
+                 new Restaurant { Id = 19, Name = "Thai Orchid", Address = "Vojvode Stepe 19", City = "Belgrade", Description = "Thai cuisine with exotic flavors.", Capacity = 50, AverageRating = 5, RestaurantOwnerId = 24 },
+                 new Restaurant { Id = 20, Name = "Nordic Table", Address = "Skandinavska 3", City = "Novi Sad", Description = "Nordic cuisine with minimalist design.", Capacity = 40, AverageRating = 5, RestaurantOwnerId = 24 }
              );
 
             modelBuilder.Entity<Meal>().HasData(
@@ -248,6 +247,36 @@ namespace gozba_na_klik_backend.Model
                 new Meal { Id = 19, MealName = "Tom Yum Soup", Description = "Spicy Thai soup with shrimp, lemongrass, and chili.", Price = 7.5, MealImageUrl = null, RestaurantId = 8 },
                 new Meal { Id = 20, MealName = "Croque Monsieur", Description = "French toasted sandwich with ham and melted cheese.", Price = 6.0, MealImageUrl = null, RestaurantId = 9 }
                 );
+            modelBuilder.Entity<Order>().HasData(
+    new Order { Id = 1, CustomerId = 4, RestaurantId = 20, OrderTime = null, Status = OrderStatus.NaCekanju },
+    new Order { Id = 2, CustomerId = 5, RestaurantId = 19, OrderTime = new TimeSpan(14, 30, 0), Status = OrderStatus.Otkazana },
+    new Order { Id = 3, CustomerId = 6, RestaurantId = 19, OrderTime = null, Status = OrderStatus.NaCekanju },
+    new Order { Id = 4, CustomerId = 7, RestaurantId = 18, OrderTime = null, Status = OrderStatus.NaCekanju },
+    new Order { Id = 5, CustomerId = 8, RestaurantId = 18, OrderTime = null, Status = OrderStatus.NaCekanju },
+    new Order { Id = 6, CustomerId = 9, RestaurantId = 18, OrderTime = null, Status = OrderStatus.NaCekanju },
+    new Order { Id = 7, CustomerId = 10, RestaurantId = 19, OrderTime = null, Status = OrderStatus.NaCekanju },
+    new Order { Id = 8, CustomerId = 11, RestaurantId = 20, OrderTime = null, Status = OrderStatus.NaCekanju },
+    new Order { Id = 9, CustomerId = 12, RestaurantId = 20, OrderTime = null, Status = OrderStatus.NaCekanju },
+    new Order { Id = 10, CustomerId = 13, RestaurantId = 20, OrderTime = new TimeSpan(14, 30, 0), Status = OrderStatus.Otkazana }
+);
+
+            // OrderMeals (join table for meals + quantity)
+            modelBuilder.Entity<OrderMeal>().HasData(
+                new OrderMeal { OrderId = 1, MealId = 1, Quantity = 2 },
+                new OrderMeal { OrderId = 1, MealId = 11, Quantity = 1 },
+                new OrderMeal { OrderId = 2, MealId = 1, Quantity = 1 },
+                new OrderMeal { OrderId = 2, MealId = 11, Quantity = 1 },
+                new OrderMeal { OrderId = 3, MealId = 1, Quantity = 3 },
+                new OrderMeal { OrderId = 4, MealId = 2, Quantity = 2 },
+                new OrderMeal { OrderId = 4, MealId = 13, Quantity = 1 },
+                new OrderMeal { OrderId = 5, MealId = 2, Quantity = 1 },
+                new OrderMeal { OrderId = 5, MealId = 13, Quantity = 2 },
+                new OrderMeal { OrderId = 6, MealId = 3, Quantity = 2 },
+                new OrderMeal { OrderId = 7, MealId = 3, Quantity = 1 },
+                new OrderMeal { OrderId = 8, MealId = 4, Quantity = 3 },
+                new OrderMeal { OrderId = 9, MealId = 4, Quantity = 2 },
+                new OrderMeal { OrderId = 10, MealId = 4, Quantity = 1 }
+            );
 
         }
     }

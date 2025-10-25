@@ -10,6 +10,6 @@
         public int RestaurantId { get; set; }
         public List<Allergen>? Allergens { get; set; } = new List<Allergen>();
         public List<Extras>? Extras { get; set; } = new List<Extras>();
-
+        public List<OrderMeal>? OrderMeals { get; set; } = new List<OrderMeal>();
     }
 }

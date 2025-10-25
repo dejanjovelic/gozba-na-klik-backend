@@ -52,7 +52,8 @@ namespace gozba_na_klik_backend
             builder.Services.AddScoped<ICourierService, CourierService>();
             builder.Services.AddScoped<IRestaurantService, RestaurantService>();
             builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
-
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
