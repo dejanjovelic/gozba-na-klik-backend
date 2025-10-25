@@ -1,11 +1,11 @@
 ﻿using gozba_na_klik_backend.Exceptions;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
-using gozba_na_klik_backend.Servises.IServices;
+using gozba_na_klik_backend.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace gozba_na_klik_backend.Servises
+namespace gozba_na_klik_backend.Services
 {
     public class AllergenService : IAllergenService
     {

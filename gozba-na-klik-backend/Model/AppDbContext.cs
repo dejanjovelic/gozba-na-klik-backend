@@ -31,6 +31,15 @@ namespace gozba_na_klik_backend.Model
                 j => j.HasOne<Customer>().WithMany().HasForeignKey("CustomerId").OnDelete(DeleteBehavior.Cascade)
                 );
 
+            modelBuilder.Entity<Meal>()
+                .HasMany(meal => meal.Allergens)
+                .WithMany("Meals")
+                .UsingEntity<Dictionary<string, object>>(
+                "MealAllergens",
+                j=>j.HasOne<Allergen>().WithMany().HasForeignKey("AllergenId").OnDelete(DeleteBehavior.Cascade),
+                j=>j.HasOne<Meal>().WithMany().HasForeignKey("MealId").OnDelete(DeleteBehavior.Cascade)
+                );
+
             modelBuilder.Entity<Restaurant>()
                 .HasMany(restaurant=> restaurant.MealsOnMenu)
                 .WithOne()
@@ -220,9 +229,9 @@ namespace gozba_na_klik_backend.Model
                  new Restaurant { Id = 15, Name = "Steakhouse 21", Address = "Bulevar Evrope 21", City = "Novi Sad", Description = "Premium steaks and fine wines.", Capacity = 95, AverageRating = 8.6, RestaurantOwnerId = 33 },
                  new Restaurant { Id = 16, Name = "Nest", Address = "Gundulićeva 6", City = "Belgrade", Description = "Rustic ambiance with local specialties.", Capacity = 70, AverageRating = 5, RestaurantOwnerId = 32 },
                  new Restaurant { Id = 17, Name = "Tapas Bar", Address = "Petrovaradinska 4", City = "Novi Sad", Description = "Spanish tapas and sangria.", Capacity = 60, AverageRating = 5, RestaurantOwnerId = 28 },
-                 new Restaurant { Id = 18, Name = "Marko's Tavern", Address = "Glavna 1", City = "Valjevo", Description = "Authentic tavern with live folk music.", Capacity = 100, AverageRating = 5, RestaurantOwnerId = 24 },
-                 new Restaurant { Id = 19, Name = "Thai Orchid", Address = "Vojvode Stepe 19", City = "Belgrade", Description = "Thai cuisine with exotic flavors.", Capacity = 50, AverageRating = 5, RestaurantOwnerId = 24 },
-                 new Restaurant { Id = 20, Name = "Nordic Table", Address = "Skandinavska 3", City = "Novi Sad", Description = "Nordic cuisine with minimalist design.", Capacity = 40, AverageRating = 5, RestaurantOwnerId = 24 }
+                 new Restaurant { Id = 18, Name = "Marko's Tavern", Address = "Glavna 1", City = "Valjevo", Description = "Authentic tavern with live folk music.", Capacity = 100, AverageRating = 5, RestaurantOwnerId = 28 },
+                 new Restaurant { Id = 19, Name = "Thai Orchid", Address = "Vojvode Stepe 19", City = "Belgrade", Description = "Thai cuisine with exotic flavors.", Capacity = 50, AverageRating = 5, RestaurantOwnerId = 29 },
+                 new Restaurant { Id = 20, Name = "Nordic Table", Address = "Skandinavska 3", City = "Novi Sad", Description = "Nordic cuisine with minimalist design.", Capacity = 40, AverageRating = 5, RestaurantOwnerId = 30 }
              );
 
             modelBuilder.Entity<Meal>().HasData(
@@ -276,6 +285,87 @@ namespace gozba_na_klik_backend.Model
                 new OrderMeal { OrderId = 8, MealId = 4, Quantity = 3 },
                 new OrderMeal { OrderId = 9, MealId = 4, Quantity = 2 },
                 new OrderMeal { OrderId = 10, MealId = 4, Quantity = 1 }
+            );
+            modelBuilder.Entity("MealAllergens").HasData(
+                // Jelo 1: Stuffed Peppers (Id=1) - Pšenica (1), Celer (22)
+                new { MealId = 1, AllergenId = 1 },
+                new { MealId = 1, AllergenId = 22 },
+
+                // Jelo 2: Capricciosa Pizza (Id=2) - Pšenica (1), Mleko (10)
+                new { MealId = 2, AllergenId = 1 },
+                new { MealId = 2, AllergenId = 10 },
+
+                // Jelo 3: Sushi Mix (Id=3) - Riba (9), Soja (12)
+                new { MealId = 3, AllergenId = 9 },
+                new { MealId = 3, AllergenId = 12 },
+
+                // Jelo 4: BBQ Ribs (Id=4) - Senf (23) (u sosu), Pšenica (1) (u marinadi/hleb)
+                new { MealId = 4, AllergenId = 23 },
+                new { MealId = 4, AllergenId = 1 },
+
+                // Jelo 5: Falafel Bowl (Id=5) - Pšenica (1) (u falafelu ili lepinji)
+                new { MealId = 5, AllergenId = 1 },
+                new { MealId = 5, AllergenId = 12 }, // Soja
+
+                // Jelo 6: Grilled Sea Bream (Id=6) - Riba (9)
+                new { MealId = 6, AllergenId = 9 },
+
+                // Jelo 7: Cabbage Rolls (Id=7) - Pšenica (1), Celer (22)
+                new { MealId = 7, AllergenId = 1 },
+                new { MealId = 7, AllergenId = 22 },
+
+                // Jelo 8: Pad Thai (Id=8) - Kikiriki (11), Jaja (8), Soja (12)
+                new { MealId = 8, AllergenId = 11 },
+                new { MealId = 8, AllergenId = 8 },
+                new { MealId = 8, AllergenId = 12 },
+
+                // Jelo 9: Quiche Lorraine (Id=9) - Pšenica (1), Jaja (8), Mleko (10)
+                new { MealId = 9, AllergenId = 1 },
+                new { MealId = 9, AllergenId = 8 },
+                new { MealId = 9, AllergenId = 10 },
+
+                // Jelo 10: Chicken Tikka Masala (Id=10) - Mleko (10) (u jogurtu/sosu), Bademi (13) (ukras)
+                new { MealId = 10, AllergenId = 10 },
+                new { MealId = 10, AllergenId = 13 },
+
+                // Jelo 11: Classic Burger (Id=11) - Pšenica (1) (zemička), Mleko (10) (sir/sos), Jaja (8) (majonez)
+                new { MealId = 11, AllergenId = 1 },
+                new { MealId = 11, AllergenId = 10 },
+                new { MealId = 11, AllergenId = 8 },
+
+                // Jelo 12: Fish Soup (Id=12) - Riba (9), Celer (22)
+                new { MealId = 12, AllergenId = 9 },
+                new { MealId = 12, AllergenId = 22 },
+
+                // Jelo 13: Pasta Carbonara (Id=13) - Pšenica (1), Jaja (8), Mleko (10)
+                new { MealId = 13, AllergenId = 1 },
+                new { MealId = 13, AllergenId = 8 },
+                new { MealId = 13, AllergenId = 10 },
+
+                // Jelo 14: Wok Veggies (Id=14) - Soja (12)
+                new { MealId = 14, AllergenId = 12 },
+
+                // Jelo 15: Peppercorn Steak (Id=15) - Mleko (10) (u sosu)
+                new { MealId = 15, AllergenId = 10 },
+
+                // Jelo 16: Vegan Lasagna (Id=16) - Pšenica (1), Soja (12) (u tofuu/zameni za sir)
+                new { MealId = 16, AllergenId = 1 },
+                new { MealId = 16, AllergenId = 12 },
+
+                // Jelo 17: Tuna Steak (Id=17) - Riba (9)
+                new { MealId = 17, AllergenId = 9 },
+
+                // Jelo 18: Ćevapi with Onion (Id=18) - Pšenica (1) (u hlebu)
+                new { MealId = 18, AllergenId = 1 },
+                new { MealId = 18, AllergenId = 10 }, // Mleko (ako se koristi kajmak)
+
+                // Jelo 19: Tom Yum Soup (Id=19) - Škampi (5, iz grupe rakovi), Riba (9) (riblji sos)
+                new { MealId = 19, AllergenId = 5 },
+                new { MealId = 19, AllergenId = 9 },
+
+                // Jelo 20: Croque Monsieur (Id=20) - Pšenica (1), Mleko (10)
+                new { MealId = 20, AllergenId = 1 },
+                new { MealId = 20, AllergenId = 10 }
             );
 
         }

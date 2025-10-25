@@ -3,8 +3,8 @@ using Castle.Core.Resource;
 using gozba_na_klik_backend.Exceptions;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
-using gozba_na_klik_backend.Servises;
-using gozba_na_klik_backend.Servises.IServices;
+using gozba_na_klik_backend.Services;
+using gozba_na_klik_backend.Services.IServices;
 using Moq;
 using Shouldly;
 

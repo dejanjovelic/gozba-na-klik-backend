@@ -7,5 +7,6 @@ namespace gozba_na_klik_backend.Model.IRepositories
         Task<PaginatedListDto<Restaurant>> GetAllRestaurantsPaginatedAsync(int page, int pageSize);
         Task<IQueryable<Restaurant>> GetBaseRestaurantsAsync();
         Task<int> CountAllRestaurantsAsync();
+        Task<Restaurant> GetRestaurantByIdAsync(int id);
     }
 }
