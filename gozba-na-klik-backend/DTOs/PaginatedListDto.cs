@@ -18,5 +18,9 @@
             HasPreviousPage = PageIndex > 0;
             HasNextPage = pageIndex < TotalPages - 1;
         }
+
+        public PaginatedListDto()
+        {
+        }
     }
 }

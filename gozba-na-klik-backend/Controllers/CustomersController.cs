@@ -1,6 +1,6 @@
 ﻿using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Repository;
-using gozba_na_klik_backend.Servises.IServices;
+using gozba_na_klik_backend.Services.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
