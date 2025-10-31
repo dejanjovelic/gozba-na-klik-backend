@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using gozba_na_klik_backend.Services.IServices;
 using gozba_na_klik_backend.Model;
+using gozba_na_klik_backend.DTOs;
 namespace gozba_na_klik_backend.Controllers
 {
     [Route("api/[controller]")]
@@ -19,9 +20,9 @@ namespace gozba_na_klik_backend.Controllers
         }
         [HttpPut("orders/{orderId}")]
  
-        public async Task<IActionResult> EditOrderStatusAsync(int orderId, [FromBody] UpdateOrderDTO dto)
+        public async Task<IActionResult> UpdateOrderStatusAsync(int orderId, [FromBody] UpdateOrderDTO dto)
         {
-            await _orderService.EditOrderStatusAsync(orderId, dto.NewStatus, dto.NewTime);
+            await _orderService.UpdateOrderStatusAsync(orderId, dto.NewStatus, dto.NewTime);
             return NoContent();
         }
 

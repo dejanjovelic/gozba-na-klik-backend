@@ -60,6 +60,7 @@ namespace gozba_na_klik_backend
             builder.Services.AddAutoMapper(cfg =>
             {
                 cfg.AddProfile<MealProfile>();
+                cfg.AddProfile<OrderProfile>();
             });
 
             builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());

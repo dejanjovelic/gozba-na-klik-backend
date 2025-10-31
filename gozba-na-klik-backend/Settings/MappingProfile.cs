@@ -13,7 +13,5 @@ namespace gozba_na_klik_backend.Settings
             CreateMap<Restaurant, RestaurantWithMealsDto>()
                 .ForMember(dest => dest.MealsOnMenu, opt => opt.MapFrom(src => src.MealsOnMenu));
         }
-
-
     }
 }
