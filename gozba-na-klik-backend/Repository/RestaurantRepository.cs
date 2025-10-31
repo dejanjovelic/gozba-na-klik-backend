@@ -42,6 +42,7 @@ namespace gozba_na_klik_backend.Repository
         {
             return await _context.Restaurants
                 .Include(r => r.MealsOnMenu)
+                .ThenInclude(m => m.Allergens)
                 .FirstOrDefaultAsync(r => r.Id == restaurantId);
         }
     }
