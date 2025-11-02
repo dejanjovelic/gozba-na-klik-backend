@@ -12,6 +12,7 @@ namespace gozba_na_klik_backend.Model
         public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<Meal> Meals { get; set; }
         public DbSet<Courier> Couriers { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,6 +46,44 @@ namespace gozba_na_klik_backend.Model
                 .HasForeignKey(restauant=>restauant.RestaurantId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Order>(entity =>
+    {
+        entity.HasKey(o => o.Id);
+
+        entity.HasOne(o => o.Customer)
+              .WithMany(c => c.Orders)
+              .HasForeignKey(o => o.CustomerId)
+              .OnDelete(DeleteBehavior.Restrict);
+
+        entity.HasOne(o => o.Restaurant)
+              .WithMany(r => r.Orders)
+              .HasForeignKey(o => o.RestaurantId)
+              .OnDelete(DeleteBehavior.Restrict);
+
+        entity.Property(o => o.OrderTime).IsRequired(false); 
+
+        entity.Property(o => o.Status)
+              .HasConversion<int>()
+              .IsRequired();
+    });
+
+    // OrderMeal (join entity to track quantity)
+    modelBuilder.Entity<OrderMeal>(entity =>
+    {
+        entity.HasKey(om => new { om.OrderId, om.MealId });
+
+        entity.HasOne(om => om.Order)
+              .WithMany(o => o.OrderItems)
+              .HasForeignKey(om => om.OrderId)
+              .OnDelete(DeleteBehavior.Cascade);
+
+        entity.HasOne(om => om.Meal)
+              .WithMany(m => m.OrderMeals)
+              .HasForeignKey(om => om.MealId)
+              .OnDelete(DeleteBehavior.Cascade);
+
+        entity.Property(om => om.Quantity).IsRequired();
+    });
 
 
             modelBuilder.Entity<Administrator>().HasData(
@@ -173,51 +212,80 @@ namespace gozba_na_klik_backend.Model
             );
 
             modelBuilder.Entity<Restaurant>().HasData(
-                 new Restaurant { Id = 1, Name = "Bistro Nova", Address = "Kralja Petra 12", City = "Belgrade", Description = "Modern Serbian cuisine with a twist.", Capacity = 60, AverageRating = 6.5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760980868/1701656104-Le-Petiti-Bistro-Blue-Centar-13_adciqg.jpg", RestaurantOwnerId = 24 },
-                 new Restaurant { Id = 2, Name = "La Tavola", Address = "Cara Dušana 45", City = "Novi Sad", Description = "Authentic Italian trattoria.", Capacity = 80, AverageRating = 9.5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981334/caption_e52wiq.jpg", RestaurantOwnerId = 24 },
-                 new Restaurant { Id = 3, Name = "Sakura Zen", Address = "Bulevar Oslobođenja 88", City = "Niš", Description = "Japanese sushi bar with minimalist ambiance.", Capacity = 40, AverageRating = 8.2, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981371/348s_o6zhl9.jpg", RestaurantOwnerId = 24 },
-                 new Restaurant { Id = 4, Name = "Grill & Chill", Address = "Trg Slobode 3", City = "Subotica", Description = "American-style BBQ with craft beers.", Capacity = 100, AverageRating = 3.8, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981740/348s_jvrtl3.jpg", RestaurantOwnerId = 24 },
-                 new Restaurant { Id = 5, Name = "Green Wave", Address = "Njegoševa 21", City = "Belgrade", Description = "Vegan restaurant with organic dishes.", Capacity = 50, AverageRating = 5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981837/AC9h4noKhAJV-_f5ucmgN7g1uu9vls7RQwFmyblYG2NoZPvK95_Go_jejqToiFswNCJ4-_fS2fTYgpCI5WdS_gfmLhjPLdx3iAPbXUCdeikQHC9o-ZPvLnI8UwM-jWS6mxXZ_bgEMXao_s680-w680-h510-rw_jdbfsp.webp", RestaurantOwnerId = 25 },
-                 new Restaurant { Id = 6, Name = "Casa del Mar", Address = "Obala 7", City = "Herceg Novi", Description = "Mediterranean cuisine with a sea view.", Capacity = 90, AverageRating = 5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981920/LaDama_10881_20_1_ojaujg.jpg", RestaurantOwnerId = 25 },
-                 new Restaurant { Id = 7, Name = "Grandma's Kitchen", Address = "Vojvode Mišića 14", City = "Kragujevac", Description = "Traditional homemade Serbian food.", Capacity = 70, AverageRating = 5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981760/im-65599456_e7zznz.jpg", RestaurantOwnerId = 26 },
-                 new Restaurant { Id = 8, Name = "Urban Spoon", Address = "Zmaj Jovina 9", City = "Novi Sad", Description = "Fusion cuisine in a modern setting.", Capacity = 85, AverageRating = 5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760982086/5dc498fe695b58645d6f1dbc_jexb15.png", RestaurantOwnerId = 27 },
-                 new Restaurant { Id = 9, Name = "Le Petit Café", Address = "Francuska 5", City = "Belgrade", Description = "French bistro with croissants and wine.", Capacity = 45, AverageRating = 8, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981871/images_yybf2j.jpg", RestaurantOwnerId = 27 },
-                 new Restaurant { Id = 10, Name = "Tandoori Flame", Address = "Đure Jakšića 33", City = "Zrenjanin", Description = "Indian cuisine with authentic spices.", Capacity = 60, AverageRating = 9, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985797/a-chef-is-cooking-in-his-restaurants-kitchen_gfpjj0.jpg", RestaurantOwnerId = 28 },
-                 new Restaurant { Id = 11, Name = "Burger Lab", Address = "Miletićeva 18", City = "Pančevo", Description = "Gourmet burgers with homemade sauces.", Capacity = 55, AverageRating = 7, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985725/premium_photo-1661883237884-263e8de8869b_fhmc5u.jpg", RestaurantOwnerId = 29 },
-                 new Restaurant { Id = 12, Name = "Fish Pot", Address = "Dunavska 2", City = "Sombor", Description = "Seafood specialties and river fish.", Capacity = 75, AverageRating = 5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981672/348s_gedljh.jpg", RestaurantOwnerId = 30 },
-                 new Restaurant { Id = 13, Name = "Pasta Mia", Address = "Kneza Miloša 27", City = "Belgrade", Description = "Fresh pasta and Italian desserts.", Capacity = 65, AverageRating = 5.4, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985883/348s_fheyvs.jpg", RestaurantOwnerId = 31 },
-                 new Restaurant { Id = 14, Name = "Orient Express", Address = "Nikole Pašića 10", City = "Niš", Description = "Asian cuisine with wok and curry dishes.", Capacity = 80, AverageRating = 6.7, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985977/348s_pumoab.jpg", RestaurantOwnerId = 32 },
-                 new Restaurant { Id = 15, Name = "Steakhouse 21", Address = "Bulevar Evrope 21", City = "Novi Sad", Description = "Premium steaks and fine wines.", Capacity = 95, AverageRating = 8.6, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760986014/ejhsj8xcmjuwdsi8qdmj.jpg", RestaurantOwnerId = 33 },
-                 new Restaurant { Id = 16, Name = "Nest", Address = "Gundulićeva 6", City = "Belgrade", Description = "Rustic ambiance with local specialties.", Capacity = 70, AverageRating = 5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985649/Most_Beautiful_Restaurants_scotland_December23_PR_Global_pafswr.jpg", RestaurantOwnerId = 32 },
-                 new Restaurant { Id = 17, Name = "Tapas Bar", Address = "Petrovaradinska 4", City = "Novi Sad", Description = "Spanish tapas and sangria.", Capacity = 60, AverageRating = 5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760970771/slikaRestorana1_hibuiy.png", RestaurantOwnerId = 28 },
-                 new Restaurant { Id = 18, Name = "Marko's Tavern", Address = "Glavna 1", City = "Valjevo", Description = "Authentic tavern with live folk music.", Capacity = 100, AverageRating = 5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985542/07best-restaurants-nashville15-jbkq-videoSixteenByNineJumbo1600_ns15cb.jpg", RestaurantOwnerId = 28 },
-                 new Restaurant { Id = 19, Name = "Thai Orchid", Address = "Vojvode Stepe 19", City = "Belgrade", Description = "Thai cuisine with exotic flavors.", Capacity = 50, AverageRating = 5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760986076/ix3atyp8yzjh6a25r2ms.jpg", RestaurantOwnerId = 29 },
-                 new Restaurant { Id = 20, Name = "Nordic Table", Address = "Skandinavska 3", City = "Novi Sad", Description = "Nordic cuisine with minimalist design.", Capacity = 40, AverageRating = 5, RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760986113/Hakkaiza-industrial-restaurant-design2_vyopcv.jpg", RestaurantOwnerId = 30 }
-            );
+                 new Restaurant { Id = 1, Name = "Bistro Nova", Address = "Kralja Petra 12", City = "Belgrade", Description = "Modern Serbian cuisine with a twist.", Capacity = 60, AverageRating = 6.5, RestaurantOwnerId = 24 },
+                 new Restaurant { Id = 2, Name = "La Tavola", Address = "Cara Dušana 45", City = "Novi Sad", Description = "Authentic Italian trattoria.", Capacity = 80, AverageRating = 9.5, RestaurantOwnerId = 24 },
+                 new Restaurant { Id = 3, Name = "Sakura Zen", Address = "Bulevar Oslobođenja 88", City = "Niš", Description = "Japanese sushi bar with minimalist ambiance.", Capacity = 40, AverageRating = 8.2, RestaurantOwnerId = 24 },
+                 new Restaurant { Id = 4, Name = "Grill & Chill", Address = "Trg Slobode 3", City = "Subotica", Description = "American-style BBQ with craft beers.", Capacity = 100, AverageRating = 3.8, RestaurantOwnerId = 24 },
+                 new Restaurant { Id = 5, Name = "Green Wave", Address = "Njegoševa 21", City = "Belgrade", Description = "Vegan restaurant with organic dishes.", Capacity = 50, AverageRating = 5, RestaurantOwnerId = 25 },
+                 new Restaurant { Id = 6, Name = "Casa del Mar", Address = "Obala 7", City = "Herceg Novi", Description = "Mediterranean cuisine with a sea view.", Capacity = 90, AverageRating = 5, RestaurantOwnerId = 25 },
+                 new Restaurant { Id = 7, Name = "Grandma's Kitchen", Address = "Vojvode Mišića 14", City = "Kragujevac", Description = "Traditional homemade Serbian food.", Capacity = 70, AverageRating = 5, RestaurantOwnerId = 26 },
+                 new Restaurant { Id = 8, Name = "Urban Spoon", Address = "Zmaj Jovina 9", City = "Novi Sad", Description = "Fusion cuisine in a modern setting.", Capacity = 85, AverageRating = 5, RestaurantOwnerId = 27 },
+                 new Restaurant { Id = 9, Name = "Le Petit Café", Address = "Francuska 5", City = "Belgrade", Description = "French bistro with croissants and wine.", Capacity = 45, AverageRating = 8, RestaurantOwnerId = 27 },
+                 new Restaurant { Id = 10, Name = "Tandoori Flame", Address = "Đure Jakšića 33", City = "Zrenjanin", Description = "Indian cuisine with authentic spices.", Capacity = 60, AverageRating = 9, RestaurantOwnerId = 28 },
+                 new Restaurant { Id = 11, Name = "Burger Lab", Address = "Miletićeva 18", City = "Pančevo", Description = "Gourmet burgers with homemade sauces.", Capacity = 55, AverageRating = 7, RestaurantOwnerId = 29 },
+                 new Restaurant { Id = 12, Name = "Fish Pot", Address = "Dunavska 2", City = "Sombor", Description = "Seafood specialties and river fish.", Capacity = 75, AverageRating = 5, RestaurantOwnerId = 30 },
+                 new Restaurant { Id = 13, Name = "Pasta Mia", Address = "Kneza Miloša 27", City = "Belgrade", Description = "Fresh pasta and Italian desserts.", Capacity = 65, AverageRating = 5.4, RestaurantOwnerId = 31 },
+                 new Restaurant { Id = 14, Name = "Orient Express", Address = "Nikole Pašića 10", City = "Niš", Description = "Asian cuisine with wok and curry dishes.", Capacity = 80, AverageRating = 6.7, RestaurantOwnerId = 32 },
+                 new Restaurant { Id = 15, Name = "Steakhouse 21", Address = "Bulevar Evrope 21", City = "Novi Sad", Description = "Premium steaks and fine wines.", Capacity = 95, AverageRating = 8.6, RestaurantOwnerId = 33 },
+                 new Restaurant { Id = 16, Name = "Nest", Address = "Gundulićeva 6", City = "Belgrade", Description = "Rustic ambiance with local specialties.", Capacity = 70, AverageRating = 5, RestaurantOwnerId = 32 },
+                 new Restaurant { Id = 17, Name = "Tapas Bar", Address = "Petrovaradinska 4", City = "Novi Sad", Description = "Spanish tapas and sangria.", Capacity = 60, AverageRating = 5, RestaurantOwnerId = 28 },
+                 new Restaurant { Id = 18, Name = "Marko's Tavern", Address = "Glavna 1", City = "Valjevo", Description = "Authentic tavern with live folk music.", Capacity = 100, AverageRating = 5, RestaurantOwnerId = 24 },
+                 new Restaurant { Id = 19, Name = "Thai Orchid", Address = "Vojvode Stepe 19", City = "Belgrade", Description = "Thai cuisine with exotic flavors.", Capacity = 50, AverageRating = 5, RestaurantOwnerId = 24 },
+                 new Restaurant { Id = 20, Name = "Nordic Table", Address = "Skandinavska 3", City = "Novi Sad", Description = "Nordic cuisine with minimalist design.", Capacity = 40, AverageRating = 5, RestaurantOwnerId = 24 }
+             );
 
             modelBuilder.Entity<Meal>().HasData(
-                new Meal { Id = 1, MealName = "Stuffed Peppers", Description = "Homemade peppers stuffed with minced meat and rice.", Price = 6.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219190/Stuffed_20Peppers_20-_20NCBA_20Beef_20Aug_20202431717_zkimq0.jpg", RestaurantId = 1 },
-                new Meal { Id = 2, MealName = "Capricciosa Pizza", Description = "Classic pizza with ham, mushrooms, and cheese.", Price = 8.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219263/Pizza-Capricciosa_8_raj5pt.jpg", RestaurantId = 2 },
-                new Meal { Id = 3, MealName = "Sushi Mix", Description = "Assorted nigiri, maki, and sashimi rolls.", Price = 12.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219415/omatsuri-2_c0esac.jpg", RestaurantId = 3 },
-                new Meal { Id = 4, MealName = "BBQ Ribs", Description = "Smoked pork ribs with homemade BBQ sauce.", Price = 14.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219452/Barbecue-Ribs-Recipe-7_ikifom.jpg", RestaurantId = 4 },
-                new Meal { Id = 5, MealName = "Falafel Bowl", Description = "Vegan bowl with falafel, hummus, and fresh veggies.", Price = 7.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219475/Bol_falafels_a18c8367-1a60-4132-8e78-0f8a3f363288_p2ayhu.jpg", RestaurantId = 5 },
-                new Meal { Id = 6, MealName = "Grilled Sea Bream", Description = "Fresh sea bream with lemon and herbs.", Price = 13.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219536/Gegrillte-Dorade-Rezept-ELAG-Grillplatte-Induktionskochfeld-2020-1-2_elvevn.jpg", RestaurantId = 6 },
-                new Meal { Id = 7, MealName = "Cabbage Rolls", Description = "Traditional Serbian rolls with meat and rice.", Price = 6.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219553/image_vb4wvf.jpg", RestaurantId = 7 },
-                new Meal { Id = 8, MealName = "Pad Thai", Description = "Thai noodles with peanuts, eggs, and vegetables.", Price = 9.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219579/Authentic-Pad-Thai_square-1908_tufobi.jpg", RestaurantId = 8 },
-                new Meal { Id = 9, MealName = "Quiche Lorraine", Description = "French tart with eggs, cheese, and bacon.", Price = 7.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219644/8-quiche-500x500_uvgs6y.webp", RestaurantId = 9 },
-                new Meal { Id = 10, MealName = "Chicken Tikka Masala", Description = "Chicken in creamy Indian tomato sauce.", Price = 10.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219669/Chicken-Tikka-Masala_0-SQ_cqaxop.jpg", RestaurantId = 10 },
-                new Meal { Id = 11, MealName = "Classic Burger", Description = "Beef burger with cheese, lettuce, and sauce.", Price = 8.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219720/frenchs_burger_styled-image_800x800_pqivq6.png", RestaurantId = 1 },
-                new Meal { Id = 12, MealName = "Fish Soup", Description = "Traditional soup made from river fish.", Price = 5.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219766/fish-soup-in-a-white-bowl-square-e1691445762883_pvfccd.jpg", RestaurantId = 6 },
-                new Meal { Id = 13, MealName = "Pasta Carbonara", Description = "Pasta with pancetta, eggs, and parmesan.", Price = 9.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219822/Spaghetti-carbonara-1-500x500_ummyjp.jpg", RestaurantId = 2 },
-                new Meal { Id = 14, MealName = "Wok Veggies", Description = "Mixed vegetables stir-fried in soy sauce.", Price = 7.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219892/vegetable_stir_fry_hn87jz.jpg", RestaurantId = 8 },
-                new Meal { Id = 15, MealName = "Peppercorn Steak", Description = "Premium beef steak with creamy pepper sauce.", Price = 15.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219939/Peppercorn-Steak_ae5dkp.jpg", RestaurantId = 4 },
-                new Meal { Id = 16, MealName = "Vegan Lasagna", Description = "Lasagna with zucchini, eggplant, and tofu.", Price = 8.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761219985/Vegan-Lasagna-17_sq4o7j.jpg", RestaurantId = 5 },
-                new Meal { Id = 17, MealName = "Tuna Steak", Description = "Grilled tuna fillet with lime and arugula.", Price = 13.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761220032/close-up-of-grilled-sliced-tuna-steak-medium-rare-1_zpdonx.jpg", RestaurantId = 6 },
-                new Meal { Id = 18, MealName = "Ćevapi with Onion", Description = "Traditional grilled minced meat served with flatbread and chopped onion.", Price = 6.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761220073/cevapi-with-onion-on-oval-plater-middle-eastern-cuisine-salad-plates-and-lavash-bread_tlphkv.jpg", RestaurantId = 7 },
-                new Meal { Id = 19, MealName = "Tom Yum Soup", Description = "Spicy Thai soup with shrimp, lemongrass, and chili.", Price = 7.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761220108/Tom-Yum-soup_2_ti1rim.jpg", RestaurantId = 8 },
-                new Meal { Id = 20, MealName = "Croque Monsieur", Description = "French toasted sandwich with ham and melted cheese.", Price = 6.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761220177/croque-monsieur-66a219aa5f0b2.jpg_h29478.jpg", RestaurantId = 9 }
-            );
+                new Meal { Id = 1, MealName = "Stuffed Peppers", Description = "Homemade peppers stuffed with minced meat and rice.", Price = 6.5, MealImageUrl = null, RestaurantId = 1 },
+                new Meal { Id = 2, MealName = "Capricciosa Pizza", Description = "Classic pizza with ham, mushrooms, and cheese.", Price = 8.0, MealImageUrl = null, RestaurantId = 2 },
+                new Meal { Id = 3, MealName = "Sushi Mix", Description = "Assorted nigiri, maki, and sashimi rolls.", Price = 12.5, MealImageUrl = null, RestaurantId = 3 },
+                new Meal { Id = 4, MealName = "BBQ Ribs", Description = "Smoked pork ribs with homemade BBQ sauce.", Price = 14.0, MealImageUrl = null, RestaurantId = 4 },
+                new Meal { Id = 5, MealName = "Falafel Bowl", Description = "Vegan bowl with falafel, hummus, and fresh veggies.", Price = 7.5, MealImageUrl = null, RestaurantId = 5 },
+                new Meal { Id = 6, MealName = "Grilled Sea Bream", Description = "Fresh sea bream with lemon and herbs.", Price = 13.0, MealImageUrl = null, RestaurantId = 6 },
+                new Meal { Id = 7, MealName = "Cabbage Rolls", Description = "Traditional Serbian rolls with meat and rice.", Price = 6.0, MealImageUrl = null, RestaurantId = 7 },
+                new Meal { Id = 8, MealName = "Pad Thai", Description = "Thai noodles with peanuts, eggs, and vegetables.", Price = 9.5, MealImageUrl = null, RestaurantId = 8 },
+                new Meal { Id = 9, MealName = "Quiche Lorraine", Description = "French tart with eggs, cheese, and bacon.", Price = 7.0, MealImageUrl = null, RestaurantId = 9 },
+                new Meal { Id = 10, MealName = "Chicken Tikka Masala", Description = "Chicken in creamy Indian tomato sauce.", Price = 10.5, MealImageUrl = null, RestaurantId = 10 },
+                new Meal { Id = 11, MealName = "Classic Burger", Description = "Beef burger with cheese, lettuce, and sauce.", Price = 8.5, MealImageUrl = null, RestaurantId = 1 },
+                new Meal { Id = 12, MealName = "Fish Soup", Description = "Traditional soup made from river fish.", Price = 5.5, MealImageUrl = null, RestaurantId = 6 },
+                new Meal { Id = 13, MealName = "Pasta Carbonara", Description = "Pasta with pancetta, eggs, and parmesan.", Price = 9.0, MealImageUrl = null, RestaurantId = 2 },
+                new Meal { Id = 14, MealName = "Wok Veggies", Description = "Mixed vegetables stir-fried in soy sauce.", Price = 7.0, MealImageUrl = null, RestaurantId = 8 },
+                new Meal { Id = 15, MealName = "Peppercorn Steak", Description = "Premium beef steak with creamy pepper sauce.", Price = 15.5, MealImageUrl = null, RestaurantId = 4 },
+                new Meal { Id = 16, MealName = "Vegan Lasagna", Description = "Lasagna with zucchini, eggplant, and tofu.", Price = 8.0, MealImageUrl = null, RestaurantId = 5 },
+                new Meal { Id = 17, MealName = "Tuna Steak", Description = "Grilled tuna fillet with lime and arugula.", Price = 13.5, MealImageUrl = null, RestaurantId = 6 },
+                new Meal { Id = 18, MealName = "Ćevapi with Onion", Description = "Traditional grilled minced meat served with flatbread and chopped onion.", Price = 6.5, MealImageUrl = null, RestaurantId = 7 },
+                new Meal { Id = 19, MealName = "Tom Yum Soup", Description = "Spicy Thai soup with shrimp, lemongrass, and chili.", Price = 7.5, MealImageUrl = null, RestaurantId = 8 },
+                new Meal { Id = 20, MealName = "Croque Monsieur", Description = "French toasted sandwich with ham and melted cheese.", Price = 6.0, MealImageUrl = null, RestaurantId = 9 }
+                );
+            modelBuilder.Entity<Order>().HasData(
+    new Order { Id = 1, CustomerId = 4, RestaurantId = 20, OrderTime = null, Status = OrderStatus.NaCekanju },
+    new Order { Id = 2, CustomerId = 5, RestaurantId = 19, OrderTime = new TimeSpan(14, 30, 0), Status = OrderStatus.Otkazana },
+    new Order { Id = 3, CustomerId = 6, RestaurantId = 19, OrderTime = null, Status = OrderStatus.NaCekanju },
+    new Order { Id = 4, CustomerId = 7, RestaurantId = 18, OrderTime = null, Status = OrderStatus.NaCekanju },
+    new Order { Id = 5, CustomerId = 8, RestaurantId = 18, OrderTime = null, Status = OrderStatus.NaCekanju },
+    new Order { Id = 6, CustomerId = 9, RestaurantId = 18, OrderTime = null, Status = OrderStatus.NaCekanju },
+    new Order { Id = 7, CustomerId = 10, RestaurantId = 19, OrderTime = null, Status = OrderStatus.NaCekanju },
+    new Order { Id = 8, CustomerId = 11, RestaurantId = 20, OrderTime = null, Status = OrderStatus.NaCekanju },
+    new Order { Id = 9, CustomerId = 12, RestaurantId = 20, OrderTime = null, Status = OrderStatus.NaCekanju },
+    new Order { Id = 10, CustomerId = 13, RestaurantId = 20, OrderTime = new TimeSpan(14, 30, 0), Status = OrderStatus.Otkazana }
+);
 
+            // OrderMeals (join table for meals + quantity)
+            modelBuilder.Entity<OrderMeal>().HasData(
+                new OrderMeal { OrderId = 1, MealId = 1, Quantity = 2 },
+                new OrderMeal { OrderId = 1, MealId = 11, Quantity = 1 },
+                new OrderMeal { OrderId = 2, MealId = 1, Quantity = 1 },
+                new OrderMeal { OrderId = 2, MealId = 11, Quantity = 1 },
+                new OrderMeal { OrderId = 3, MealId = 1, Quantity = 3 },
+                new OrderMeal { OrderId = 4, MealId = 2, Quantity = 2 },
+                new OrderMeal { OrderId = 4, MealId = 13, Quantity = 1 },
+                new OrderMeal { OrderId = 5, MealId = 2, Quantity = 1 },
+                new OrderMeal { OrderId = 5, MealId = 13, Quantity = 2 },
+                new OrderMeal { OrderId = 6, MealId = 3, Quantity = 2 },
+                new OrderMeal { OrderId = 7, MealId = 3, Quantity = 1 },
+                new OrderMeal { OrderId = 8, MealId = 4, Quantity = 3 },
+                new OrderMeal { OrderId = 9, MealId = 4, Quantity = 2 },
+                new OrderMeal { OrderId = 10, MealId = 4, Quantity = 1 }
+            );
             modelBuilder.Entity("MealAllergens").HasData(
                 // Jelo 1: Stuffed Peppers (Id=1) - Pšenica (1), Celer (22)
                 new { MealId = 1, AllergenId = 1 },
