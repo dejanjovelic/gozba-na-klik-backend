@@ -53,46 +53,19 @@ namespace gozba_na_klik_backend.Services
 
         public async Task<ResponseOrderDto> CreateOrderAsync(CreateOrderDto dto)
         {
-            Restaurant restaurant = await _restaurantRepository.GetRestaurantByIdAsync(dto.RestaurantId);
-            if (restaurant == null) throw new NotFoundException($"Restaurant with ID: {dto.RestaurantId} not found.");
-            if (_restaurantService.IsRestaurantOpen(restaurant)) throw new BadRequestException("Restaurant is closed.");
+            Restaurant restaurant = await ValidateRestaurantAsync(dto.RestaurantId);
 
-            Customer customer = await _customerRepository.GetByIdAsync(dto.CustomerId);
-            if (customer == null) throw new NotFoundException($"Customer with ID: {dto.CustomerId} not found.");
+            Customer customer = await ValidateCustomerAsync(dto.CustomerId);
 
             List<Meal> meals = await _mealRepository.GetMealsFromOrderAsync(dto.Items);
 
-            double totalPrice = meals.Sum(meal =>
-            {
-                int quantity = dto.Items.First(i => i.MealId == meal.Id).Quantity;
-                return meal.Price * quantity;
-            });
-            totalPrice += deliveryPrice;
+            double totalPrice = CalculateTotalPrice(dto, meals);
 
             bool hasDangerousMeals = meals
             .Any(meal => meal.Allergens
             .Any(a => customer.Allergens.Any(ca => ca.Id == a.Id)));
 
-            Address deliveryAddress = customer.Addresses.FirstOrDefault(a => a.Id == dto.DeliveryAddressId);
-
-            Order newOrder = new Order
-            {
-                CustomerId = dto.CustomerId,
-                RestaurantId = dto.RestaurantId,
-                DeliveryAddressId = deliveryAddress.Id,
-                OrderTime = DateTime.Now.TimeOfDay,
-                Status = OrderStatus.NaCekanju,
-                TotalPrice = totalPrice
-            };
-
-            foreach (var item in dto.Items)
-            {
-                newOrder.OrderItems.Add(new OrderMeal
-                {
-                    MealId = item.MealId,
-                    Quantity = item.Quantity
-                });
-            }
+            Order newOrder = CreateOrderEntity(customer, dto, totalPrice);
 
             ResponseOrderDto responseDto = _mapper.Map<ResponseOrderDto>(await _orderRepository.CreateOrderAsync(newOrder));
             responseDto.RequiresAllergenWarn = hasDangerousMeals;
@@ -107,6 +80,61 @@ namespace gozba_na_klik_backend.Services
 
             await _orderRepository.UpdateOrderStatusAsync(orderId, status, order.OrderTime.Value);
             return;
+        }
+
+        private async Task<Restaurant> ValidateRestaurantAsync(int restaurantId)
+        {
+            var restaurant = await _restaurantRepository.GetRestaurantByIdAsync(restaurantId);
+            if (restaurant == null) throw new NotFoundException($"Restaurant with ID {restaurantId} not found.");
+
+            if (_restaurantService.IsRestaurantOpen(restaurant))
+                throw new BadRequestException("Restaurant is closed.");
+
+            return restaurant;
+        }
+
+        private async Task<Customer> ValidateCustomerAsync(int customerId)
+        {
+            var customer = await _customerRepository.GetByIdAsync(customerId);
+            if (customer == null)
+                throw new NotFoundException($"Customer with ID: {customerId} not found.");
+
+            return customer;
+        }
+
+        private double CalculateTotalPrice(CreateOrderDto dto, List<Meal> meals)
+        {
+            double totalPrice = meals.Sum(meal =>
+            {
+                int quantity = dto.Items.First(i => i.MealId == meal.Id).Quantity;
+                return meal.Price * quantity;
+            });
+            totalPrice += deliveryPrice;
+            return totalPrice;
+        }
+
+        private Order CreateOrderEntity(Customer customer,CreateOrderDto dto, double totalPrice)
+        {
+            var deliveryAddress = customer.Addresses
+            .FirstOrDefault(a => a.Id == dto.DeliveryAddressId);
+
+            if (deliveryAddress == null)
+                throw new BadRequestException("Invalid delivery address.");
+
+            return new Order
+            {
+                CustomerId = dto.CustomerId,
+                RestaurantId = dto.RestaurantId,
+                DeliveryAddressId = dto.DeliveryAddressId,
+                OrderTime = DateTime.Now.TimeOfDay,
+                Status = OrderStatus.NaCekanju,
+                TotalPrice = totalPrice,
+                OrderItems = dto.Items.Select(item => new OrderMeal
+                {
+                    MealId = item.MealId,
+                    Quantity = item.Quantity
+                }).ToList()
+            };
         }
     }
 }
