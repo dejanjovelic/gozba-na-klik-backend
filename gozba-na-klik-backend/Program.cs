@@ -9,6 +9,7 @@ using gozba_na_klik_backend.Services.IServices;
 using gozba_na_klik_backend.Settings;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using gozba_na_klik_backend.Settings.Mappings;
 
 namespace gozba_na_klik_backend
 {
@@ -61,14 +62,16 @@ namespace gozba_na_klik_backend
             {
                 cfg.AddProfile<MealProfile>();
                 cfg.AddProfile<OrderProfile>();
+                cfg.AddProfile<RestaurantProfile>();
+                cfg.AddProfile<CourierProfile>();
+                cfg.AddProfile<AllergenProfile>();
+                cfg.AddProfile<OrderMealProfile>();
             });
-
-            builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-        
+
             var app = builder.Build();
             app.UseCors("AllowAllOrigins");
 

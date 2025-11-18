@@ -38,12 +38,14 @@ namespace gozba_na_klik_backend.Controllers
             var courier = await _courierService.GetByIdAsync(courierId);
             return Ok(courier);
         }
+
         [HttpPut("status")]
         public async Task<IActionResult> UpdateCourierStatus()
         {
             await _courierService.UpdateCourierStatusAsync();
             return Ok("Courier status succesfully updated");
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAllCouriers()
         {
