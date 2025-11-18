@@ -40,7 +40,7 @@ namespace gozba_na_klik_backend.Services
             return await _orderRepository.GetOrdersByOwnerIdAsync(ownerId);
         }
 
-        public async Task UpdateOrderStatusAsync(int orderId, OrderStatus newStatus, TimeSpan orderTime)
+        public async Task UpdateOrderStatusAsync(int orderId, OrderStatus newStatus, DateTime orderTime)
         {
             if (orderId == 0)
                 throw new BadRequestException("Invalid data.");
@@ -87,7 +87,7 @@ namespace gozba_na_klik_backend.Services
             var restaurant = await _restaurantRepository.GetRestaurantByIdAsync(restaurantId);
             if (restaurant == null) throw new NotFoundException($"Restaurant with ID {restaurantId} not found.");
 
-            if (_restaurantService.IsRestaurantOpen(restaurant))
+            if (!_restaurantService.IsRestaurantOpen(restaurant)) 
                 throw new BadRequestException("Restaurant is closed.");
 
             return restaurant;
@@ -126,7 +126,7 @@ namespace gozba_na_klik_backend.Services
                 CustomerId = dto.CustomerId,
                 RestaurantId = dto.RestaurantId,
                 DeliveryAddressId = dto.DeliveryAddressId,
-                OrderTime = DateTime.Now.TimeOfDay,
+                OrderTime = DateTime.UtcNow,
                 Status = OrderStatus.NaCekanju,
                 TotalPrice = totalPrice,
                 OrderItems = dto.Items.Select(item => new OrderMeal

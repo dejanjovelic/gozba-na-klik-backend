@@ -13,6 +13,7 @@ namespace gozba_na_klik_backend.Model
         public DbSet<Meal> Meals { get; set; }
         public DbSet<Courier> Couriers { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<WorkingHours> WorkingHours { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -211,8 +212,25 @@ namespace gozba_na_klik_backend.Model
                 new Address { Id = 16, Street = "Industrijska", StreetNumber = 10, City = "Pančevo", ZipCode = "26000", CustomerId = 13 }
             );
 
+            modelBuilder.Entity<WorkingHours>().HasData(
+                    new WorkingHours { Id = 1, DayOfTheWeek = DayOfWeek.Monday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 1 },
+                    new WorkingHours { Id = 2, DayOfTheWeek = DayOfWeek.Tuesday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 1 },
+                    new WorkingHours { Id = 3, DayOfTheWeek = DayOfWeek.Wednesday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 1 },
+                    new WorkingHours { Id = 4, DayOfTheWeek = DayOfWeek.Thursday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 1 },
+                    new WorkingHours { Id = 5, DayOfTheWeek = DayOfWeek.Friday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 1 },
+                    new WorkingHours { Id = 6, DayOfTheWeek = DayOfWeek.Saturday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 1 },
+                    new WorkingHours { Id = 7, DayOfTheWeek = DayOfWeek.Sunday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 1 },
+                    new WorkingHours { Id = 8, DayOfTheWeek = DayOfWeek.Monday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 2 },
+                    new WorkingHours { Id = 9, DayOfTheWeek = DayOfWeek.Tuesday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 2 },
+                    new WorkingHours { Id = 10, DayOfTheWeek = DayOfWeek.Wednesday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 2 },
+                    new WorkingHours { Id = 11, DayOfTheWeek = DayOfWeek.Thursday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 2 },
+                    new WorkingHours { Id = 12, DayOfTheWeek = DayOfWeek.Friday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 2 },
+                    new WorkingHours { Id = 13, DayOfTheWeek = DayOfWeek.Saturday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 2 },
+                    new WorkingHours { Id = 14, DayOfTheWeek = DayOfWeek.Sunday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 2 }
+                );
+
             modelBuilder.Entity<Restaurant>().HasData(
-                 new Restaurant { Id = 1, Name = "Bistro Nova", Address = "Kralja Petra 12", City = "Belgrade", Description = "Modern Serbian cuisine with a twist.", Capacity = 60, AverageRating = 6.5, RestaurantOwnerId = 24 },
+                 new Restaurant { Id = 1, Name = "Bistro Nova", Address = "Kralja Petra 12", City = "Belgrade", Description = "Modern Serbian cuisine with a twist.", Capacity = 60, AverageRating = 6.5, RestaurantOwnerId = 24},
                  new Restaurant { Id = 2, Name = "La Tavola", Address = "Cara Dušana 45", City = "Novi Sad", Description = "Authentic Italian trattoria.", Capacity = 80, AverageRating = 9.5, RestaurantOwnerId = 24 },
                  new Restaurant { Id = 3, Name = "Sakura Zen", Address = "Bulevar Oslobođenja 88", City = "Niš", Description = "Japanese sushi bar with minimalist ambiance.", Capacity = 40, AverageRating = 8.2, RestaurantOwnerId = 24 },
                  new Restaurant { Id = 4, Name = "Grill & Chill", Address = "Trg Slobode 3", City = "Subotica", Description = "American-style BBQ with craft beers.", Capacity = 100, AverageRating = 3.8, RestaurantOwnerId = 24 },
