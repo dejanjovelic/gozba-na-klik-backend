@@ -40,6 +40,5 @@ namespace gozba_na_klik_backend.Controllers
         {
             return Ok(await _orderService.UpdateCourierActiveOrderStatusAsync(orderId, courierId, updateOrder));
         }
-
     }
 }
