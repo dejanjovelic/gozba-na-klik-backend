@@ -8,7 +8,8 @@ namespace gozba_na_klik_backend.Settings.Mappings
     {
         public OrderMealProfile()
         {
-            CreateMap<OrderMeal, CourierOrderMealDto>();
+            CreateMap<OrderMeal, CourierOrderMealDto>()
+                .ForMember(dest => dest.MealName, opt => opt.MapFrom(src => src.Meal.MealName));
 
         }
     }

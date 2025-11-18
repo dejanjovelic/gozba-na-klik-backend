@@ -81,6 +81,11 @@ namespace gozba_na_klik_backend.Services
 
         private static void ValidateCourierOrderUpdateData(int orderId, int courierId, UpdateOrderDTO updateOrder, Order order)
         {
+            if (order == null)
+            {
+                throw new NotFoundException($"Order with Id: {order.Id} not found.");
+            }
+
             if (order.CourierId != courierId)
             {
                 throw new ForbiddenException($"You are not authorized to update order with ID: {orderId}.");

@@ -10,7 +10,7 @@ namespace gozba_na_klik_backend.Settings.Mappings
         {
             CreateMap<Meal, MealWithAllergensDto>();
             CreateMap<Meal, MealDto>();
-            CreateMap<Meal, CourierOrderMealDto>();
+           
         }
     }
 }
