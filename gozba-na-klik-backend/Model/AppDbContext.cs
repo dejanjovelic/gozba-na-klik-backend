@@ -13,6 +13,7 @@ namespace gozba_na_klik_backend.Model
         public DbSet<Meal> Meals { get; set; }
         public DbSet<Courier> Couriers { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<WorkingHours> WorkingHours { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -211,8 +212,25 @@ namespace gozba_na_klik_backend.Model
                 new Address { Id = 16, Street = "Industrijska", StreetNumber = 10, City = "Pančevo", ZipCode = "26000", CustomerId = 13 }
             );
 
+            modelBuilder.Entity<WorkingHours>().HasData(
+                    new WorkingHours { Id = 1, DayOfTheWeek = DayOfWeek.Monday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 1 },
+                    new WorkingHours { Id = 2, DayOfTheWeek = DayOfWeek.Tuesday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 1 },
+                    new WorkingHours { Id = 3, DayOfTheWeek = DayOfWeek.Wednesday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 1 },
+                    new WorkingHours { Id = 4, DayOfTheWeek = DayOfWeek.Thursday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 1 },
+                    new WorkingHours { Id = 5, DayOfTheWeek = DayOfWeek.Friday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 1 },
+                    new WorkingHours { Id = 6, DayOfTheWeek = DayOfWeek.Saturday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 1 },
+                    new WorkingHours { Id = 7, DayOfTheWeek = DayOfWeek.Sunday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 1 },
+                    new WorkingHours { Id = 8, DayOfTheWeek = DayOfWeek.Monday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 2 },
+                    new WorkingHours { Id = 9, DayOfTheWeek = DayOfWeek.Tuesday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 2 },
+                    new WorkingHours { Id = 10, DayOfTheWeek = DayOfWeek.Wednesday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 2 },
+                    new WorkingHours { Id = 11, DayOfTheWeek = DayOfWeek.Thursday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 2 },
+                    new WorkingHours { Id = 12, DayOfTheWeek = DayOfWeek.Friday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 2 },
+                    new WorkingHours { Id = 13, DayOfTheWeek = DayOfWeek.Saturday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 2 },
+                    new WorkingHours { Id = 14, DayOfTheWeek = DayOfWeek.Sunday, StartingTime = new TimeSpan(07, 00, 00), EndingTime = new TimeSpan(23, 00, 00), RestaurantId = 2 }
+                );
+
             modelBuilder.Entity<Restaurant>().HasData(
-                 new Restaurant { Id = 1, Name = "Bistro Nova", Address = "Kralja Petra 12", City = "Belgrade", Description = "Modern Serbian cuisine with a twist.", Capacity = 60, AverageRating = 6.5, RestaurantOwnerId = 24 },
+                 new Restaurant { Id = 1, Name = "Bistro Nova", Address = "Kralja Petra 12", City = "Belgrade", Description = "Modern Serbian cuisine with a twist.", Capacity = 60, AverageRating = 6.5, RestaurantOwnerId = 24},
                  new Restaurant { Id = 2, Name = "La Tavola", Address = "Cara Dušana 45", City = "Novi Sad", Description = "Authentic Italian trattoria.", Capacity = 80, AverageRating = 9.5, RestaurantOwnerId = 24 },
                  new Restaurant { Id = 3, Name = "Sakura Zen", Address = "Bulevar Oslobođenja 88", City = "Niš", Description = "Japanese sushi bar with minimalist ambiance.", Capacity = 40, AverageRating = 8.2, RestaurantOwnerId = 24 },
                  new Restaurant { Id = 4, Name = "Grill & Chill", Address = "Trg Slobode 3", City = "Subotica", Description = "American-style BBQ with craft beers.", Capacity = 100, AverageRating = 3.8, RestaurantOwnerId = 24 },
@@ -256,36 +274,7 @@ namespace gozba_na_klik_backend.Model
                 new Meal { Id = 19, MealName = "Tom Yum Soup", Description = "Spicy Thai soup with shrimp, lemongrass, and chili.", Price = 7.5, MealImageUrl = null, RestaurantId = 8 },
                 new Meal { Id = 20, MealName = "Croque Monsieur", Description = "French toasted sandwich with ham and melted cheese.", Price = 6.0, MealImageUrl = null, RestaurantId = 9 }
                 );
-            modelBuilder.Entity<Order>().HasData(
-    new Order { Id = 1, CustomerId = 4, RestaurantId = 20, OrderTime = null, Status = OrderStatus.NaCekanju },
-    new Order { Id = 2, CustomerId = 5, RestaurantId = 19, OrderTime = new TimeSpan(14, 30, 0), Status = OrderStatus.Otkazana },
-    new Order { Id = 3, CustomerId = 6, RestaurantId = 19, OrderTime = null, Status = OrderStatus.NaCekanju },
-    new Order { Id = 4, CustomerId = 7, RestaurantId = 18, OrderTime = null, Status = OrderStatus.NaCekanju },
-    new Order { Id = 5, CustomerId = 8, RestaurantId = 18, OrderTime = null, Status = OrderStatus.NaCekanju },
-    new Order { Id = 6, CustomerId = 9, RestaurantId = 18, OrderTime = null, Status = OrderStatus.NaCekanju },
-    new Order { Id = 7, CustomerId = 10, RestaurantId = 19, OrderTime = null, Status = OrderStatus.NaCekanju },
-    new Order { Id = 8, CustomerId = 11, RestaurantId = 20, OrderTime = null, Status = OrderStatus.NaCekanju },
-    new Order { Id = 9, CustomerId = 12, RestaurantId = 20, OrderTime = null, Status = OrderStatus.NaCekanju },
-    new Order { Id = 10, CustomerId = 13, RestaurantId = 20, OrderTime = new TimeSpan(14, 30, 0), Status = OrderStatus.Otkazana }
-);
 
-            // OrderMeals (join table for meals + quantity)
-            modelBuilder.Entity<OrderMeal>().HasData(
-                new OrderMeal { OrderId = 1, MealId = 1, Quantity = 2 },
-                new OrderMeal { OrderId = 1, MealId = 11, Quantity = 1 },
-                new OrderMeal { OrderId = 2, MealId = 1, Quantity = 1 },
-                new OrderMeal { OrderId = 2, MealId = 11, Quantity = 1 },
-                new OrderMeal { OrderId = 3, MealId = 1, Quantity = 3 },
-                new OrderMeal { OrderId = 4, MealId = 2, Quantity = 2 },
-                new OrderMeal { OrderId = 4, MealId = 13, Quantity = 1 },
-                new OrderMeal { OrderId = 5, MealId = 2, Quantity = 1 },
-                new OrderMeal { OrderId = 5, MealId = 13, Quantity = 2 },
-                new OrderMeal { OrderId = 6, MealId = 3, Quantity = 2 },
-                new OrderMeal { OrderId = 7, MealId = 3, Quantity = 1 },
-                new OrderMeal { OrderId = 8, MealId = 4, Quantity = 3 },
-                new OrderMeal { OrderId = 9, MealId = 4, Quantity = 2 },
-                new OrderMeal { OrderId = 10, MealId = 4, Quantity = 1 }
-            );
             modelBuilder.Entity("MealAllergens").HasData(
                 // Jelo 1: Stuffed Peppers (Id=1) - Pšenica (1), Celer (22)
                 new { MealId = 1, AllergenId = 1 },
@@ -368,6 +357,13 @@ namespace gozba_na_klik_backend.Model
                 new { MealId = 20, AllergenId = 10 }
             );
 
+            modelBuilder.Entity<Order>().HasData(
+    new Order { Id = 1, CustomerId = 5, DeliveryAddressId = 3, RestaurantId = 1, OrderTime = null, Status = OrderStatus.NaCekanju,
+                OrderItems = new List<OrderMeal>(), TotalPrice = 50 });
+            // OrderMeals (join table for meals + quantity)
+            modelBuilder.Entity<OrderMeal>().HasData(
+                new OrderMeal { OrderId = 1, MealId = 1, Quantity = 2 }
+            );
         }
     }
 }

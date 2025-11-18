@@ -9,5 +9,6 @@ namespace gozba_na_klik_backend.Services.IServices
         Task<PaginatedListDto<Restaurant>> GetAllRestaurantsPaginatedAsync(int page, int pageSize);
         List<RestaurantSortTypeOptionDto> GetAllSortTypes();
         Task<RestaurantWithMealsDto> GetRestaurantWithMealsAsync(int restaurantId);
+        bool IsRestaurantOpen(Restaurant restaurant);
     }
 }
