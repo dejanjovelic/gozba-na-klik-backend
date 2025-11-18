@@ -36,54 +36,59 @@ namespace gozba_na_klik_backend.Model
                 .WithMany("Meals")
                 .UsingEntity<Dictionary<string, object>>(
                 "MealAllergens",
-                j=>j.HasOne<Allergen>().WithMany().HasForeignKey("AllergenId").OnDelete(DeleteBehavior.Cascade),
-                j=>j.HasOne<Meal>().WithMany().HasForeignKey("MealId").OnDelete(DeleteBehavior.Cascade)
+                j => j.HasOne<Allergen>().WithMany().HasForeignKey("AllergenId").OnDelete(DeleteBehavior.Cascade),
+                j => j.HasOne<Meal>().WithMany().HasForeignKey("MealId").OnDelete(DeleteBehavior.Cascade)
                 );
 
             modelBuilder.Entity<Restaurant>()
-                .HasMany(restaurant=> restaurant.MealsOnMenu)
+                .HasMany(restaurant => restaurant.MealsOnMenu)
                 .WithOne()
-                .HasForeignKey(restauant=>restauant.RestaurantId)
+                .HasForeignKey(restauant => restauant.RestaurantId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Order>(entity =>
-    {
-        entity.HasKey(o => o.Id);
+            {
+                entity.HasKey(o => o.Id);
 
-        entity.HasOne(o => o.Customer)
-              .WithMany(c => c.Orders)
-              .HasForeignKey(o => o.CustomerId)
-              .OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(o => o.Customer)
+                      .WithMany(c => c.Orders)
+                      .HasForeignKey(o => o.CustomerId)
+                      .OnDelete(DeleteBehavior.Restrict);
 
-        entity.HasOne(o => o.Restaurant)
-              .WithMany(r => r.Orders)
-              .HasForeignKey(o => o.RestaurantId)
-              .OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(o => o.Restaurant)
+                      .WithMany(r => r.Orders)
+                      .HasForeignKey(o => o.RestaurantId)
+                      .OnDelete(DeleteBehavior.Restrict);
 
-        entity.Property(o => o.OrderTime).IsRequired(false); 
+                entity.Property(o => o.OrderTime).IsRequired(false);
 
-        entity.Property(o => o.Status)
-              .HasConversion<int>()
-              .IsRequired();
-    });
+                entity.Property(o => o.Status)
+                      .HasConversion<int>()
+                      .IsRequired();
+            });
 
-    // OrderMeal (join entity to track quantity)
-    modelBuilder.Entity<OrderMeal>(entity =>
-    {
-        entity.HasKey(om => new { om.OrderId, om.MealId });
 
-        entity.HasOne(om => om.Order)
-              .WithMany(o => o.OrderItems)
-              .HasForeignKey(om => om.OrderId)
-              .OnDelete(DeleteBehavior.Cascade);
 
-        entity.HasOne(om => om.Meal)
-              .WithMany(m => m.OrderMeals)
-              .HasForeignKey(om => om.MealId)
-              .OnDelete(DeleteBehavior.Cascade);
+            // OrderMeal (join entity to track quantity)
+            modelBuilder.Entity<OrderMeal>(entity =>
+            {
+                entity.HasKey(om => new { om.OrderId, om.MealId });
 
-        entity.Property(om => om.Quantity).IsRequired();
-    });
+                entity
+                 .HasOne(om => om.Meal)
+                 .WithMany(m => m.OrderMeals)
+                 .HasForeignKey(om => om.MealId);
+
+
+                entity.HasOne<Order>()
+                      .WithMany(o => o.OrderItems)
+                      .HasForeignKey(om => om.OrderId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+
+
+                entity.Property(om => om.Quantity).IsRequired();
+            });
 
 
             modelBuilder.Entity<Administrator>().HasData(
@@ -257,17 +262,19 @@ namespace gozba_na_klik_backend.Model
                 new Meal { Id = 20, MealName = "Croque Monsieur", Description = "French toasted sandwich with ham and melted cheese.", Price = 6.0, MealImageUrl = null, RestaurantId = 9 }
                 );
             modelBuilder.Entity<Order>().HasData(
-    new Order { Id = 1, CustomerId = 4, RestaurantId = 20, OrderTime = null, Status = OrderStatus.NaCekanju },
-    new Order { Id = 2, CustomerId = 5, RestaurantId = 19, OrderTime = new TimeSpan(14, 30, 0), Status = OrderStatus.Otkazana },
-    new Order { Id = 3, CustomerId = 6, RestaurantId = 19, OrderTime = null, Status = OrderStatus.NaCekanju },
-    new Order { Id = 4, CustomerId = 7, RestaurantId = 18, OrderTime = null, Status = OrderStatus.NaCekanju },
-    new Order { Id = 5, CustomerId = 8, RestaurantId = 18, OrderTime = null, Status = OrderStatus.NaCekanju },
-    new Order { Id = 6, CustomerId = 9, RestaurantId = 18, OrderTime = null, Status = OrderStatus.NaCekanju },
-    new Order { Id = 7, CustomerId = 10, RestaurantId = 19, OrderTime = null, Status = OrderStatus.NaCekanju },
-    new Order { Id = 8, CustomerId = 11, RestaurantId = 20, OrderTime = null, Status = OrderStatus.NaCekanju },
-    new Order { Id = 9, CustomerId = 12, RestaurantId = 20, OrderTime = null, Status = OrderStatus.NaCekanju },
-    new Order { Id = 10, CustomerId = 13, RestaurantId = 20, OrderTime = new TimeSpan(14, 30, 0), Status = OrderStatus.Otkazana }
-);
+                 new Order { Id = 1, CustomerId = 4, RestaurantId = 20, DeliveryAddressId = 1, CourierId = 14, OrderTime = null, Status = OrderStatus.Pending },
+                 new Order { Id = 2, CustomerId = 5, RestaurantId = 19, DeliveryAddressId = 3, CourierId = 15, OrderTime = DateTime.UtcNow, Status = OrderStatus.Cancelled },
+                 new Order { Id = 3, CustomerId = 6, RestaurantId = 19, DeliveryAddressId = 4, CourierId = 16, OrderTime = null, Status = OrderStatus.Pending },
+                 new Order { Id = 4, CustomerId = 7, RestaurantId = 18, DeliveryAddressId = 7, CourierId = 17, OrderTime = null, Status = OrderStatus.Pending },
+                 new Order { Id = 5, CustomerId = 8, RestaurantId = 18, DeliveryAddressId = 8, CourierId = 18, OrderTime = null, Status = OrderStatus.Pending },
+                 new Order { Id = 6, CustomerId = 9, RestaurantId = 18, DeliveryAddressId = 10, CourierId = 19, OrderTime = null, Status = OrderStatus.Pending },
+                 new Order { Id = 7, CustomerId = 10, RestaurantId = 19, DeliveryAddressId = 11, CourierId = 20, OrderTime = null, Status = OrderStatus.Accepted },
+                 new Order { Id = 8, CustomerId = 11, RestaurantId = 20, DeliveryAddressId = 13, CourierId = 21, OrderTime = null, Status = OrderStatus.Accepted },
+                 new Order { Id = 9, CustomerId = 12, RestaurantId = 20, DeliveryAddressId = 14, CourierId = 22, OrderTime = null, Status = OrderStatus.DeliveryInProgress },
+                 new Order { Id = 10, CustomerId = 13, RestaurantId = 20, DeliveryAddressId = 16, CourierId = 23, OrderTime = DateTime.UtcNow, Status = OrderStatus.DeliveryInProgress }
+             );
+
+
 
             // OrderMeals (join table for meals + quantity)
             modelBuilder.Entity<OrderMeal>().HasData(
@@ -367,6 +374,7 @@ namespace gozba_na_klik_backend.Model
                 new { MealId = 20, AllergenId = 1 },
                 new { MealId = 20, AllergenId = 10 }
             );
+
 
         }
     }

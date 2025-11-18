@@ -10,7 +10,7 @@ namespace gozba_na_klik_backend.DTOs
         public string CustomerAddress { get; set; }
         public double TotalPrice { get; set; }
         public string Status { get; set; }
-        public TimeSpan? OrderTime { get; set; }
+        public DateTime? OrderTime { get; set; }
         public int TotalQuantity { get; set; }
     }
 }

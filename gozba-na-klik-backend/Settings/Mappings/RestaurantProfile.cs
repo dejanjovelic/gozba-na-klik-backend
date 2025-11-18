@@ -2,14 +2,12 @@
 using gozba_na_klik_backend.DTOs;
 using gozba_na_klik_backend.Model;
 
-namespace gozba_na_klik_backend.Settings
+namespace gozba_na_klik_backend.Settings.Mappings
 {
-    public class MappingProfile : Profile
+    public class RestaurantProfile : Profile
     {
-        public MappingProfile()
+        public RestaurantProfile()
         {
-            CreateMap<Meal, MealDto>();
-
             CreateMap<Restaurant, RestaurantWithMealsDto>()
                 .ForMember(dest => dest.MealsOnMenu, opt => opt.MapFrom(src => src.MealsOnMenu));
         }
