@@ -6,6 +6,6 @@ namespace gozba_na_klik_backend.DTOs
     public class UpdateOrderDTO
     {
         public OrderStatus NewStatus { get; set; }
-        public TimeSpan NewTime { get; set; }
+        public DateTime? NewTime { get; set; }
     }
 }
