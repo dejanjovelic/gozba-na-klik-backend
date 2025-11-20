@@ -45,7 +45,7 @@ namespace gozba_na_klik_backend.Repository
         public async Task AssignOrderToCourierAsync()
         {
             var orders = await _context.Orders
-                .Where(o => o.CourierId == null && o.Status == OrderStatus.Prihvacena)
+                .Where(o => o.CourierId == null && o.Status == OrderStatus.Accepted)
                 .ToListAsync();
 
             if(!orders.Any())
@@ -63,7 +63,7 @@ namespace gozba_na_klik_backend.Repository
             }
             foreach(var courier in couriers)
             {
-                if(courier.Orders.Any(o => o.Status == OrderStatus.DostavaUToku))
+                if(courier.Orders.Any(o => o.Status == OrderStatus.DeliveryInProgress))
                 {
                     continue;
                 }
@@ -73,8 +73,8 @@ namespace gozba_na_klik_backend.Repository
                     break;
                 }
                 nextOrder.CourierId= courier.Id;
-                nextOrder.Status = OrderStatus.DostavaUToku;
-                nextOrder.OrderTime = DateTime.Now.TimeOfDay;
+                nextOrder.Status = OrderStatus.DeliveryInProgress;
+                nextOrder.OrderTime = DateTime.Now;
             }
          
             await _context.SaveChangesAsync();

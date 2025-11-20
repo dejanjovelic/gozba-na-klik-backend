@@ -10,6 +10,6 @@ namespace gozba_na_klik_backend.Model.IRepositories
     {
         Task<List<Order>> GetOrdersByOwnerIdAsync(int ownerId);
         Task UpdateOrderStatusAsync(int orderId, OrderStatus newStatus, DateTime? OrderTime);
-        Task AssignOrderToCourierAsync()
+        Task AssignOrderToCourierAsync();
     }
 }
