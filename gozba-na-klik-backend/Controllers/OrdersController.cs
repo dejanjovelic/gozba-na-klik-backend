@@ -25,6 +25,11 @@ namespace gozba_na_klik_backend.Controllers
             await _orderService.UpdateOrderStatusAsync(orderId, dto.NewStatus, dto.NewTime);
             return NoContent();
         }
-
+        [HttpPatch("/couriers")]
+        public async Task <IActionResult> AssignOrderToCourierAsync()
+        {
+            await _orderService.AssignOrderToCourierAsync();
+            return NoContent();
+        }
     }
 }

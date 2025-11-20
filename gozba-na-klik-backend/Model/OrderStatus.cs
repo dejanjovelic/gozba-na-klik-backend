@@ -4,6 +4,8 @@
     {
         NaCekanju,   
         Prihvacena,  
-        Otkazana     
+        Otkazana,
+        PreuzimanjeUToku,
+        DostavaUToku
     }
 }

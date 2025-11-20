@@ -7,6 +7,6 @@ namespace gozba_na_klik_backend.Services.IServices
     {
         Task<List<RestaurantOrderDTO>> GetOrdersByOwnerIdAsync(int ownerId);
         Task UpdateOrderStatusAsync(int orderId, OrderStatus newStatus, TimeSpan OrderTime);
-        
+        Task AssignOrderToCourierAsync();
     }
 }

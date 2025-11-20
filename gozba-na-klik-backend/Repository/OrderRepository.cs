@@ -39,5 +39,42 @@ namespace gozba_na_klik_backend.Repository
                     .SetProperty(order => order.OrderTime, order => orderTime)
                 );
         }
+        public async Task AssignOrderToCourierAsync()
+        {
+            var orders = await _context.Orders
+                .Where(o => o.CourierId == null && o.Status == OrderStatus.Prihvacena)
+                .ToListAsync();
+
+            if(!orders.Any())
+            {
+                return;
+            }
+            var couriers = await _context.Couriers
+                .Include(c => c.Orders)
+                .Where(c => c.active == true)
+                .ToListAsync();
+
+            if(!couriers.Any())
+            {
+                return;
+            }
+            foreach(var courier in couriers)
+            {
+                if(courier.Orders.Any(o => o.Status == OrderStatus.DostavaUToku))
+                {
+                    continue;
+                }
+                var nextOrder = orders.FirstOrDefault(o => o.CourierId == null);
+                if(nextOrder==null)
+                {
+                    break;
+                }
+                nextOrder.CourierId= courier.Id;
+                nextOrder.Status = OrderStatus.DostavaUToku;
+                nextOrder.OrderTime = DateTime.Now.TimeOfDay;
+            }
+         
+            await _context.SaveChangesAsync();
+        }
     }
 }
