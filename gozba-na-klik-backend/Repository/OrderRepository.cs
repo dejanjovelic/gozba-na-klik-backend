@@ -63,7 +63,7 @@ namespace gozba_na_klik_backend.Repository
             }
             foreach(var courier in couriers)
             {
-                if(courier.Orders.Any(o => o.Status == OrderStatus.DeliveryInProgress))
+                if(courier.Orders.Any(o => o.Status == OrderStatus.DeliveryInProgress || o.Status == OrderStatus.PickupInProgress))
                 {
                     continue;
                 }
@@ -73,7 +73,7 @@ namespace gozba_na_klik_backend.Repository
                     break;
                 }
                 nextOrder.CourierId= courier.Id;
-                nextOrder.Status = OrderStatus.DeliveryInProgress;
+                nextOrder.Status = OrderStatus.PickupInProgress;
                 nextOrder.OrderTime = DateTime.UtcNow;
 
                 courier.Orders.Add(nextOrder);
