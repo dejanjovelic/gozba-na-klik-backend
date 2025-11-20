@@ -19,8 +19,8 @@ namespace gozba_na_klik_backend.Services.BackgroundServices
             while (!stoppingToken.IsCancellationRequested) //radi dok se aplikacija ne zatvori
             {
                 using var scope = _scopeFactory.CreateScope();
-                var orderService = scope.ServiceProvider.GetService<IOrderService>();
-                orderService.AssignOrderToCourierAsync();
+                var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
+                await orderService.AssignOrderToCourierAsync();
                 await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
             }
         }
