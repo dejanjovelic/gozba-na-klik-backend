@@ -55,60 +55,10 @@ namespace gozba_na_klik_backend.Services
                 throw new BadRequestException("Invalid pagination parameter: 'pageSize' must be a positive integer.");
             }
 
-            var baseRestaurants = await _restaurantRepository.GetBaseRestaurantsAsync();
-
-            var restaurants = FilterRestaurants(baseRestaurants, restaurantFilter);
-            restaurants = SortedRestaurants(restaurants, sortType);
-
-            int pageIndex = page - 1;
-            int totalRowsCount = await restaurants.CountAsync();
-            var item = await restaurants.Skip(pageIndex * pageSize).Take(pageSize).ToListAsync();
-            PaginatedListDto<Restaurant> paginatedRestaurantListDto = new PaginatedListDto<Restaurant>(item, totalRowsCount, pageIndex, pageSize);
-            return paginatedRestaurantListDto;
+            return await _restaurantRepository.GetAllFilteredAndSortedAndPagedAsync(restaurantFilter, sortType, page, pageSize);
         }
 
-        private static IQueryable<Restaurant> FilterRestaurants(IQueryable<Restaurant> restaurants, RestaurantFilterDto filter)
-        {
-            if (!string.IsNullOrEmpty(filter.Name))
-            {
-                restaurants = restaurants.Where(restaurant => restaurant.Name.ToLower().Contains(filter.Name.ToLower()));
-            }
-            if (!string.IsNullOrEmpty(filter.City))
-            {
-                restaurants = restaurants.Where(restaurant => restaurant.City.ToLower().Contains(filter.City.ToLower()));
-            }
-            if (filter.CapacityFrom != null )
-            {
-                restaurants = restaurants.Where(restaurant => restaurant.Capacity >= filter.CapacityFrom);
-            }
-            if (filter.CapacityTo != null )
-            {
-                restaurants = restaurants.Where(restaurant => restaurant.Capacity <= filter.CapacityTo);
-            }
-            if (filter.AverageRatingform != null)
-            {
-                restaurants = restaurants.Where(restaurant => restaurant.AverageRating >= filter.AverageRatingform);
-            }
-            if (filter.AverageRatingTo != null)
-            {
-                restaurants = restaurants.Where(restaurants => restaurants.AverageRating <= filter.AverageRatingTo);
-            }
-            return restaurants;
-        }
 
-        private static IQueryable<Restaurant> SortedRestaurants(IQueryable<Restaurant> restaurants, int sortType)
-        {
-            return sortType switch
-            {
-                (int)RestaurantSortType.NAME_ASC => restaurants.OrderBy(restaurant => restaurant.Name),
-                (int)RestaurantSortType.NAME_DESC => restaurants.OrderByDescending(restaurant => restaurant.Name),
-                (int)RestaurantSortType.CAPACITY_ASC => restaurants.OrderBy(restaurant => restaurant.Capacity),
-                (int)RestaurantSortType.CAPACITY_DESC => restaurants.OrderByDescending(restaurant => restaurant.Capacity),
-                (int)RestaurantSortType.AVERAGE_RATING_ASC => restaurants.OrderBy(restaurant => restaurant.AverageRating),
-                (int)RestaurantSortType.AVERAGE_RATING_DECS => restaurants.OrderByDescending(restaurant => restaurant.AverageRating),
-                _ => restaurants.OrderBy(restaurant => restaurant.Name)
-            };
-        }
 
         public async Task<RestaurantWithMealsDto> GetRestaurantWithMealsAsync(int restaurantId)
         {
