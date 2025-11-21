@@ -16,8 +16,8 @@ namespace gozba_na_klik_backend.DTOs
         public OrderStatus Status { get; set; }
         public List<OrderMeal> OrderItems { get; set; } = new List<OrderMeal>();
         public double TotalPrice { get; set; } = 0;
-        public TimeSpan? DeliveryStartedAt { get; set; } = DateTime.Now.TimeOfDay;
-        public TimeSpan? DeliveredAt { get; set; } = DateTime.Now.TimeOfDay;
+        public TimeSpan? DeliveryStartedAt { get; set; }
+        public TimeSpan? DeliveredAt { get; set; }
         public Courier? Courier { get; set; }
         public int CourierId { get; set; }
     }
