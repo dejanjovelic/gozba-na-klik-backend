@@ -13,12 +13,14 @@ namespace gozba_na_klik_backend.Services
         private readonly IOrderRepository _orderRepository;
         private readonly IMealService _mealService;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public OrderService(IOrderRepository orderRepository, IMapper mapper, IMealService mealService)
+        public OrderService(IOrderRepository orderRepository, IMapper mapper, IMealService mealService, IHttpContextAccessor httpContextAccessor)
         {
             _orderRepository = orderRepository;
             _mapper = mapper;
             _mealService = mealService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<List<RestaurantOrderDTO>> GetOrdersByOwnerIdAsync(string ownerId, string? currentOwnerId)
@@ -37,8 +39,10 @@ namespace gozba_na_klik_backend.Services
         }
 
 
-        public async Task UpdateOrderStatusAsync(int orderId, OrderStatus newStatus, DateTime orderTime, string? authenticatedUserId)
+        public async Task<CourierOrderDto> UpdateOrderStatusAsync(int orderId, UpdateOrderDTO dto, string? authenticatedUserId)
         {
+            var roles = GetUserRoles();
+
             if (orderId == 0)
             {
                 throw new BadRequestException("Invalid data.");
@@ -46,31 +50,107 @@ namespace gozba_na_klik_backend.Services
 
             Order order = await _orderRepository.GetByIdAsync(orderId);
 
-            ValidateRestaurantOwnerUpdateData(orderId, newStatus, authenticatedUserId, order);
+            ValidateActiveOrderUpdateData(orderId, dto.NewStatus, authenticatedUserId, order, roles);
+            
+            order.Status = dto.NewStatus;
 
-            await _orderRepository.UpdateOrderStatusAsync(orderId, newStatus, orderTime);
+            if (roles.Contains("Customer"))
+            {
+                //TO DO treba mi vreme za update
+            }
+            else if (roles.Contains("RestaurantOwner"))
+            {
+                //TO DO treba mi vreme za update
+            }
+            else if (roles.Contains("Courier"))
+            {
+                if (dto.NewStatus.ToString().Trim().ToLower() == "deliveryinprogress")
+                {
+                    order.DeliveryStartedAt = dto.NewTime;
+                }
+                else if (dto.NewStatus.ToString().Trim().ToLower() == "delivered")
+                {
+                    order.DeliveredAt = dto.NewTime;
+                }
+            }
+
+            Order updatedOrder = await _orderRepository.UpdateOrderStatusAsync(order);
+            return _mapper.Map<CourierOrderDto>(updatedOrder);
         }
 
-        private static void ValidateRestaurantOwnerUpdateData(int orderId, OrderStatus newStatus, string? authenticatedUserId, Order order)
+        private List<string> GetUserRoles()
+        {
+            var user = _httpContextAccessor.HttpContext?.User;
+            if (user == null)
+            {
+                return new List<string>();
+            }
+            var roles = user.Claims
+                            .Where(c => c.Type == "role")
+                            .Select(c => c.Value)
+                            .ToList();
+            return roles;
+        }
+
+        private static void ValidateActiveOrderUpdateData(int orderId, OrderStatus newStatus, string? authenticatedUserId, Order order, List<string> roles)
         {
             if (order == null)
             {
                 throw new NotFoundException($"Order with Id:{orderId} not found.");
             }
 
-            if (order.Restaurant.RestaurantOwnerId != authenticatedUserId)
+            if (roles.Contains("RestaurantOwner"))
             {
-                throw new ForbiddenException($"Restaurant owner with Id: {authenticatedUserId} do not have permission to access this order.");
+                if (order.Restaurant.RestaurantOwnerId != authenticatedUserId)
+                {
+                    throw new ForbiddenException($"Restaurant owner with Id: {authenticatedUserId} do not have permission to access this order.");
+                }
+
+                if (order.Status != OrderStatus.Pending)
+                {
+                    throw new ForbiddenException("Restaurant owner can only modify orders that are in 'Pending' status.");
+                }
+
+                if (newStatus != OrderStatus.Cancelled && newStatus != OrderStatus.Accepted)
+                {
+                    throw new ArgumentException("Status must be either Denied or Accepted", nameof(newStatus));
+                }
             }
 
-            if (order.Status != OrderStatus.Pending)
+            if (roles.Contains("Courier")) 
             {
-                throw new ForbiddenException("Restaurant owner can only modify orders that are in 'Pending' status.");
+                if (order.CourierId != authenticatedUserId)
+                {
+                    throw new ForbiddenException($"Courier with Id: {authenticatedUserId} is not authorized to update order with ID: {orderId}.");
+                }
+
+                if (order.Status != OrderStatus.PickupInProgress && order.Status != OrderStatus.DeliveryInProgress)
+                {
+                    throw new BadRequestException($"Courier can only modify orders that are in 'Pickup in progress' or  'Delivery In Progress' status.");
+                }
+
+                if (newStatus != OrderStatus.DeliveryInProgress && newStatus != OrderStatus.Delivered)
+                {
+                    throw new BadRequestException("Status of order must be either 'Delivery in progress'  or 'Delivered'.");
+                }
             }
 
-            if (newStatus != OrderStatus.Cancelled && newStatus != OrderStatus.Accepted)
+            if (roles.Contains("Customer"))
             {
-                throw new ArgumentException("Status must be either Denied or Accepted", nameof(newStatus));
+                if (order.CustomerId != authenticatedUserId)
+                {
+                    throw new ForbiddenException($"Customer with Id: {authenticatedUserId} is not authorized to update order with ID: {orderId}.");
+                }
+
+                if (order.Status != OrderStatus.Pending)
+                {
+                    throw new BadRequestException($"Customer can only modify orders that are in 'Pending' status.");
+                }
+
+                if (newStatus != OrderStatus.Cancelled)
+                {
+                    throw new BadRequestException("Customer can change status of order only in 'Canceled'.");
+                }
             }
         }
 
@@ -79,6 +159,10 @@ namespace gozba_na_klik_backend.Services
             if (string.IsNullOrWhiteSpace(courierId))
             {
                 throw new BadRequestException("Invalid courier data.");
+            }
+            if (courierId != authenticatedUserId)
+            {
+                throw new ForbiddenException($"You are not allowed to access another courier's orders.");
             }
 
             Order order = await _orderRepository.GetActiveOrderByCourierIdAsync(courierId);
@@ -93,56 +177,6 @@ namespace gozba_na_klik_backend.Services
             CourierOrderDto courierOrderDto = _mapper.Map<CourierOrderDto>(order);
             courierOrderDto.OrderItems = courierOrderMeals;
             return courierOrderDto;
-        }
-
-        public async Task<CourierOrderDto> UpdateCourierActiveOrderStatusAsync(int orderId, UpdateOrderDTO updateOrder, string? authenticatedUserId)
-        {
-            if (orderId <= 0)
-            {
-                throw new BadRequestException("Invalid data.");
-            }
-
-            Order order = await _orderRepository.GetByIdAsync(orderId);
-
-            ValidateCourierOrderUpdateData(orderId, authenticatedUserId, updateOrder, order);
-
-            order.Status = updateOrder.NewStatus;
-
-            if (order.Status == OrderStatus.PickupInProgress)
-            {
-                order.DeliveryStartedAt = updateOrder.NewTime;
-            }
-            else
-            {
-                order.DeliveredAt = updateOrder.NewTime;
-            }
-
-            Order updatedOrder = await _orderRepository.UpdateCourierActiveOrderStatusAsync(order);
-            return _mapper.Map<CourierOrderDto>(updatedOrder);
-
-        }
-
-        private static void ValidateCourierOrderUpdateData(int orderId, string? authenticatedUserId, UpdateOrderDTO updateOrder, Order order)
-        {
-            if (order == null)
-            {
-                throw new NotFoundException($"Order with Id: {order.Id} not found.");
-            }
-
-            if (order.CourierId != authenticatedUserId)
-            {
-                throw new ForbiddenException($"Courier with Id: {authenticatedUserId} is not authorized to update order with ID: {orderId}.");
-            }
-
-            if (order.Status != OrderStatus.PickupInProgress && order.Status != OrderStatus.DeliveryInProgress)
-            {
-                throw new BadRequestException($"Courier can only modify orders that are in 'Pickup in progress' or  'Delivery In Progress' status.");
-            }
-
-            if (updateOrder.NewStatus != OrderStatus.DeliveryInProgress && updateOrder.NewStatus != OrderStatus.Delivered)
-            {
-                throw new BadRequestException("Status of order must be either 'Delivery in progress'  or 'Delivered'.");
-            }
         }
     }
 }

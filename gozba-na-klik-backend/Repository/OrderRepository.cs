@@ -30,15 +30,12 @@ namespace gozba_na_klik_backend.Repository
                 .ToListAsync();
         }
 
-        public async Task UpdateOrderStatusAsync(int orderId, OrderStatus newStatus, DateTime orderTime)
+        public async Task<Order> UpdateOrderStatusAsync(Order order)
         {
-            await _context.Orders
-                .Where(o => o.Id == orderId)
-                .ExecuteUpdateAsync(o => o
-                    .SetProperty(order => order.Status, order => newStatus)
-                    .SetProperty(order => order.OrderTime, order => orderTime)
-                );
+            await _context.SaveChangesAsync();
+                return order;
         }
+
         public async Task<Order> GetActiveOrderByCourierIdAsync(string courierId)
         {
             return await _context.Orders
@@ -64,13 +61,5 @@ namespace gozba_na_klik_backend.Repository
                 .FirstOrDefaultAsync(order => order.Id == orderId);
             return order;
         }
-
-        public async Task<Order> UpdateCourierActiveOrderStatusAsync(Order order)
-        {
-            _context.Orders.Update(order);
-            await _context.SaveChangesAsync();
-            return order;
-        }
-
     }
 }
