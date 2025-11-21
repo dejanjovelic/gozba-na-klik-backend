@@ -1,7 +1,8 @@
 ﻿namespace gozba_na_klik_backend.Model
 {
-    public class Administrator: User
+    public class Administrator
     {
-        public override Role Role => Role.Administrator;
+        public string Id { get; set; }
+        public ApplicationUser? ApplicationUser { get; set; }
     }
 }

@@ -1,10 +1,11 @@
 ﻿namespace gozba_na_klik_backend.Model
 {
-    public class Courier : User
+    public class Courier
     {
-        public override Role Role => Role.Courier;
+        public string Id { get; set; }
+        public ApplicationUser? ApplicationUser { get; set; }
         public List<WorkingHours>? WorkingHours { get; set; } = new List<WorkingHours>();
-        public bool active { get; set; }
+        public bool Active { get; set; }
 
     }
 }

@@ -1,9 +1,14 @@
-﻿using gozba_na_klik_backend.Model;
-using gozba_na_klik_backend.Repository;
+﻿using gozba_na_klik_backend.DTOs;
 using gozba_na_klik_backend.Exceptions;
-using Microsoft.AspNetCore.Mvc;
+using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
+using gozba_na_klik_backend.Repository;
 using gozba_na_klik_backend.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Security;
 
 
 namespace gozba_na_klik_backend.Services
@@ -13,24 +18,41 @@ namespace gozba_na_klik_backend.Services
         private readonly ICustomerRepository _customerRepository;
         private readonly IAllergenService _allergenService;
         private readonly IAddressRepository _addressRepository;
+        private readonly IAuthService _authService;
 
-        public CustomerService(ICustomerRepository customerRepository, IAllergenService allergenService, IAddressRepository addressRepository)
+
+        public CustomerService(
+            ICustomerRepository customerRepository,
+            IAllergenService allergenService,
+            IAddressRepository addressRepository,
+            IAuthService authService
+            )
         {
             _customerRepository = customerRepository;
             _allergenService = allergenService;
             _addressRepository = addressRepository;
+            _authService = authService;
         }
-        public async Task<Customer> CreateAsync(Customer customer)
+
+        public async Task<string> CreateAsync(RegistrationDto registrationDto)
         {
-            if (customer == null)
+            AuthResponseDto authResponseDto = await _authService.RegisterUserAsync(registrationDto, "Customer");
+
+            Customer customer = new Customer { Id = authResponseDto.AplicationUserId };
+
+            await _customerRepository.CreateAsync(customer);
+
+            return authResponseDto.Token;
+        }
+
+       
+        public async Task<Customer> GetByIdAsync(string customerId, string? ownerId)
+        {
+            if (customerId != ownerId) 
             {
-                throw new BadRequestException("Invalid data.");
+                throw new ForbiddenException("You do not have permission to perform this action.");
             }
 
-            return await _customerRepository.CreateAsync(customer);
-        }
-        public async Task<Customer> GetByIdAsync(int customerId)
-        {
             Customer customer = await _customerRepository.GetByIdAsync(customerId);
             if (customer == null)
             {
@@ -39,8 +61,14 @@ namespace gozba_na_klik_backend.Services
             return customer;
         }
 
-        public async Task<List<Allergen>> GetAllCustomerAllergensAsync(int customerId)
+       
+        public async Task<List<Allergen>> GetAllCustomerAllergensAsync(string customerId, string? ownerId)
         {
+            if (customerId != ownerId)
+            {
+                throw new ForbiddenException("You do not have permission to perform this action.");
+            }
+
             Customer customer = await _customerRepository.GetByIdAsync(customerId);
             if (customer == null)
             {
@@ -49,8 +77,14 @@ namespace gozba_na_klik_backend.Services
             return customer.Allergens;
         }
 
-        public async Task<List<Address>> GetAddressesAsync(int customerId)
+       
+        public async Task<List<Address>> GetAddressesAsync(string customerId, string? ownerId)
         {
+            if (customerId != ownerId)
+            {
+                throw new ForbiddenException("You do not have permission to perform this action.");
+            }
+
             Customer customer = await _customerRepository.GetByIdAsync(customerId);
             if (customer == null)
             {
@@ -59,8 +93,14 @@ namespace gozba_na_klik_backend.Services
             return await _addressRepository.GetByCustomerIdAsync(customerId);
         }
 
-        public async Task<Customer> UpdateCustomerAllergensAsync(int customerId, List<int> allergenIds)
+    
+        public async Task<Customer> UpdateCustomerAllergensAsync(string customerId, List<int> allergenIds, string? ownerId)
         {
+            if (customerId != ownerId)
+            {
+                throw new ForbiddenException("You do not have permission to perform this action.");
+            }
+
             Customer customer = await _customerRepository.GetByIdAsync(customerId);
             if (customer == null)
             {
@@ -73,8 +113,14 @@ namespace gozba_na_klik_backend.Services
             return updatedCustomer;
         }
 
-        public async Task<Address> CreateAddressAsync(int customerId, Address address)
+       
+        public async Task<Address> CreateAddressAsync(string customerId, Address address, string? ownerId)
         {
+            if (customerId != ownerId)
+            {
+                throw new ForbiddenException("You do not have permission to perform this action.");
+            }
+
             if (address == null)
             {
                 throw new BadRequestException("Invalid data.");
@@ -90,17 +136,10 @@ namespace gozba_na_klik_backend.Services
             return await _addressRepository.CreateAsync(address);
         }
 
-
-        public async Task<Address> UpdateAddressAsync(int customerId, int addressId, Address updatedAddress)
+       
+        public async Task<Address> UpdateAddressAsync(string customerId, int addressId, Address updatedAddress, string? ownerId)
         {
-            if (addressId != updatedAddress.Id)
-            {
-                throw new BadRequestException("Address ID mismatch");
-            }
-            else if (updatedAddress == null)
-            {
-                throw new BadRequestException("Invalid Address data.");
-            }
+            ValidateInputData(customerId, addressId, updatedAddress, ownerId);
 
             Customer customer = await _customerRepository.GetByIdAsync(customerId);
             if (customer == null)
@@ -115,18 +154,46 @@ namespace gozba_na_klik_backend.Services
                 throw new NotFoundException($"Address with ID: {addressId} not found.");
             }
 
+            UpdateExistingAddressData(customerId, updatedAddress, existingAddress);
+
+            return await _addressRepository.UpdateAsync(existingAddress);
+        }
+
+        private static void UpdateExistingAddressData(string customerId, Address updatedAddress, Address existingAddress)
+        {
             existingAddress.CustomerId = customerId;
             existingAddress.Street = updatedAddress.Street;
             existingAddress.StreetNumber = updatedAddress.StreetNumber;
             existingAddress.City = updatedAddress.City;
             existingAddress.ZipCode = updatedAddress.ZipCode;
-
-            return await _addressRepository.UpdateAsync(existingAddress);
         }
 
-        public async Task DeleteAddressAsync(int customerId, int addressId)
+        private static void ValidateInputData(string customerId, int addressId, Address updatedAddress, string? ownerId)
         {
+            if (customerId != ownerId)
+            {
+                throw new ForbiddenException("You do not have permission to perform this action.");
+            }
+
+            if (addressId != updatedAddress.Id)
+            {
+                throw new BadRequestException("Address ID mismatch");
+            }
+            else if (updatedAddress == null)
+            {
+                throw new BadRequestException("Invalid Address data.");
+            }
+        }
+
+        public async Task DeleteAddressAsync(string customerId, int addressId, string? ownerId)
+        {
+            if (customerId != ownerId)
+            {
+                throw new ForbiddenException("You do not have permission to perform this action.");
+            }
+
             Customer customer = await _customerRepository.GetByIdAsync(customerId);
+
             if (customer == null)
             {
                 throw new NotFoundException($"Customer with ID: {customerId} not found.");

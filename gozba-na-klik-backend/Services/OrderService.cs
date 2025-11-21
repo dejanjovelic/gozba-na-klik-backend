@@ -21,9 +21,14 @@ namespace gozba_na_klik_backend.Services
             _mealService = mealService;
         }
 
-        public async Task<List<RestaurantOrderDTO>> GetOrdersByOwnerIdAsync(int ownerId)
+        public async Task<List<RestaurantOrderDTO>> GetOrdersByOwnerIdAsync(string ownerId, string? currentOwnerId)
         {
-            if (ownerId == 0)
+            if (ownerId != currentOwnerId)
+            {
+                throw new ForbiddenException($"Restaurant owner with Id: {ownerId} do not have permission to perform this action.");
+            }
+
+            if (string.IsNullOrWhiteSpace(ownerId))
             {
                 throw new BadRequestException("Invalid data.");
             }
@@ -31,25 +36,58 @@ namespace gozba_na_klik_backend.Services
             return await _orderRepository.GetOrdersByOwnerIdAsync(ownerId);
         }
 
-        public async Task UpdateOrderStatusAsync(int orderId, OrderStatus newStatus, DateTime orderTime)
+
+        public async Task UpdateOrderStatusAsync(int orderId, OrderStatus newStatus, DateTime orderTime, string? authenticatedUserId)
         {
             if (orderId == 0)
+            {
                 throw new BadRequestException("Invalid data.");
+            }
 
-            if (newStatus != OrderStatus.Cancelled && newStatus != OrderStatus.Accepted)
-                throw new ArgumentException("Status must be either Denied or Accepted", nameof(newStatus));
+            Order order = await _orderRepository.GetByIdAsync(orderId);
+
+            ValidateRestaurantOwnerUpdateData(orderId, newStatus, authenticatedUserId, order);
 
             await _orderRepository.UpdateOrderStatusAsync(orderId, newStatus, orderTime);
         }
 
-        public async Task<CourierOrderDto> GetActiveOrderByCourierIdAsync(int courierId)
+        private static void ValidateRestaurantOwnerUpdateData(int orderId, OrderStatus newStatus, string? authenticatedUserId, Order order)
         {
+            if (order == null)
+            {
+                throw new NotFoundException($"Order with Id:{orderId} not found.");
+            }
+
+            if (order.Restaurant.RestaurantOwnerId != authenticatedUserId)
+            {
+                throw new ForbiddenException($"Restaurant owner with Id: {authenticatedUserId} do not have permission to access this order.");
+            }
+
+            if (order.Status != OrderStatus.Pending)
+            {
+                throw new ForbiddenException("Restaurant owner can only modify orders that are in 'Pending' status.");
+            }
+
+            if (newStatus != OrderStatus.Cancelled && newStatus != OrderStatus.Accepted)
+            {
+                throw new ArgumentException("Status must be either Denied or Accepted", nameof(newStatus));
+            }
+        }
+
+        public async Task<CourierOrderDto> GetActiveOrderByCourierIdAsync(string courierId, string? authenticatedUserId)
+        {
+            if (string.IsNullOrWhiteSpace(courierId))
+            {
+                throw new BadRequestException("Invalid courier data.");
+            }
+
             Order order = await _orderRepository.GetActiveOrderByCourierIdAsync(courierId);
+
             if (order == null)
             {
                 throw new NotFoundException("You currently have no assigned orders.");
             }
-            
+
             List<CourierOrderMealDto> courierOrderMeals = order.OrderItems.Select(_mapper.Map<CourierOrderMealDto>).ToList();
 
             CourierOrderDto courierOrderDto = _mapper.Map<CourierOrderDto>(order);
@@ -57,11 +95,16 @@ namespace gozba_na_klik_backend.Services
             return courierOrderDto;
         }
 
-        public async Task<CourierOrderDto> UpdateCourierActiveOrderStatusAsync(int orderId, int courierId, UpdateOrderDTO updateOrder)
+        public async Task<CourierOrderDto> UpdateCourierActiveOrderStatusAsync(int orderId, UpdateOrderDTO updateOrder, string? authenticatedUserId)
         {
+            if (orderId <= 0)
+            {
+                throw new BadRequestException("Invalid data.");
+            }
+
             Order order = await _orderRepository.GetByIdAsync(orderId);
 
-            ValidateCourierOrderUpdateData(orderId, courierId, updateOrder, order);
+            ValidateCourierOrderUpdateData(orderId, authenticatedUserId, updateOrder, order);
 
             order.Status = updateOrder.NewStatus;
 
@@ -79,26 +122,26 @@ namespace gozba_na_klik_backend.Services
 
         }
 
-        private static void ValidateCourierOrderUpdateData(int orderId, int courierId, UpdateOrderDTO updateOrder, Order order)
+        private static void ValidateCourierOrderUpdateData(int orderId, string? authenticatedUserId, UpdateOrderDTO updateOrder, Order order)
         {
             if (order == null)
             {
                 throw new NotFoundException($"Order with Id: {order.Id} not found.");
             }
 
-            if (order.CourierId != courierId)
+            if (order.CourierId != authenticatedUserId)
             {
-                throw new ForbiddenException($"You are not authorized to update order with ID: {orderId}.");
+                throw new ForbiddenException($"Courier with Id: {authenticatedUserId} is not authorized to update order with ID: {orderId}.");
             }
 
             if (order.Status != OrderStatus.PickupInProgress && order.Status != OrderStatus.DeliveryInProgress)
             {
-                throw new BadRequestException($"Order with status '{order.Status}' cannot be updated.");
+                throw new BadRequestException($"Courier can only modify orders that are in 'Pickup in progress' or  'Delivery In Progress' status.");
             }
 
             if (updateOrder.NewStatus != OrderStatus.DeliveryInProgress && updateOrder.NewStatus != OrderStatus.Delivered)
             {
-                throw new BadRequestException("Status of order must be either delivery in progress  or delivered");
+                throw new BadRequestException("Status of order must be either 'Delivery in progress'  or 'Delivered'.");
             }
         }
     }

@@ -1,46 +1,56 @@
-﻿using gozba_na_klik_backend.Exceptions;
+﻿using gozba_na_klik_backend.DTOs;
+using gozba_na_klik_backend.Exceptions;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
 using gozba_na_klik_backend.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
-using gozba_na_klik_backend.DTOs;
+using System;
+using System.Security;
 
 namespace gozba_na_klik_backend.Services
 {
     public class CourierService : ICourierService
     {
         private readonly ICourierRepository _courierRepository;
-        public CourierService(ICourierRepository courierRepository)
+        private readonly IAuthService _authService;
+
+        public CourierService(ICourierRepository courierRepository, IAuthService authService)
         {
             _courierRepository = courierRepository;
-        }
-        public async Task<Courier> CreateAsync(Courier courier)
-        {
-            if (courier == null)
-            {
-                throw new BadRequestException("Invalid courier data.");
-            }
-            return await _courierRepository.CreateAsync(courier);          
+            _authService = authService;
         }
 
-        public async Task<CourierDto> GetByIdAsync(int courierId)
+        public async Task<string> CreateAsync(RegistrationDto registrationDto)
         {
-            if (courierId <= 0)
+            AuthResponseDto authResponseDto = await _authService.RegisterUserAsync(registrationDto, "Courier");
+            Courier courier = new Courier
             {
-                throw new BadRequestException("Invalid courier ID.");
-            }
+                Id = authResponseDto.AplicationUserId
+            };
+
+            await _courierRepository.CreateAsync(courier);
+
+            return authResponseDto.Token;
+        }
+
+        public async Task<CourierDto> GetByIdAsync(string courierId, string? ownerId)
+        {
+            ValidateInputData(courierId, ownerId);
+
             var courier = await _courierRepository.GetByIdAsync(courierId);
+
             if (courier == null)
             {
                 throw new NotFoundException("Courier not found.");
             }
             return new CourierDto
             {
-                Id = courier.Id,
-                Username = courier.Username,
-                Name = courier.Name,
-                Surname = courier.Surname,
+                Id = courier.ApplicationUser.Id,
+                Username = courier.ApplicationUser.UserName,
+                Name = courier.ApplicationUser.Name,
+                Surname = courier.ApplicationUser.Surname,
                 WorkingHours = courier.WorkingHours.Select(wh => new WorkingHoursDto
                 {
                     DayOfTheWeek = wh.DayOfTheWeek.ToString(),
@@ -50,25 +60,38 @@ namespace gozba_na_klik_backend.Services
             };
         }
 
-        public async Task UpdateWorkingHoursAsync(int courierId, List<WorkingHours> workingHours)
+        public async Task UpdateWorkingHoursAsync(string courierId, List<WorkingHours> workingHours, string? ownerId)
         {
-            if (courierId <= 0)
-            {
-                throw new BadRequestException("Invalid courier ID.");
-            }
+            ValidateInputData(courierId, ownerId);
+
             var courier = await _courierRepository.GetByIdAsync(courierId);
+
             if (courier == null)
             {
                 throw new NotFoundException("Courier not found.");
             }
-            await _courierRepository.UpdateWorkingHoursAsync(courier, workingHours);               
+            await _courierRepository.UpdateWorkingHoursAsync(courier, workingHours);
         }
+
+        private static void ValidateInputData(string courierId, string? ownerId)
+        {
+            if (ownerId != courierId)
+            {
+                throw new ForbiddenException($"Courier with Id: {courierId} do not have permission to perform this action.");
+            }
+
+            if (string.IsNullOrWhiteSpace(courierId))
+            {
+                throw new BadRequestException("Invalid courier ID.");
+            }
+        }
+
         public async Task UpdateCourierStatusAsync()
-        {          
-            await _courierRepository.UpdateCourierStatusAsync();            
+        {
+            await _courierRepository.UpdateCourierStatusAsync();
         }
         public async Task<List<Courier>> GetAllAsync()
-        {   
+        {
             return await _courierRepository.GetAllAsync();
         }
     }

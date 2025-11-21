@@ -17,7 +17,7 @@ namespace gozba_na_klik_backend.Repository
             _mapper = mapper;
         }
 
-        public async Task<List<RestaurantOrderDTO>> GetOrdersByOwnerIdAsync(int ownerId)
+        public async Task<List<RestaurantOrderDTO>> GetOrdersByOwnerIdAsync(string ownerId)
         {
             var restaurantIds = await _context.Restaurants
                 .Where(r => r.RestaurantOwnerId == ownerId)
@@ -39,7 +39,7 @@ namespace gozba_na_klik_backend.Repository
                     .SetProperty(order => order.OrderTime, order => orderTime)
                 );
         }
-        public async Task<Order> GetActiveOrderByCourierIdAsync(int courierId)
+        public async Task<Order> GetActiveOrderByCourierIdAsync(string courierId)
         {
             return await _context.Orders
                 .Include(order => order.Courier)

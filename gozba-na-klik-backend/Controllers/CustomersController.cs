@@ -1,8 +1,11 @@
-﻿using gozba_na_klik_backend.Model;
+﻿using gozba_na_klik_backend.DTOs;
+using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Repository;
 using gozba_na_klik_backend.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace gozba_na_klik_backend.Controllers
 {
@@ -21,57 +24,71 @@ namespace gozba_na_klik_backend.Controllers
 
         //POST api/customers
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] Customer customer)
+        public async Task<IActionResult> CreateAsync([FromBody] RegistrationDto registrationDto)
         {
-            return Ok(await _customerService.CreateAsync(customer));
+            return Ok(await _customerService.CreateAsync(registrationDto));
         }
 
         //GET api/customers/5
+        [Authorize(Roles = "Customer")]
         [HttpGet("{customerId}")]
-        public async Task<IActionResult> GetByIdAsync(int customerId)
+        public async Task<IActionResult> GetByIdAsync(string customerId)
         {
-            return Ok(await _customerService.GetByIdAsync(customerId));
+            string ownerId = User.FindFirstValue("sub");
+            return Ok(await _customerService.GetByIdAsync(customerId, ownerId));
         }
 
 
         //GET api/customers/5/allergens
+        [Authorize(Roles = "Customer")]
         [HttpGet("{customerId}/allergens")]
-        public async Task<IActionResult> GetAllCustomerAllergens(int customerId)
+        public async Task<IActionResult> GetAllCustomerAllergens(string customerId)
         {
-            return Ok(await _customerService.GetAllCustomerAllergensAsync(customerId));
+            string ownerId = User.FindFirstValue("sub");
+            return Ok(await _customerService.GetAllCustomerAllergensAsync(customerId, ownerId));
         }
 
         //PUT api/customers/5/allergens
+        [Authorize(Roles = "Customer")]
         [HttpPut("{customerId}/allergens")]
-        public async Task<IActionResult> UpdateCustomerAllergensAsync(int customerId, [FromBody] List<int> allergenIds)
+        public async Task<IActionResult> UpdateCustomerAllergensAsync(string customerId, [FromBody] List<int> allergenIds)
         {
-            return Ok(await _customerService.UpdateCustomerAllergensAsync(customerId, allergenIds));
+            string ownerId = User.FindFirstValue("sub");
+            return Ok(await _customerService.UpdateCustomerAllergensAsync(customerId, allergenIds, ownerId));
         }
 
 
         //GET api/customers/5/addresses
+        [Authorize(Roles = "Customer")]
         [HttpGet("{customerId}/addresses")]
-        public async Task<IActionResult> GetAddressesAsync(int customerId)
+        public async Task<IActionResult> GetAddressesAsync(string customerId)
         {
-            return Ok(await _customerService.GetAddressesAsync(customerId));
+            string ownerId = User.FindFirstValue("sub");
+            return Ok(await _customerService.GetAddressesAsync(customerId, ownerId));
         }
 
+        [Authorize(Roles = "Customer")]
         [HttpPost("{customerId}/addresses")]
-        public async Task<IActionResult> CreateAddressAsync(int customerId, [FromBody] Address address)
+        public async Task<IActionResult> CreateAddressAsync(string customerId, [FromBody] Address address)
         {
-            return Ok(await _customerService.CreateAddressAsync(customerId, address));
+            string ownerId = User.FindFirstValue("sub");
+            return Ok(await _customerService.CreateAddressAsync(customerId, address, ownerId));
         }
 
+        [Authorize(Roles = "Customer")]
         [HttpPut("{customerId}/addresses/{addressId}")]
-        public async Task<IActionResult> UpdateAddressAsync(int customerId, int addressId, [FromBody] Address updatedAddress)
+        public async Task<IActionResult> UpdateAddressAsync(string customerId, int addressId, [FromBody] Address updatedAddress)
         {
-            return Ok(await _customerService.UpdateAddressAsync(customerId, addressId, updatedAddress));
+            string ownerId = User.FindFirstValue("sub");
+            return Ok(await _customerService.UpdateAddressAsync(customerId, addressId, updatedAddress, ownerId));
         }
 
+        [Authorize(Roles = "Customer")]
         [HttpDelete("{customerId}/addresses/{addressId}")]
-        public async Task<IActionResult> DeleteAddressAsync(int customerId, int addressId)
+        public async Task<IActionResult> DeleteAddressAsync(string customerId, int addressId)
         {
-            await _customerService.DeleteAddressAsync(customerId, addressId);
+            string ownerId = User.FindFirstValue("sub");
+            await _customerService.DeleteAddressAsync(customerId, addressId, ownerId);
             return NoContent();
         }
     }

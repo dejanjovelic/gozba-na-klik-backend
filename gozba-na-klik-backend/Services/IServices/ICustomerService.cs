@@ -1,16 +1,17 @@
-﻿using gozba_na_klik_backend.Model;
+﻿using gozba_na_klik_backend.DTOs;
+using gozba_na_klik_backend.Model;
 
 namespace gozba_na_klik_backend.Services.IServices
 {
     public interface ICustomerService
     {
-        Task<Address> CreateAddressAsync(int customerId, Address address);
-        Task<Customer> CreateAsync(Customer customer);
-        Task DeleteAddressAsync(int customerId, int addressId);
-        Task<List<Address>> GetAddressesAsync(int customerId);
-        Task<List<Allergen>> GetAllCustomerAllergensAsync(int customerId);
-        Task<Customer> GetByIdAsync(int customerId);
-        Task<Address> UpdateAddressAsync(int customerId, int addressId, Address updatedAddress);
-        Task<Customer> UpdateCustomerAllergensAsync(int customerId, List<int> allergenIds);
+        Task<Address> CreateAddressAsync(string customerId, Address address, string? ownerId);
+        Task<string> CreateAsync(RegistrationDto registrationDto);
+        Task DeleteAddressAsync(string customerId, int addressId, string? ownerId);
+        Task<List<Address>> GetAddressesAsync(string customerId, string? ownerId);
+        Task<List<Allergen>> GetAllCustomerAllergensAsync(string customerId, string? ownerId);
+        Task<Customer> GetByIdAsync(string customerId, string? ownerId);
+        Task<Address> UpdateAddressAsync(string customerId, int addressId, Address updatedAddress, string? ownerId);
+        Task<Customer> UpdateCustomerAllergensAsync(string customerId, List<int> allergenIds, string? ownerId);
     }
 }

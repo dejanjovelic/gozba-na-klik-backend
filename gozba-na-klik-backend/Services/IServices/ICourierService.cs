@@ -5,9 +5,9 @@ namespace gozba_na_klik_backend.Services.IServices
 {
     public interface ICourierService
     {
-        Task<Courier> CreateAsync(Courier courier);
-        Task<CourierDto> GetByIdAsync(int courierId);
-        Task UpdateWorkingHoursAsync(int courierId, List<WorkingHours> workingHours);
+        Task<string> CreateAsync(RegistrationDto registrationDto);
+        Task<CourierDto> GetByIdAsync(string courierId, string? ownerId);
+        Task UpdateWorkingHoursAsync(string courierId, List<WorkingHours> workingHours, string? ownerId);
         Task<List<Courier>> GetAllAsync();
         Task UpdateCourierStatusAsync();
     }

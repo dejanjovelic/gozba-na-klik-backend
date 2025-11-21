@@ -3,6 +3,8 @@ using gozba_na_klik_backend.Services.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using gozba_na_klik_backend.Exceptions;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace gozba_na_klik_backend.Controllers
 {
@@ -19,10 +21,12 @@ namespace gozba_na_klik_backend.Controllers
 
 
         //POST api/meals/filter
+        [Authorize(Roles = "Customer")]
         [HttpPost("filter")]
         public async Task<IActionResult> GetFilteredMealsAsync([FromBody] MealFilterRequestDto mealFilterRequestDto, [FromQuery] int page = 1, [FromQuery] int pageSize = 6)
         {
-            return Ok(await _mealService.GetFilteredMealsAsync(mealFilterRequestDto, page, pageSize));
+            string ownerId = User.FindFirstValue("sub");
+            return Ok(await _mealService.GetFilteredMealsAsync(mealFilterRequestDto, page, pageSize, ownerId));
         }
     }
 }

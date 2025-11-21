@@ -3,7 +3,7 @@ using gozba_na_klik_backend.Model.IRepositories;
 using Microsoft.EntityFrameworkCore;
 namespace gozba_na_klik_backend.Repository
 {
-    public class CourierRepository:ICourierRepository
+    public class CourierRepository : ICourierRepository
     {
         public AppDbContext _context;
 
@@ -12,22 +12,24 @@ namespace gozba_na_klik_backend.Repository
             this._context = context;
         }
 
-        public async Task<Courier> CreateAsync(Courier courier) 
+        public async Task<Courier> CreateAsync(Courier courier)
         {
             _context.Add(courier);
             await _context.SaveChangesAsync();
             return courier;
         }
-        public async Task<Courier?> GetByIdAsync(int courierId)
+        public async Task<Courier?> GetByIdAsync(string courierId)
         {
             return await _context.Users
                 .OfType<Courier>()
+                .Include(c => c.ApplicationUser)
                 .Include(c => c.WorkingHours)
                 .FirstOrDefaultAsync(c => c.Id == courierId);
         }
         public async Task<List<Courier>> GetAllAsync()
         {
             return await _context.Couriers
+             .Include(c => c.ApplicationUser)
              .Include(c => c.WorkingHours)
              .ToListAsync();
         }
@@ -55,7 +57,7 @@ namespace gozba_na_klik_backend.Repository
                                currentTime <= wh.EndingTime)
                     ?? false;
 
-                courier.active = isWorkingNow;
+                courier.Active = isWorkingNow;
             }
 
             await _context.SaveChangesAsync();

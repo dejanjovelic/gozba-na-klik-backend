@@ -20,8 +20,8 @@ namespace gozba_na_klik_backend.Model
         public double AverageRating { get; set; } = 5;
         public string? RestaurantImageUrl { get; set; }
         [Required]
-        public int RestaurantOwnerId { get; set; }
-        public User? RestaurantOwner { get; set; }
+        public string RestaurantOwnerId { get; set; }
+        public RestaurantOwner? RestaurantOwner { get; set; }
         public List<Meal>? MealsOnMenu { get; set; } = new List<Meal>();
         public List<WorkingHours>? WorkingHours { get; set; } = new List<WorkingHours>();
         public List<NonWorkingDate>? NonWorkingDates { get; set; } = new List<NonWorkingDate>();

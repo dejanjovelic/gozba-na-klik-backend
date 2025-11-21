@@ -13,7 +13,7 @@ namespace gozba_na_klik_backend.Repository
             this._context = context;
         }
 
-        public async Task<List<Address>> GetByCustomerIdAsync(int customerId)
+        public async Task<List<Address>> GetByCustomerIdAsync(string customerId)
         {
             return await _context.Addresses
                 .Where(address => address.CustomerId == customerId)
