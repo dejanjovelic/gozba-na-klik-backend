@@ -74,7 +74,7 @@ namespace gozba_na_klik_backend.Repository
                 }
                 nextOrder.CourierId= courier.Id;
                 nextOrder.Status = OrderStatus.PickupInProgress;
-                nextOrder.OrderTime = DateTime.UtcNow;
+                nextOrder.AssignedAt = DateTime.UtcNow;
 
                 courier.Orders.Add(nextOrder);
             }

@@ -15,6 +15,8 @@ namespace gozba_na_klik_backend.Model
         public Courier Courier { get; set; }
         public int? CourierId { get; set; }
         public DateTime? OrderTime { get; set; }
+        public DateTime? AssignedAt { get; set; }
+
         public OrderStatus Status { get; set; }
         [JsonIgnore]
         public List<OrderMeal> OrderItems { get; set; } = new List<OrderMeal>();
