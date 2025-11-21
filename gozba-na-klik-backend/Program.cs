@@ -4,11 +4,11 @@ using gozba_na_klik_backend.Model.IRepositories;
 using gozba_na_klik_backend.Repository;
 using gozba_na_klik_backend.Services;
 using gozba_na_klik_backend.Services.IServices;
-using gozba_na_klik_backend.Services;
 using gozba_na_klik_backend.Services.IServices;
 using gozba_na_klik_backend.Settings;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using gozba_na_klik_backend.Services.BackgroundServices;
 
 namespace gozba_na_klik_backend
 {
@@ -56,7 +56,8 @@ namespace gozba_na_klik_backend
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IMealService, MealService>();
             builder.Services.AddScoped<IMealRepository, MealRepository>();
-
+            builder.Services.AddHostedService<OrderBackgroundService>();
+            builder.Services.AddHostedService<CourierBackgroundService>();
             builder.Services.AddAutoMapper(cfg =>
             {
                 cfg.AddProfile<MealProfile>();

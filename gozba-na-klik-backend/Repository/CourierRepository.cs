@@ -28,8 +28,9 @@ namespace gozba_na_klik_backend.Repository
         public async Task<List<Courier>> GetAllAsync()
         {
             return await _context.Couriers
-             .Include(c => c.WorkingHours)
-             .ToListAsync();
+              .Include(c => c.WorkingHours)
+              .Include(c => c.Orders)
+              .ToListAsync();
         }
         public async Task UpdateWorkingHoursAsync(Courier courier, List<WorkingHours> workingHours)
         {

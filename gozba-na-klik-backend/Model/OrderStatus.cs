@@ -2,8 +2,10 @@
 {
     public enum OrderStatus
     {
-        Pending,     // NaCekanju
-        Accepted,    // Prihvacena
-        Canceled     // Otkazana
+        Pending,   
+        Accepted,  
+        Canceled,
+        PickupInProgress,
+        DeliveryInProgress
     }
 }

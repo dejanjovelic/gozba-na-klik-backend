@@ -3,6 +3,7 @@ using gozba_na_klik_backend.DTOs;
 using gozba_na_klik_backend.Exceptions;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
+using gozba_na_klik_backend.Repository;
 using gozba_na_klik_backend.Services.IServices;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,5 +44,9 @@ namespace gozba_na_klik_backend.Services
 
             await _orderRepository.UpdateOrderStatusAsync(orderId, newStatus, orderTime);
         }
+        public async Task AssignOrderToCourierAsync()
+        {
+           await _orderRepository.AssignOrderToCourierAsync();
+        }
     }
-}
+ }
