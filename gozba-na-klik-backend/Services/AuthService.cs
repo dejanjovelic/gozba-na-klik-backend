@@ -79,6 +79,10 @@ namespace gozba_na_klik_backend.Services
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim("username", user.UserName),
+                new Claim("name", user.Name),
+                new Claim("surname", user.Surname),
+                new Claim("id", user.Id),
+                new Claim("profileImageUrl", user.ProfileImageUrl ?? string.Empty),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

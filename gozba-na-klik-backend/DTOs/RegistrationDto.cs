@@ -10,7 +10,6 @@ namespace gozba_na_klik_backend.DTOs
         [Required]
         public string Surname { get; set; }
 
-        [Required]
         public DateTime? DateOfBirth { get; set; }
 
         public string? ProfileImageUrl { get; set; }

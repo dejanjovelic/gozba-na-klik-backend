@@ -14,14 +14,14 @@ namespace gozba_na_klik_backend.Repository
 
         public async Task<Courier> CreateAsync(Courier courier)
         {
-            _context.Add(courier);
+            _context.Couriers.Add(courier);
             await _context.SaveChangesAsync();
             return courier;
         }
+
         public async Task<Courier?> GetByIdAsync(string courierId)
         {
-            return await _context.Users
-                .OfType<Courier>()
+            return await _context.Couriers
                 .Include(c => c.ApplicationUser)
                 .Include(c => c.WorkingHours)
                 .FirstOrDefaultAsync(c => c.Id == courierId);
@@ -33,15 +33,16 @@ namespace gozba_na_klik_backend.Repository
              .Include(c => c.WorkingHours)
              .ToListAsync();
         }
+
         public async Task UpdateWorkingHoursAsync(Courier courier, List<WorkingHours> workingHours)
         {
-            if (courier == null) return;
 
             courier.WorkingHours.Clear();
             courier.WorkingHours = workingHours;
 
             await _context.SaveChangesAsync();
         }
+
         public async Task UpdateCourierStatusAsync()
         {
             var now = DateTime.Now;

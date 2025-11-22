@@ -1,4 +1,5 @@
-﻿using gozba_na_klik_backend.DTOs;
+﻿using AutoMapper;
+using gozba_na_klik_backend.DTOs;
 using gozba_na_klik_backend.Exceptions;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
@@ -13,15 +14,17 @@ namespace gozba_na_klik_backend.Services
     {
         private readonly IRestaurantOwnerRepository _restaurantOwnerRepository;
         private readonly IAuthService _authService;
-
-        public RestaurantOwnerService(IRestaurantOwnerRepository restaurantOwnerRepository, IAuthService authService)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
+        public RestaurantOwnerService(IRestaurantOwnerRepository restaurantOwnerRepository, IAuthService authService, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _restaurantOwnerRepository = restaurantOwnerRepository;
             _authService = authService;
+            _userManager = userManager;
+            _mapper = mapper;
         }
 
-        [Authorize(Policy = "CreateUserByAdmin")]
-        public async Task<string> CreateAsync(RegistrationDto registrationDto)
+        public async Task<NewRestaurantOwnerDto> CreateAsync(RegistrationDto registrationDto)
         {
             AuthResponseDto authResponseDto = await _authService.RegisterUserAsync(registrationDto, "RestaurantOwner");
 
@@ -31,8 +34,12 @@ namespace gozba_na_klik_backend.Services
             };
 
             await _restaurantOwnerRepository.CreateAsync(restaurantOwner);
+            restaurantOwner = await _restaurantOwnerRepository.GetById(authResponseDto.AplicationUserId);
+            var roles = await _userManager.GetRolesAsync(restaurantOwner.ApplicationUser);
+            var result = _mapper.Map<NewRestaurantOwnerDto>(restaurantOwner);
+            result.Role = roles.FirstOrDefault();
 
-            return authResponseDto.Token;
+            return result;
         }
     }
 }

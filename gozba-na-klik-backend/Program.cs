@@ -74,6 +74,8 @@ namespace gozba_na_klik_backend
                 cfg.AddProfile<AllergenProfile>();
                 cfg.AddProfile<OrderMealProfile>();
                 cfg.AddProfile<ApplicationUserProfile>();
+                cfg.AddProfile<RestauranOwnerProfile>();
+                cfg.AddProfile<AddressProfile>();
             });
 
             // Adding Authentication

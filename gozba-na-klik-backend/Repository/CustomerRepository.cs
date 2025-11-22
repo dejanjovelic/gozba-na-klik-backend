@@ -19,7 +19,7 @@ namespace gozba_na_klik_backend.Repository
 
         public async Task<List<Customer>> GetAllAsync()
         {
-            return await _context.Users
+            return await _context.Customers
                 .OfType<Customer>()
                 .Include(customer => customer.ApplicationUser)
                 .ToListAsync();
@@ -27,7 +27,7 @@ namespace gozba_na_klik_backend.Repository
 
         public async Task<Customer> GetByIdAsync(string customerId)
         {
-            return await _context.Users
+            return await _context.Customers
                 .OfType<Customer>()
                 .Include(customer=>customer.ApplicationUser)
                 .Include(customer => customer.Allergens)

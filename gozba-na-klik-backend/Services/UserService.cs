@@ -23,7 +23,18 @@ namespace gozba_na_klik_backend.Services
         public async Task<List<ApplicationUserDto>> GetAllAsync()
         {
             List<ApplicationUser> users = await _userManager.Users.ToListAsync();
-            return users.Select(_mapper.Map<ApplicationUserDto>).ToList();
-        }
+            var result = new List<ApplicationUserDto>();
+
+            foreach (var user in users) 
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                var dto = _mapper.Map<ApplicationUserDto>(user);
+                dto.Role = roles.FirstOrDefault();
+                result.Add(dto);
+            }
+            
+            return result;
+
+        } 
     }
 }

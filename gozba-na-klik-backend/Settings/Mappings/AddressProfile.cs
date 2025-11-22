@@ -4,12 +4,11 @@ using gozba_na_klik_backend.Model;
 
 namespace gozba_na_klik_backend.Settings.Mappings
 {
-    public class CourierProfile : Profile
+    public class AddressProfile : Profile
     {
-        public CourierProfile()
+       public AddressProfile()
         {
-            CreateMap<Courier, CourierShortDto>();
-            CreateMap<Courier, NewCourierDto>();
+            CreateMap<NewAddressDto, Address>();
         }
     }
 }

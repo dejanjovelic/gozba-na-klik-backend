@@ -1,10 +1,12 @@
-﻿using gozba_na_klik_backend.DTOs;
+﻿using AutoMapper;
+using gozba_na_klik_backend.DTOs;
 using gozba_na_klik_backend.Exceptions;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
 using gozba_na_klik_backend.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Security;
@@ -15,14 +17,18 @@ namespace gozba_na_klik_backend.Services
     {
         private readonly ICourierRepository _courierRepository;
         private readonly IAuthService _authService;
+        private readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CourierService(ICourierRepository courierRepository, IAuthService authService)
+        public CourierService(ICourierRepository courierRepository, IAuthService authService, IMapper mapper, UserManager<ApplicationUser> userManager)
         {
             _courierRepository = courierRepository;
             _authService = authService;
+            _mapper = mapper;
+            _userManager = userManager;
         }
 
-        public async Task<string> CreateAsync(RegistrationDto registrationDto)
+        public async Task<NewCourierDto> CreateAsync(RegistrationDto registrationDto)
         {
             AuthResponseDto authResponseDto = await _authService.RegisterUserAsync(registrationDto, "Courier");
             Courier courier = new Courier
@@ -31,8 +37,12 @@ namespace gozba_na_klik_backend.Services
             };
 
             await _courierRepository.CreateAsync(courier);
+            courier = await _courierRepository.GetByIdAsync(authResponseDto.AplicationUserId);
+            var roles = await _userManager.GetRolesAsync(courier.ApplicationUser);
+            var result = _mapper.Map<NewCourierDto>(courier);
+            result.Role = roles.FirstOrDefault();
 
-            return authResponseDto.Token;
+            return result;
         }
 
         public async Task<CourierDto> GetByIdAsync(string courierId, string? ownerId)
@@ -70,7 +80,14 @@ namespace gozba_na_klik_backend.Services
             {
                 throw new NotFoundException("Courier not found.");
             }
-            await _courierRepository.UpdateWorkingHoursAsync(courier, workingHours);
+
+            if (courier.WorkingHours.Count != 0) 
+            { 
+                // TO DO Treba da ih obrise
+            }
+            
+                await _courierRepository.UpdateWorkingHoursAsync(courier, workingHours);
+                        
         }
 
         private static void ValidateInputData(string courierId, string? ownerId)

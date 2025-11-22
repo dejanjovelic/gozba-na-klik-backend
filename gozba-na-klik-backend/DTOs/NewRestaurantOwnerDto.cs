@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace gozba_na_klik_backend.DTOs
+﻿namespace gozba_na_klik_backend.DTOs
 {
-    public class ApplicationUserDto
+    public class NewRestaurantOwnerDto
     {
         public string Name { get; set; }
         public string Surname { get; set; }

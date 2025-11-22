@@ -34,7 +34,7 @@ namespace gozba_na_klik_backend.Controllers
         [HttpGet("{customerId}")]
         public async Task<IActionResult> GetByIdAsync(string customerId)
         {
-            string ownerId = User.FindFirstValue("sub");
+            string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return Ok(await _customerService.GetByIdAsync(customerId, ownerId));
         }
 
@@ -44,7 +44,7 @@ namespace gozba_na_klik_backend.Controllers
         [HttpGet("{customerId}/allergens")]
         public async Task<IActionResult> GetAllCustomerAllergens(string customerId)
         {
-            string ownerId = User.FindFirstValue("sub");
+            string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return Ok(await _customerService.GetAllCustomerAllergensAsync(customerId, ownerId));
         }
 
@@ -53,7 +53,7 @@ namespace gozba_na_klik_backend.Controllers
         [HttpPut("{customerId}/allergens")]
         public async Task<IActionResult> UpdateCustomerAllergensAsync(string customerId, [FromBody] List<int> allergenIds)
         {
-            string ownerId = User.FindFirstValue("sub");
+            string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return Ok(await _customerService.UpdateCustomerAllergensAsync(customerId, allergenIds, ownerId));
         }
 
@@ -63,23 +63,23 @@ namespace gozba_na_klik_backend.Controllers
         [HttpGet("{customerId}/addresses")]
         public async Task<IActionResult> GetAddressesAsync(string customerId)
         {
-            string ownerId = User.FindFirstValue("sub");
+            string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return Ok(await _customerService.GetAddressesAsync(customerId, ownerId));
         }
 
         [Authorize(Roles = "Customer")]
         [HttpPost("{customerId}/addresses")]
-        public async Task<IActionResult> CreateAddressAsync(string customerId, [FromBody] Address address)
+        public async Task<IActionResult> CreateAddressAsync(string customerId, [FromBody] NewAddressDto newAddress)
         {
-            string ownerId = User.FindFirstValue("sub");
-            return Ok(await _customerService.CreateAddressAsync(customerId, address, ownerId));
+            string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return Ok(await _customerService.CreateAddressAsync(customerId, newAddress, ownerId));
         }
 
         [Authorize(Roles = "Customer")]
         [HttpPut("{customerId}/addresses/{addressId}")]
-        public async Task<IActionResult> UpdateAddressAsync(string customerId, int addressId, [FromBody] Address updatedAddress)
+        public async Task<IActionResult> UpdateAddressAsync(string customerId, int addressId, [FromBody] NewAddressDto updatedAddress)
         {
-            string ownerId = User.FindFirstValue("sub");
+            string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return Ok(await _customerService.UpdateAddressAsync(customerId, addressId, updatedAddress, ownerId));
         }
 
@@ -87,7 +87,7 @@ namespace gozba_na_klik_backend.Controllers
         [HttpDelete("{customerId}/addresses/{addressId}")]
         public async Task<IActionResult> DeleteAddressAsync(string customerId, int addressId)
         {
-            string ownerId = User.FindFirstValue("sub");
+            string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             await _customerService.DeleteAddressAsync(customerId, addressId, ownerId);
             return NoContent();
         }

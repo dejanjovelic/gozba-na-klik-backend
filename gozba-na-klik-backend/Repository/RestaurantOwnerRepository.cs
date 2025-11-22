@@ -1,5 +1,6 @@
 ﻿using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace gozba_na_klik_backend.Repository
 {
@@ -17,6 +18,13 @@ namespace gozba_na_klik_backend.Repository
             _context.Add(restaurantOwner);
             await _context.SaveChangesAsync();
             return restaurantOwner;
+        }
+
+        public async Task<RestaurantOwner> GetById(string restaurantOwnerId)
+        {
+           return await _context.RestaurantOwners
+                .Include(restaurantOwner=>restaurantOwner.ApplicationUser)
+                .FirstOrDefaultAsync(restaurantOwner => restaurantOwner.Id == restaurantOwnerId);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace gozba_na_klik_backend.Controllers
         [HttpPost("filter")]
         public async Task<IActionResult> GetFilteredMealsAsync([FromBody] MealFilterRequestDto mealFilterRequestDto, [FromQuery] int page = 1, [FromQuery] int pageSize = 6)
         {
-            string ownerId = User.FindFirstValue("sub");
+            string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return Ok(await _mealService.GetFilteredMealsAsync(mealFilterRequestDto, page, pageSize, ownerId));
         }
     }

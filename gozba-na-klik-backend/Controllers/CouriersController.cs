@@ -36,7 +36,7 @@ namespace gozba_na_klik_backend.Controllers
         [HttpPut("{courierId}/working-hours")]
         public async Task<IActionResult> UpdateWorkingHours(string courierId, [FromBody] List<WorkingHours> workingHours)
         {
-            string ownerId = User.FindFirstValue("sub");
+            string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             await _courierService.UpdateWorkingHoursAsync(courierId, workingHours, ownerId);
             return Ok(new { Message = "Working hours updated successfully" });
         }
@@ -45,7 +45,7 @@ namespace gozba_na_klik_backend.Controllers
         [HttpGet("{courierId}")]
         public async Task<IActionResult> GetCourierById(string courierId)
         {
-            string ownerId = User.FindFirstValue("sub");
+            string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var courier = await _courierService.GetByIdAsync(courierId, ownerId);
             return Ok(courier);
         }

@@ -22,7 +22,7 @@ namespace gozba_na_klik_backend.Controllers
         }
 
         //POST api/restaurantowners
-        [Authorize("Administrator")]
+        [Authorize(Roles ="Administrator")]
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] RegistrationDto registrationDto)
         {

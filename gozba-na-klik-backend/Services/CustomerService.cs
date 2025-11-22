@@ -1,4 +1,5 @@
-﻿using gozba_na_klik_backend.DTOs;
+﻿using AutoMapper;
+using gozba_na_klik_backend.DTOs;
 using gozba_na_klik_backend.Exceptions;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
@@ -19,19 +20,22 @@ namespace gozba_na_klik_backend.Services
         private readonly IAllergenService _allergenService;
         private readonly IAddressRepository _addressRepository;
         private readonly IAuthService _authService;
+        private readonly IMapper _mapper;
 
 
         public CustomerService(
             ICustomerRepository customerRepository,
             IAllergenService allergenService,
             IAddressRepository addressRepository,
-            IAuthService authService
+            IAuthService authService,
+            IMapper mapper
             )
         {
             _customerRepository = customerRepository;
             _allergenService = allergenService;
             _addressRepository = addressRepository;
             _authService = authService;
+            _mapper = mapper;
         }
 
         public async Task<string> CreateAsync(RegistrationDto registrationDto)
@@ -114,17 +118,20 @@ namespace gozba_na_klik_backend.Services
         }
 
        
-        public async Task<Address> CreateAddressAsync(string customerId, Address address, string? ownerId)
+        public async Task<Address> CreateAddressAsync(string customerId, NewAddressDto updatedAddress, string? ownerId)
         {
             if (customerId != ownerId)
             {
                 throw new ForbiddenException("You do not have permission to perform this action.");
             }
 
-            if (address == null)
+            if (updatedAddress == null)
             {
                 throw new BadRequestException("Invalid data.");
             }
+
+            Address address = _mapper.Map<Address>(updatedAddress);
+
             address.CustomerId = customerId;
 
             Customer customer = await _customerRepository.GetByIdAsync(customerId);
@@ -137,11 +144,12 @@ namespace gozba_na_klik_backend.Services
         }
 
        
-        public async Task<Address> UpdateAddressAsync(string customerId, int addressId, Address updatedAddress, string? ownerId)
+        public async Task<Address> UpdateAddressAsync(string customerId, int addressId, NewAddressDto updatedAddress, string? ownerId)
         {
             ValidateInputData(customerId, addressId, updatedAddress, ownerId);
 
             Customer customer = await _customerRepository.GetByIdAsync(customerId);
+
             if (customer == null)
             {
                 throw new NotFoundException($"Customer with ID: {customerId} not found.");
@@ -159,7 +167,7 @@ namespace gozba_na_klik_backend.Services
             return await _addressRepository.UpdateAsync(existingAddress);
         }
 
-        private static void UpdateExistingAddressData(string customerId, Address updatedAddress, Address existingAddress)
+        private static void UpdateExistingAddressData(string customerId, NewAddressDto updatedAddress, Address existingAddress)
         {
             existingAddress.CustomerId = customerId;
             existingAddress.Street = updatedAddress.Street;
@@ -168,7 +176,7 @@ namespace gozba_na_klik_backend.Services
             existingAddress.ZipCode = updatedAddress.ZipCode;
         }
 
-        private static void ValidateInputData(string customerId, int addressId, Address updatedAddress, string? ownerId)
+        private static void ValidateInputData(string customerId, int addressId, NewAddressDto updatedAddress, string? ownerId)
         {
             if (customerId != ownerId)
             {

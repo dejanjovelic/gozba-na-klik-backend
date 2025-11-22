@@ -20,7 +20,7 @@ namespace gozba_na_klik_backend.Controllers
         [HttpGet("orders/{ownerId}")]
         public async Task<IActionResult> GetOrdersByOwnerIdAsync(string ownerId)
         {
-            string currentOwnerId = User.FindFirstValue("sub");
+            string currentOwnerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return Ok(await _orderService.GetOrdersByOwnerIdAsync(ownerId, currentOwnerId));
         }
 
@@ -29,7 +29,7 @@ namespace gozba_na_klik_backend.Controllers
         [HttpPut("{orderId}/status")]
         public async Task<IActionResult> UpdateOrderStatusAsync(int orderId, [FromBody] UpdateOrderDTO dto)
         {
-            string authenticatedUserId = User.FindFirstValue("sub");
+            string authenticatedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return Ok(await _orderService.UpdateOrderStatusAsync(orderId, dto, authenticatedUserId));
         }
 
@@ -38,7 +38,7 @@ namespace gozba_na_klik_backend.Controllers
         [HttpGet("active")]
         public async Task<IActionResult> GetActiveOrderByCourierIdAsync([FromQuery] string courierId)
         {
-            string authenticatedUserId = User.FindFirstValue("sub");
+            string authenticatedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return Ok(await _orderService.GetActiveOrderByCourierIdAsync(courierId, authenticatedUserId));
         }
     }
