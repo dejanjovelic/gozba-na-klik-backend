@@ -17,7 +17,7 @@ namespace gozba_na_klik_backend.Services
         private readonly IRestaurantService _restaurantService;
         private readonly IMealRepository _mealRepository;
         private readonly IMapper _mapper;
-        private const double deliveryPrice = 200;
+        private const double deliveryPrice = 2;
 
         public OrderService(IOrderRepository orderRepository, IRestaurantRepository restaurantRepository, ICustomerRepository customerRepository, 
                             IRestaurantService restaurantService, IMealRepository mealRepository, IMapper mapper)
@@ -65,7 +65,7 @@ namespace gozba_na_klik_backend.Services
             .Any(meal => meal.Allergens
             .Any(a => customer.Allergens.Any(ca => ca.Id == a.Id)));
 
-            Order newOrder = CreateOrderEntity(customer, dto, totalPrice);
+            Order newOrder = CreateOrderEntity(meals ,customer, dto, totalPrice);
 
             ResponseOrderDto responseDto = _mapper.Map<ResponseOrderDto>(await _orderRepository.CreateOrderAsync(newOrder));
             responseDto.RequiresAllergenWarn = hasDangerousMeals;
@@ -113,13 +113,16 @@ namespace gozba_na_klik_backend.Services
             return totalPrice;
         }
 
-        private Order CreateOrderEntity(Customer customer,CreateOrderDto dto, double totalPrice)
+        private Order CreateOrderEntity(List<Meal> meals, Customer customer,CreateOrderDto dto, double totalPrice)
         {
             var deliveryAddress = customer.Addresses
             .FirstOrDefault(a => a.Id == dto.DeliveryAddressId);
 
             if (deliveryAddress == null)
                 throw new BadRequestException("Invalid delivery address.");
+
+            if (meals.Any(m => m.RestaurantId != dto.RestaurantId))
+                throw new BadHttpRequestException("Meals do not belong to restaurant");
 
             return new Order
             {
