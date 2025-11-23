@@ -25,8 +25,11 @@ namespace gozba_na_klik_backend.Repository
                 .ToListAsync();
 
             return await _context.Orders
+                .Include(o => o.Customer)
+                    .ThenInclude(c => c.Addresses)
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Meal)
                 .Where(o => restaurantIds.Contains(o.RestaurantId))
-                .ProjectTo<RestaurantOrderDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
         }
 

@@ -35,7 +35,8 @@ namespace gozba_na_klik_backend.Services
                 throw new BadRequestException("Invalid data.");
             }
 
-            return await _orderRepository.GetOrdersByOwnerIdAsync(ownerId);
+            var orders = await _orderRepository.GetOrdersByOwnerIdAsync(ownerId);
+            return _mapper.Map<List<RestaurantOrderDTO>>(orders);
         }
 
 

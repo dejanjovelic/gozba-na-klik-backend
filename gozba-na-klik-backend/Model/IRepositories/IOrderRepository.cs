@@ -10,5 +10,7 @@ namespace gozba_na_klik_backend.Model.IRepositories
         Task<Order> UpdateOrderStatusAsync(Order order);
         Task<Order> GetActiveOrderByCourierIdAsync(string courierId);
         Task<Order> GetByIdAsync(int orderId);
+
+        //Task<List<Order>> GetOrdersByOwnerIdAsync(int ownerId); //Promenio na string pri merge i prebacio na DTO na mojoj grani
     }
 }
