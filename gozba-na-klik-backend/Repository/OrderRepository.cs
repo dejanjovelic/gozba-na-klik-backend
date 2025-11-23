@@ -65,5 +65,17 @@ namespace gozba_na_klik_backend.Repository
                 .FirstOrDefaultAsync(order => order.Id == orderId);
             return order;
         }
+
+        public async Task<Order> GetOrderByIdAsync(int orderId)
+        {
+            return await _context.Orders.FindAsync(orderId);
+        }
+
+        public async Task<Order> CreateOrderAsync(Order order)
+        {
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+            return order;
+        }
     }
 }

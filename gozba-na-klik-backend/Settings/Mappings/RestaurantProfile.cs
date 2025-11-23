@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using gozba_na_klik_backend.DTOs;
+using gozba_na_klik_backend.DTOs.Order;
 using gozba_na_klik_backend.Model;
 
 namespace gozba_na_klik_backend.Settings.Mappings
@@ -10,6 +11,9 @@ namespace gozba_na_klik_backend.Settings.Mappings
         {
             CreateMap<Restaurant, RestaurantWithMealsDto>()
                 .ForMember(dest => dest.MealsOnMenu, opt => opt.MapFrom(src => src.MealsOnMenu));
+
+            CreateMap<Order, ResponseOrderDto>()
+                .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Id));
         }
     }
 }

@@ -49,6 +49,7 @@ namespace gozba_na_klik_backend.Repository
         public async Task<Restaurant?> GetRestaurantByIdAsync(int restaurantId)
         {
             return await _context.Restaurants
+                .Include(r => r.WorkingHours)
                 .Include(r => r.MealsOnMenu)
                 .ThenInclude(m => m.Allergens)
                 .FirstOrDefaultAsync(r => r.Id == restaurantId);

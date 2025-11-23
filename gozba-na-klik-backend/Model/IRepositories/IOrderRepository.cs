@@ -8,8 +8,8 @@ namespace gozba_na_klik_backend.Model.IRepositories
     {
         Task<List<Order>> GetOrdersByOwnerIdAsync(string ownerId);
         Task<Order> UpdateOrderStatusAsync(Order order);
-        Task<Order> GetActiveOrderByCourierIdAsync(string courierId);
+        Task<Order> CreateOrderAsync(Order order);
         Task<Order> GetByIdAsync(int orderId);
-
+        Task<Order> GetActiveOrderByCourierIdAsync(string courierId);
     }
 }

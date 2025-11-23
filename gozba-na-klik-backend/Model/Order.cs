@@ -19,7 +19,7 @@ namespace gozba_na_klik_backend.Model
         public DateTime? DeliveryStartedAt { get; set; }
         public DateTime? DeliveredAt { get; set; }
         public Courier? Courier { get; set; }
-        public string CourierId { get; set; }
+        public string? CourierId { get; set; }
 
     }
 }

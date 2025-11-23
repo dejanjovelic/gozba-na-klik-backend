@@ -71,5 +71,19 @@ namespace gozba_na_klik_backend.Services
 
             return _mapper.Map<RestaurantWithMealsDto>(restaurant);
         }
+
+        public bool IsRestaurantOpen(Restaurant restaurant)
+        {
+            var now = DateTime.Now.TimeOfDay;
+            var today = DateTime.Now.DayOfWeek;
+
+            var todayHours = restaurant.WorkingHours
+                .FirstOrDefault(w => w.DayOfTheWeek == today);
+
+            if (todayHours == null)
+                return false;
+
+            return now >= todayHours.StartingTime && now <= todayHours.EndingTime;
+        }
     }
 }

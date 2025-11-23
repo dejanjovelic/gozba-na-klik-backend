@@ -1,4 +1,6 @@
-﻿using gozba_na_klik_backend.Exceptions;
+﻿using AutoMapper;
+using gozba_na_klik_backend.DTOs;
+using gozba_na_klik_backend.Exceptions;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
 using gozba_na_klik_backend.Services;
@@ -20,7 +22,7 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            var result = await service.GetAddressesAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh03");
+            var result = await service.GetAddressesAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh03", "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh03");
 
             result.ShouldNotBeNull();
             result.Count.ShouldBe(2);
@@ -31,7 +33,7 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            await Should.ThrowAsync<NotFoundException>(() => service.GetAddressesAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh00"));
+            await Should.ThrowAsync<NotFoundException>(() => service.GetAddressesAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh00", "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh00"));
         }
 
         [Fact]
@@ -39,7 +41,7 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            var newAddress = new Address
+            var newAddress = new NewAddressDto
             {
                 Street = "Test Street",
                 StreetNumber = 99,
@@ -47,7 +49,7 @@ namespace gozba_na_klik_backend_Tests
                 ZipCode = "12345"
             };
 
-            var result = await service.CreateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01", newAddress);
+            var result = await service.CreateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01", newAddress, "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01");
 
             result.ShouldNotBeNull();
             result.Id.ShouldBeGreaterThan(0);
@@ -58,7 +60,7 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            await Should.ThrowAsync<BadRequestException>(() => service.CreateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01", null));
+            await Should.ThrowAsync<BadRequestException>(() => service.CreateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01", null, "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01"));
         }
 
         [Fact]
@@ -66,7 +68,7 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            var newAddress = new Address
+            var newAddress = new NewAddressDto
             {
                 Street = "Test Street",
                 StreetNumber = 99,
@@ -74,7 +76,7 @@ namespace gozba_na_klik_backend_Tests
                 ZipCode = "12345"
             };
 
-            await Should.ThrowAsync<NotFoundException>(() => service.CreateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh00", newAddress));
+            await Should.ThrowAsync<NotFoundException>(() => service.CreateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh00", newAddress, "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh00"));
         }
 
 
@@ -83,7 +85,7 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            var updatedAddress = new Address
+            var updatedAddress = new NewAddressDto
             {
                 Id = 3,
                 Street = "Updated Street",
@@ -92,7 +94,7 @@ namespace gozba_na_klik_backend_Tests
                 ZipCode = "99999"
             };
 
-            var result = await service.UpdateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02", 3, updatedAddress);
+            var result = await service.UpdateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02", 3, updatedAddress, "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02");
 
             result.Street.ShouldBe("Updated Street");
             result.City.ShouldBe("Updated City");
@@ -103,7 +105,7 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            var updatedAddress = new Address
+            var updatedAddress = new NewAddressDto
             {
                 Id = 1,
                 Street = "Updated Street",
@@ -112,7 +114,7 @@ namespace gozba_na_klik_backend_Tests
                 ZipCode = "99999"
             };
 
-            await Should.ThrowAsync<BadRequestException>(() => service.UpdateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02", 3, updatedAddress));
+            await Should.ThrowAsync<BadRequestException>(() => service.UpdateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02", 3, updatedAddress, "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02"));
         }
 
         [Fact]
@@ -120,7 +122,7 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            var updatedAddress = new Address
+            var updatedAddress = new NewAddressDto
             {
                 Id = 1,
                 Street = "Updated Street",
@@ -129,7 +131,7 @@ namespace gozba_na_klik_backend_Tests
                 ZipCode = "99999"
             };
 
-            await Should.ThrowAsync<NotFoundException>(() => service.UpdateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh22", 1, updatedAddress));
+            await Should.ThrowAsync<NotFoundException>(() => service.UpdateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh22", 1, updatedAddress, "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh22"));
         }
 
         [Fact]
@@ -137,7 +139,7 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            var updatedAddress = new Address
+            var updatedAddress = new NewAddressDto
             {
                 Id = 999,
                 Street = "Updated Street",
@@ -146,7 +148,7 @@ namespace gozba_na_klik_backend_Tests
                 ZipCode = "99999"
             };
 
-            await Should.ThrowAsync<NotFoundException>(() => service.UpdateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01", 999, updatedAddress));
+            await Should.ThrowAsync<NotFoundException>(() => service.UpdateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01", 999, updatedAddress, "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01"));
         }
 
         [Fact]
@@ -154,9 +156,9 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            await service.DeleteAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02", 3);
+            await service.DeleteAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02", 3, "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02");
 
-            var addresses = await service.GetAddressesAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02");
+            var addresses = await service.GetAddressesAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02", "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02");
             addresses.ShouldNotContain(a => a.Id == 1);
         }
 
@@ -165,7 +167,7 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            await Should.ThrowAsync<NotFoundException>(() => service.DeleteAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02", 999));
+            await Should.ThrowAsync<NotFoundException>(() => service.DeleteAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02", 999, "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02"));
         }
 
         [Fact]
@@ -173,7 +175,7 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            await Should.ThrowAsync<NotFoundException>(() => service.DeleteAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh22", 1));
+            await Should.ThrowAsync<NotFoundException>(() => service.DeleteAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh22", 1, "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh22"));
         }
 
         private static CustomerService CreateCustomerService()
@@ -181,8 +183,9 @@ namespace gozba_na_klik_backend_Tests
             var (customerStubRepository, addressStubRepository) = CreateRepositories();
             var allergenService = new Mock<IAllergenService>();
             var authService = new Mock<IAuthService>();
+            var mapper = new Mock<IMapper>();
 
-            var service = new CustomerService(customerStubRepository, allergenService.Object, addressStubRepository, authService.Object);
+            var service = new CustomerService(customerStubRepository, allergenService.Object, addressStubRepository, authService.Object, mapper.Object);
 
             return service;
         }

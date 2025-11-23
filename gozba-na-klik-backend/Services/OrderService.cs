@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using gozba_na_klik_backend.DTOs;
+using gozba_na_klik_backend.DTOs.Order;
 using gozba_na_klik_backend.Exceptions;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
@@ -11,13 +12,23 @@ namespace gozba_na_klik_backend.Services
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepository;
-        private readonly IMealService _mealService;
+        private readonly IRestaurantRepository _restaurantRepository;
+        private readonly ICustomerRepository _customerRepository;
+        private readonly IRestaurantService _restaurantService;
+        private readonly IMealRepository _mealRepository;
         private readonly IMapper _mapper;
+        private readonly IMealService _mealService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private const double deliveryPrice = 2;
 
-        public OrderService(IOrderRepository orderRepository, IMapper mapper, IMealService mealService, IHttpContextAccessor httpContextAccessor)
+        public OrderService(IOrderRepository orderRepository, IRestaurantRepository restaurantRepository, ICustomerRepository customerRepository, 
+                            IRestaurantService restaurantService, IMealRepository mealRepository, IMapper mapper, IMealService mealService, IHttpContextAccessor httpContextAccessor)
         {
             _orderRepository = orderRepository;
+            _restaurantRepository = restaurantRepository;
+            _customerRepository = customerRepository;
+            _restaurantService = restaurantService;
+            _mealRepository = mealRepository;
             _mapper = mapper;
             _mealService = mealService;
             _httpContextAccessor = httpContextAccessor;
@@ -178,6 +189,100 @@ namespace gozba_na_klik_backend.Services
             CourierOrderDto courierOrderDto = _mapper.Map<CourierOrderDto>(order);
             courierOrderDto.OrderItems = courierOrderMeals;
             return courierOrderDto;
+        }
+
+        public async Task<ResponseOrderDto> CreateOrderAsync(CreateOrderDto dto)
+        {
+            Restaurant restaurant = await ValidateRestaurantAsync(dto.RestaurantId);
+
+            Customer customer = await ValidateCustomerAsync(dto.CustomerId);
+
+            List<Meal> meals = await _mealRepository.GetMealsFromOrderAsync(dto.Items);
+
+            double totalPrice = CalculateTotalPrice(dto, meals);
+
+            bool hasDangerousMeals = meals
+            .Any(meal => meal.Allergens
+            .Any(a => customer.Allergens.Any(ca => ca.Id == a.Id)));
+
+            Order newOrder = CreateOrderEntity(meals ,customer, dto, totalPrice);
+
+            Order createdOrder = await _orderRepository.CreateOrderAsync(newOrder);
+
+            ResponseOrderDto responseDto = _mapper.Map<ResponseOrderDto>(createdOrder);
+            responseDto.RequiresAllergenWarn = hasDangerousMeals;
+
+            return responseDto;
+        }
+
+        public async Task HandleOrderConfirmationAsync(int orderId, OrderStatus status)
+        {
+            Order order = await _orderRepository.GetByIdAsync(orderId);
+            if (order == null) throw new NotFoundException($"Order with ID: {orderId} not found.");
+
+            order.Status = status;
+
+            await _orderRepository.UpdateOrderStatusAsync(order);
+            return;
+        }
+
+        private async Task<Restaurant> ValidateRestaurantAsync(int restaurantId)
+        {
+            var restaurant = await _restaurantRepository.GetRestaurantByIdAsync(restaurantId);
+            if (restaurant == null) throw new NotFoundException($"Restaurant with ID {restaurantId} not found.");
+
+            //Trebaju biti definisani workinghours da bi ovaj if radio
+            if (!_restaurantService.IsRestaurantOpen(restaurant)) 
+                throw new BadRequestException("Restaurant is closed.");
+
+            return restaurant;
+        }
+
+        private async Task<Customer> ValidateCustomerAsync(string customerId)
+        {
+            var customer = await _customerRepository.GetByIdAsync(customerId);
+            if (customer == null)
+                throw new NotFoundException($"Customer with ID: {customerId} not found.");
+
+            return customer;
+        }
+
+        private double CalculateTotalPrice(CreateOrderDto dto, List<Meal> meals)
+        {
+            double totalPrice = meals.Sum(meal =>
+            {
+                int quantity = dto.Items.First(i => i.MealId == meal.Id).Quantity;
+                return meal.Price * quantity;
+            });
+            totalPrice += deliveryPrice;
+            return totalPrice;
+        }
+
+        private Order CreateOrderEntity(List<Meal> meals, Customer customer,CreateOrderDto dto, double totalPrice)
+        {
+            var deliveryAddress = customer.Addresses
+            .FirstOrDefault(a => a.Id == dto.DeliveryAddressId);
+
+            if (deliveryAddress == null)
+                throw new BadRequestException("Invalid delivery address.");
+
+            if (meals.Any(m => m.RestaurantId != dto.RestaurantId))
+                throw new BadHttpRequestException("Meals do not belong to restaurant");
+
+            return new Order
+            {
+                CustomerId = dto.CustomerId,
+                RestaurantId = dto.RestaurantId,
+                DeliveryAddressId = dto.DeliveryAddressId,
+                OrderTime = DateTime.UtcNow,
+                Status = OrderStatus.Pending,
+                TotalPrice = totalPrice,
+                OrderItems = dto.Items.Select(item => new OrderMeal
+                {
+                    MealId = item.MealId,
+                    Quantity = item.Quantity
+                }).ToList()
+            };
         }
     }
 }

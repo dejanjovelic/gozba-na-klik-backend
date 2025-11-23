@@ -348,7 +348,6 @@ namespace gozba_na_klik_backend.Model
                   }
              );
 
-
             modelBuilder.Entity<Restaurant>().HasData(
                  new Restaurant
                  {
@@ -739,23 +738,6 @@ namespace gozba_na_klik_backend.Model
             );
 
 
-            // OrderMeals (join table for meals + quantity)
-            modelBuilder.Entity<OrderMeal>().HasData(
-                new OrderMeal { OrderId = 1, MealId = 1, Quantity = 2 },
-                new OrderMeal { OrderId = 1, MealId = 11, Quantity = 1 },
-                new OrderMeal { OrderId = 2, MealId = 1, Quantity = 1 },
-                new OrderMeal { OrderId = 2, MealId = 11, Quantity = 1 },
-                new OrderMeal { OrderId = 3, MealId = 1, Quantity = 3 },
-                new OrderMeal { OrderId = 4, MealId = 2, Quantity = 2 },
-                new OrderMeal { OrderId = 4, MealId = 13, Quantity = 1 },
-                new OrderMeal { OrderId = 5, MealId = 2, Quantity = 1 },
-                new OrderMeal { OrderId = 5, MealId = 13, Quantity = 2 },
-                new OrderMeal { OrderId = 6, MealId = 3, Quantity = 2 },
-                new OrderMeal { OrderId = 7, MealId = 3, Quantity = 1 },
-                new OrderMeal { OrderId = 8, MealId = 4, Quantity = 3 },
-                new OrderMeal { OrderId = 9, MealId = 4, Quantity = 2 },
-                new OrderMeal { OrderId = 10, MealId = 4, Quantity = 1 }
-            );
             modelBuilder.Entity("MealAllergens").HasData(
                 // Jelo 1: Stuffed Peppers (Id=1) - Pšenica (1), Celer (22)
                 new { MealId = 1, AllergenId = 1 },
@@ -837,7 +819,6 @@ namespace gozba_na_klik_backend.Model
                 new { MealId = 20, AllergenId = 1 },
                 new { MealId = 20, AllergenId = 10 }
             );
-
 
         }
     }

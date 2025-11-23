@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using gozba_na_klik_backend.Services.IServices;
+﻿using gozba_na_klik_backend.DTOs;
+using gozba_na_klik_backend.DTOs.Order;
 using gozba_na_klik_backend.Model;
-using gozba_na_klik_backend.DTOs;
+using gozba_na_klik_backend.Services.IServices;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+
 namespace gozba_na_klik_backend.Controllers
 {
     [Route("api/[controller]")]
@@ -22,6 +24,29 @@ namespace gozba_na_klik_backend.Controllers
         {
             string currentOwnerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return Ok(await _orderService.GetOrdersByOwnerIdAsync(ownerId, currentOwnerId));
+        }
+
+        [Authorize(Roles = "Customer")]
+        [HttpPost]
+        public async Task<IActionResult> CreateOrder(CreateOrderDto dto)
+        {
+            return Ok(await _orderService.CreateOrderAsync(dto));
+        }
+
+        [Authorize(Roles = "Customer")]
+        [HttpPatch("{id}/confirm")]
+        public async Task<IActionResult> ConfirmOrder(int id)
+        {
+            await _orderService.HandleOrderConfirmationAsync(id, OrderStatus.Pending);
+            return Ok("Order confirmed.");
+        }
+
+        [Authorize(Roles = "Customer")]
+        [HttpPatch("{id}/cancel")]
+        public async Task<IActionResult> CancelOrder(int id)
+        {
+            await _orderService.HandleOrderConfirmationAsync(id, OrderStatus.Cancelled);
+            return Ok("Order cancelled.");
         }
 
         [Authorize(Roles = "Customer, Courier, RestaurantOwner, Employee")]
