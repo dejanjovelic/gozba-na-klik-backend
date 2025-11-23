@@ -12,34 +12,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace gozba_na_klik_backend_Tests
 {
     public class CustomerAllergenServiceTests
     {
         [Theory]
-        [InlineData(1)]
-        public async Task GettingCustomerAllergens_throwsNotFoundException_whenCustomerDoesNotExist(int id)
+        [InlineData("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh00")]
+        public async Task GettingCustomerAllergens_throwsNotFoundException_whenCustomerDoesNotExist(string id)
         {
             var stubRepository = createRepository();
             var allergenMockService = new Mock<IAllergenService>();
             var addressMockRepo = new Mock<IAddressRepository>();
+            var authService = new Mock<IAuthService>();
 
-            var servise = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object);
+            var servise = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object, authService.Object);
 
             var ex = await Assert.ThrowsAsync<NotFoundException>(() => servise.GetAllCustomerAllergensAsync(id));
             ex.Message.ShouldContain($"Customer with ID: {id} not found.");
         }
 
         [Theory]
-        [InlineData(4)]
-        public async Task GetAllCustomerAllergensAsync_ShouldReturnAllergens_WhenCustomerExists(int id)
+        [InlineData("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01")]
+        public async Task GetAllCustomerAllergensAsync_ShouldReturnAllergens_WhenCustomerExists(string id)
         {
             var stubRepository = createRepository();
             var allergenMockService = new Mock<IAllergenService>();
             var addressMockRepo = new Mock<IAddressRepository>();
+            var authService = new Mock<IAuthService>();
 
-            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object);
+            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object, authService.Object);
 
             var result = await service.GetAllCustomerAllergensAsync(id);
             result.ShouldNotBeNull();
@@ -48,13 +51,14 @@ namespace gozba_na_klik_backend_Tests
         }
 
         [Theory]
-        [InlineData(7)]
-        public async Task GetAllCustomerAllergensAsync_ShouldReturnEmptyList_WhenCustomerHasNoAllergens(int id)
+        [InlineData("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh03")]
+        public async Task GetAllCustomerAllergensAsync_ShouldReturnEmptyList_WhenCustomerHasNoAllergens(string id)
         {
             var stubRepository = createRepository();
             var allergenMockService = new Mock<IAllergenService>();
             var addressMockRepo = new Mock<IAddressRepository>();
-            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object);
+            var authService = new Mock<IAuthService>();
+            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object, authService.Object);
 
             var result = await service.GetAllCustomerAllergensAsync(id);
 
@@ -65,18 +69,19 @@ namespace gozba_na_klik_backend_Tests
         public static IEnumerable<object[]> CustomerWithData =>
         new List<object[]>
         {
-            new object[]{3, new List<int> {1,2,3 } }
+            new object[]{ "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh00", new List<int> { 1, 2, 3 } }
         };
 
         [Theory]
         [MemberData(nameof(CustomerWithData))]
-        public async Task UpdateCustomerAllergensAsync_ShouldThrowNotFoundException_WhenCustomerDoesNotExist(int customerId, List<int> allergenIds)
+        public async Task UpdateCustomerAllergensAsync_ShouldThrowNotFoundException_WhenCustomerDoesNotExist(string customerId, List<int> allergenIds)
         {
             var stubRepository = createRepository();
             var allergenMockService = new Mock<IAllergenService>();
             var addressMockRepo = new Mock<IAddressRepository>();
+            var authService = new Mock<IAuthService>();
 
-            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object);
+            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object, authService.Object);
 
             await Assert.ThrowsAsync<NotFoundException>(() => service.UpdateCustomerAllergensAsync(customerId, allergenIds));
         }
@@ -84,23 +89,24 @@ namespace gozba_na_klik_backend_Tests
         public static IEnumerable<object[]> CustomerWithNotExistingAllergenIDData =>
            new List<object[]>
            {
-                new object[]{6, new List<int> {1,2,38} }
+                new object[]{ "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01", new List<int> {1,2,38} }
            };
 
         [Theory]
         [MemberData(nameof(CustomerWithNotExistingAllergenIDData))]
-        public async Task UpdateCustomerAllergensAsync_ShouldReturnListOfAllergen_WhenAllAllergensFromListExist(int customerId, List<int> allergenIds)
+        public async Task UpdateCustomerAllergensAsync_ShouldReturnListOfAllergen_WhenAllAllergensFromListExist(string customerId, List<int> allergenIds)
         {
             var stubRepository = createRepository();
             var allergenMockService = new Mock<IAllergenService>();
             var addressMockRepo = new Mock<IAddressRepository>();
+            var authService = new Mock<IAuthService>();
             allergenMockService
            .Setup(allergenService => allergenService.GetAllSelectedAllergensAsync(It.IsAny<List<int>>()))
            .ReturnsAsync((List<int> allergenIds) => allergenIds
            .Select(id => new Allergen { Id = id, Name = $"Allergen{id}" })
            .ToList());
 
-            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object);
+            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object, authService.Object);
 
             Customer result = await service.UpdateCustomerAllergensAsync(customerId, allergenIds);
 
@@ -115,16 +121,41 @@ namespace gozba_na_klik_backend_Tests
         {
             List<Customer> customers = new List<Customer>
             {
-                 new Customer {
-                     Id = 4,
-                     Name = "Ashley",
-                     Surname = "Green",
-                     Email = "caseymaria@example.com",
-                     Username = "customer4",
-                     Password = "cust123",
-                     ProfileImageUrl = "https://example.com/customer4.png",
-                     ContactNumber = "+381621112223",
+                 new Customer{
+                    Id = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02",
+                    ApplicationUser = new ApplicationUser
+                    {
+                    Id = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02",
+                            Name = "Emily",
+                            Surname = "Austin",
+                            Email = "reynoldscourtney@example.net",
+                            UserName = "customer5",
+                            ProfileImageUrl = "https://example.com/customer5.png",
+                            PhoneNumber = "+381631234567",
+                            DateOfBirth = new DateTime(2000, 1, 25, 0, 0, 0, DateTimeKind.Utc)
+                    },
                      Allergens = new List<Allergen>
+                    {
+                        new Allergen { Id = 1, Name = "wheat" },
+                        new Allergen { Id = 2, Name = "rye" },
+                        new Allergen { Id = 3, Name = "barley" }
+                    }
+
+                 },
+                 new Customer{
+                    Id = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01",
+                    ApplicationUser = new ApplicationUser
+                    {
+                        Id = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01",
+                        Name = "Ashley",
+                        Surname = "Green",
+                        Email = "caseymaria@example.com",
+                        UserName = "customer4",
+                        ProfileImageUrl = "https://example.com/customer4.png",
+                        PhoneNumber = "+381621112223",
+                        DateOfBirth = new DateTime(1995, 5, 10, 0, 0, 0, DateTimeKind.Utc)
+                    },
+                    Allergens = new List<Allergen>
                     {
                         new Allergen { Id = 7, Name = "prawns" },
                         new Allergen { Id = 8, Name = "eggs" },
@@ -132,66 +163,67 @@ namespace gozba_na_klik_backend_Tests
                     }
 
                  },
-                new Customer {
-                    Id = 5,
-                    Name = "Emily",
-                    Surname = "Austin",
-                    Email = "reynoldscourtney@example.net",
-                    Username = "customer5",
-                    Password = "cust123",
-                    ProfileImageUrl = "https://example.com/customer5.png",
-                    ContactNumber = "+381631234567",
-                    Allergens = new List<Allergen>
+                 new Customer{
+                    Id = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02",
+                    ApplicationUser = new ApplicationUser
                     {
-                        new Allergen { Id = 1, Name = "wheat" },
-                        new Allergen { Id = 2, Name = "rye" },
-                        new Allergen { Id = 3, Name = "barley" }
-                    }
-                },
-                new Customer {
-                    Id = 6,
-                    Name = "Wendy",
-                    Surname = "Vargas",
-                    Email = "michael99@example.org",
-                    Username = "customer6",
-                    Password = "cust123",
-                    ProfileImageUrl = "https://example.com/customer6.png",
-                    ContactNumber = "+381601234321",
+                        Id = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02",
+                        Name = "Emily",
+                        Surname = "Austin",
+                        Email = "reynoldscourtney@example.net",
+                        UserName = "customer5",
+                        ProfileImageUrl = "https://example.com/customer5.png",
+                        PhoneNumber = "+381631234567",
+                        DateOfBirth = new DateTime(2000, 1, 25, 0, 0, 0, DateTimeKind.Utc)
+                    },
                     Allergens = new List<Allergen>
                     {
                         new Allergen { Id = 4, Name = "oats" },
                         new Allergen { Id = 5, Name = "crabs" },
                         new Allergen { Id = 6, Name = "lobsters" }
                     }
-                },
-                new Customer {
-                     Id = 7,
-                     Name = "Kimberly",
-                     Surname = "Brown",
-                     Email = "robertschristopher@example.net",
-                     Username = "customer7", Password = "cust123",
-                     ProfileImageUrl = "https://example.com/customer7.png",
-                     ContactNumber = "+381641112233",
-                     Allergens = new List<Allergen>()
-                },
-                new Customer {
-                     Id = 8,
-                     Name = "David",
-                     Surname = "Sims",
-                     Email = "nelsonrebecca@example.com",
-                     Username = "customer8",
-                     Password = "cust123",
-                     ProfileImageUrl = "https://example.com/customer8.png",
-                     ContactNumber = "+381611231231",
+
+                 },
+                 new Customer{
+                    Id = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh03",
+                    ApplicationUser = new ApplicationUser
+                    {
+                        Id = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh03",
+                        Name = "Wendy",
+                        Surname = "Vargas",
+                        Email = "michael99@example.org",
+                        UserName = "customer6",
+                        ProfileImageUrl = "https://example.com/customer6.png",
+                        PhoneNumber = "+381601234321",
+                        DateOfBirth = new DateTime(1988, 12, 3, 0, 0, 0, DateTimeKind.Utc)
+                    },
+                    Allergens = new List<Allergen>()
+
+                 },
+                 new Customer{
+                    Id = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh04",
+                    ApplicationUser = new ApplicationUser
+                    {
+                        Id = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh04",
+                        Name = "Kimberly",
+                        Surname = "Brown",
+                        Email = "robertschristopher@example.net",
+                        UserName = "customer7",
+                        ProfileImageUrl = "https://example.com/customer7.png",
+                        PhoneNumber = "+381641112233",
+                        DateOfBirth = new DateTime(1991, 7, 18, 0, 0, 0, DateTimeKind.Utc)
+                    },
                      Allergens = null
-                }
+
+                 },
             };
+                
 
             var stubRepository = new Mock<ICustomerRepository>();
 
             stubRepository
-                .Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))
-                .ReturnsAsync((int id) => customers.FirstOrDefault(customer => customer.Id == id));
+                .Setup(repo => repo.GetByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync((string id) => customers.FirstOrDefault(customer => customer.Id == id));
             
             stubRepository
                 .Setup(repo => repo.UpdateCustomerAllergensAsync(It.IsAny<Customer>(), It.IsAny<List<Allergen>>()))

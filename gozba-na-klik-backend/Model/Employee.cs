@@ -1,8 +1,9 @@
 ﻿namespace gozba_na_klik_backend.Model
 {
-    public class Employee : User
+    public class Employee
     {
-        public override Role Role => Role.Employee;
+        public string Id { get; set; }
+        public ApplicationUser? ApplicationUser { get; set; }
         public bool IsSuspended { get; set; } = false;
     }
 }

@@ -7,7 +7,7 @@ namespace gozba_na_klik_backend.Model
     {
         public int Id { get; set; }
         public Customer? Customer { get; set; }
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
         public Address? DeliveryAddress { get; set; }
         public int DeliveryAddressId { get; set; }
         public Restaurant? Restaurant { get; set; }
@@ -19,7 +19,7 @@ namespace gozba_na_klik_backend.Model
         public DateTime? DeliveryStartedAt { get; set; }
         public DateTime? DeliveredAt { get; set; }
         public Courier? Courier { get; set; }
-        public int CourierId { get; set; }
+        public string CourierId { get; set; }
 
     }
 }

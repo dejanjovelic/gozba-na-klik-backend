@@ -2,6 +2,8 @@
 using gozba_na_klik_backend.Services.IServices;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.DTOs;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 namespace gozba_na_klik_backend.Controllers
 {
     [Route("api/[controller]")]
@@ -13,32 +15,31 @@ namespace gozba_na_klik_backend.Controllers
         {
             _orderService = orderService;
         }
+
+        [Authorize(Roles = "RestaurantOwner")]
         [HttpGet("orders/{ownerId}")]
-        public async Task<IActionResult> GetOrdersByOwnerIdAsync(int ownerId)
+        public async Task<IActionResult> GetOrdersByOwnerIdAsync(string ownerId)
         {
-            return Ok(await _orderService.GetOrdersByOwnerIdAsync(ownerId));
+            string currentOwnerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return Ok(await _orderService.GetOrdersByOwnerIdAsync(ownerId, currentOwnerId));
         }
 
-        [HttpPut("orders/{orderId}")]
-
+        [Authorize(Roles = "Customer, Courier, RestaurantOwner, Employee")]
+        //PUT api/orders/{orderId=1}/status
+        [HttpPut("{orderId}/status")]
         public async Task<IActionResult> UpdateOrderStatusAsync(int orderId, [FromBody] UpdateOrderDTO dto)
         {
-            await _orderService.UpdateOrderStatusAsync(orderId, dto.NewStatus, dto.NewTime);
-            return NoContent();
+            string authenticatedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return Ok(await _orderService.UpdateOrderStatusAsync(orderId, dto, authenticatedUserId));
         }
 
         //GET /orders/active?courierId={courierId}
+        [Authorize(Roles = "Courier")]
         [HttpGet("active")]
-        public async Task<IActionResult> GetActiveOrderByCourierIdAsync([FromQuery] int courierId)
+        public async Task<IActionResult> GetActiveOrderByCourierIdAsync([FromQuery] string courierId)
         {
-            return Ok(await _orderService.GetActiveOrderByCourierIdAsync(courierId));
-        }
-       
-        //PUT api/orders/{orderId=1}status?courierId=1
-        [HttpPut("{orderId}/status")]
-        public async Task<IActionResult> UpdateCourierActiveOrderStatusAsync(int orderId, [FromQuery] int courierId, [FromBody] UpdateOrderDTO updateOrder)
-        {
-            return Ok(await _orderService.UpdateCourierActiveOrderStatusAsync(orderId, courierId, updateOrder));
+            string authenticatedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return Ok(await _orderService.GetActiveOrderByCourierIdAsync(courierId, authenticatedUserId));
         }
     }
 }

@@ -24,15 +24,15 @@ namespace gozba_na_klik_backend.Services
             this._mapper = mapper;
         }
 
-        public async Task<MealFilterResponseDto> GetFilteredMealsAsync(MealFilterRequestDto mealFilterRequestDto, int page, int pageSize)
+        public async Task<MealFilterResponseDto> GetFilteredMealsAsync(MealFilterRequestDto mealFilterRequestDto, int page, int pageSize, string? ownerId)
         {
-            ValidateRequest(mealFilterRequestDto, page, pageSize);
+            ValidateRequest(mealFilterRequestDto, page, pageSize, ownerId);
 
             IQueryable<Meal> meals = _mealRepository.GetAll();
 
             List<Allergen> allergens = await _allergenService.GetAllAsync();
 
-            List<Allergen> customersAllergens = await _customerService.GetAllCustomerAllergensAsync(mealFilterRequestDto.CustomerId);
+            List<Allergen> customersAllergens = await _customerService.GetAllCustomerAllergensAsync(mealFilterRequestDto.CustomerId, ownerId);
             IEnumerable<int> combinedAllergensIds = GetCombinedAllergenIds(mealFilterRequestDto, customersAllergens);
 
 
@@ -95,8 +95,13 @@ namespace gozba_na_klik_backend.Services
             return combinedAllergensIds;
         }
 
-        private static void ValidateRequest(MealFilterRequestDto mealFilterRequestDto, int page, int pageSize)
+        private static void ValidateRequest(MealFilterRequestDto mealFilterRequestDto, int page, int pageSize, string? ownerId)
         {
+            if (ownerId != mealFilterRequestDto.CustomerId) 
+            {
+                throw new ForbiddenException("You do not have permission to perform this action.");
+            }
+
             if (mealFilterRequestDto == null)
             {
                 throw new BadRequestException("Request body cannot be null.");

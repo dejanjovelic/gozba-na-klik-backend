@@ -28,7 +28,7 @@ namespace gozba_na_klik_backend.Settings.Mappings
                     }).ToList()));
 
             CreateMap<Order, CourierOrderDto>()
-                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name + " " + src.Customer.Surname))
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.ApplicationUser.Name + " " + src.Customer.ApplicationUser.Surname))
             .ForMember(dest => dest.OrderItems, opt => opt.Ignore());
 
             CreateMap<Order, OrderDto>();

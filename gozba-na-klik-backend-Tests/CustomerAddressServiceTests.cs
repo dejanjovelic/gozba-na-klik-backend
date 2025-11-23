@@ -20,7 +20,7 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            var result = await service.GetAddressesAsync(4);
+            var result = await service.GetAddressesAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh03");
 
             result.ShouldNotBeNull();
             result.Count.ShouldBe(2);
@@ -31,7 +31,7 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            await Should.ThrowAsync<NotFoundException>(() => service.GetAddressesAsync(0));
+            await Should.ThrowAsync<NotFoundException>(() => service.GetAddressesAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh00"));
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace gozba_na_klik_backend_Tests
                 ZipCode = "12345"
             };
 
-            var result = await service.CreateAddressAsync(5, newAddress);
+            var result = await service.CreateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01", newAddress);
 
             result.ShouldNotBeNull();
             result.Id.ShouldBeGreaterThan(0);
@@ -58,7 +58,7 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            await Should.ThrowAsync<BadRequestException>(() => service.CreateAddressAsync(4, null));
+            await Should.ThrowAsync<BadRequestException>(() => service.CreateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01", null));
         }
 
         [Fact]
@@ -74,32 +74,12 @@ namespace gozba_na_klik_backend_Tests
                 ZipCode = "12345"
             };
 
-            await Should.ThrowAsync<NotFoundException>(() => service.CreateAddressAsync(555, newAddress));
+            await Should.ThrowAsync<NotFoundException>(() => service.CreateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh00", newAddress));
         }
 
 
         [Fact]
         public async Task UpdateAddressAsync_ValidData_ShouldUpdateAddress()
-        {
-            CustomerService service = CreateCustomerService();
-
-            var updatedAddress = new Address
-            {
-                Id = 1,
-                Street = "Updated Street",
-                StreetNumber = 100,
-                City = "Updated City",
-                ZipCode = "99999"
-            };
-
-            var result = await service.UpdateAddressAsync(4, 1, updatedAddress);
-
-            result.Street.ShouldBe("Updated Street");
-            result.City.ShouldBe("Updated City");
-        }
-
-        [Fact]
-        public async Task UpdateAddressAsync_MismatchedIds_ShouldThrowBadRequest()
         {
             CustomerService service = CreateCustomerService();
 
@@ -112,7 +92,27 @@ namespace gozba_na_klik_backend_Tests
                 ZipCode = "99999"
             };
 
-            await Should.ThrowAsync<BadRequestException>(() => service.UpdateAddressAsync(4, 1, updatedAddress));
+            var result = await service.UpdateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02", 3, updatedAddress);
+
+            result.Street.ShouldBe("Updated Street");
+            result.City.ShouldBe("Updated City");
+        }
+
+        [Fact]
+        public async Task UpdateAddressAsync_MismatchedIds_ShouldThrowBadRequest()
+        {
+            CustomerService service = CreateCustomerService();
+
+            var updatedAddress = new Address
+            {
+                Id = 1,
+                Street = "Updated Street",
+                StreetNumber = 100,
+                City = "Updated City",
+                ZipCode = "99999"
+            };
+
+            await Should.ThrowAsync<BadRequestException>(() => service.UpdateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02", 3, updatedAddress));
         }
 
         [Fact]
@@ -129,7 +129,7 @@ namespace gozba_na_klik_backend_Tests
                 ZipCode = "99999"
             };
 
-            await Should.ThrowAsync<NotFoundException>(() => service.UpdateAddressAsync(555, 1, updatedAddress));
+            await Should.ThrowAsync<NotFoundException>(() => service.UpdateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh22", 1, updatedAddress));
         }
 
         [Fact]
@@ -146,7 +146,7 @@ namespace gozba_na_klik_backend_Tests
                 ZipCode = "99999"
             };
 
-            await Should.ThrowAsync<NotFoundException>(() => service.UpdateAddressAsync(5, 999, updatedAddress));
+            await Should.ThrowAsync<NotFoundException>(() => service.UpdateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01", 999, updatedAddress));
         }
 
         [Fact]
@@ -154,9 +154,9 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            await service.DeleteAddressAsync(4, 1);
+            await service.DeleteAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02", 3);
 
-            var addresses = await service.GetAddressesAsync(4);
+            var addresses = await service.GetAddressesAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02");
             addresses.ShouldNotContain(a => a.Id == 1);
         }
 
@@ -165,7 +165,7 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            await Should.ThrowAsync<NotFoundException>(() => service.DeleteAddressAsync(4, 999));
+            await Should.ThrowAsync<NotFoundException>(() => service.DeleteAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02", 999));
         }
 
         [Fact]
@@ -173,15 +173,16 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            await Should.ThrowAsync<NotFoundException>(() => service.DeleteAddressAsync(555, 1));
+            await Should.ThrowAsync<NotFoundException>(() => service.DeleteAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh22", 1));
         }
 
         private static CustomerService CreateCustomerService()
         {
             var (customerStubRepository, addressStubRepository) = CreateRepositories();
             var allergenService = new Mock<IAllergenService>();
+            var authService = new Mock<IAuthService>();
 
-            var service = new CustomerService(customerStubRepository, allergenService.Object, addressStubRepository);
+            var service = new CustomerService(customerStubRepository, allergenService.Object, addressStubRepository, authService.Object);
 
             return service;
         }
@@ -190,33 +191,58 @@ namespace gozba_na_klik_backend_Tests
         {
             List<Customer> customers = new List<Customer>
             {
-                 new Customer {
-                     Id = 4,
-                     Name = "Ashley",
-                     Surname = "Green",
-                     Email = "caseymaria@example.com",
-                     Username = "customer4",
-                     Password = "cust123",
-                     ProfileImageUrl = "https://example.com/customer4.png",
-                     ContactNumber = "+381621112223"
+                 new Customer{
+                    Id = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02",
+                    ApplicationUser = new ApplicationUser
+                    {
+                    Id = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02",
+                            Name = "Emily",
+                            Surname = "Austin",
+                            Email = "reynoldscourtney@example.net",
+                            UserName = "customer5",
+                            ProfileImageUrl = "https://example.com/customer5.png",
+                            PhoneNumber = "+381631234567",
+                            DateOfBirth = new DateTime(2000, 1, 25, 0, 0, 0, DateTimeKind.Utc)
+                    }
                  },
-                new Customer {
-                    Id = 5,
-                    Name = "Emily",
-                    Surname = "Austin",
-                    Email = "reynoldscourtney@example.net",
-                    Username = "customer5",
-                    Password = "cust123",
-                    ProfileImageUrl = "https://example.com/customer5.png",
-                    ContactNumber = "+381631234567"
-                }
+                 new Customer{
+                    Id = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01",
+                    ApplicationUser = new ApplicationUser
+                    {
+                        Id = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01",
+                        Name = "Ashley",
+                        Surname = "Green",
+                        Email = "caseymaria@example.com",
+                        UserName = "customer4",
+                        ProfileImageUrl = "https://example.com/customer4.png",
+                        PhoneNumber = "+381621112223",
+                        DateOfBirth = new DateTime(1995, 5, 10, 0, 0, 0, DateTimeKind.Utc)
+                    }
+                 },
+                 new Customer{
+                    Id = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh03",
+                    ApplicationUser = new ApplicationUser
+                    {
+                        Id = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh03",
+                        Name = "Wendy",
+                        Surname = "Vargas",
+                        Email = "michael99@example.org",
+                        UserName = "customer6",
+                        ProfileImageUrl = "https://example.com/customer6.png",
+                        PhoneNumber = "+381601234321",
+                        DateOfBirth = new DateTime(1988, 12, 3, 0, 0, 0, DateTimeKind.Utc)
+                    },
+                      
+                 }
+
+              
             };
 
-            var customerStubRepository = new Mock<ICustomerRepository>();
+        var customerStubRepository = new Mock<ICustomerRepository>();
 
-            customerStubRepository
-                .Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))
-                .ReturnsAsync((int id) => customers.FirstOrDefault(customer => customer.Id == id));
+        customerStubRepository
+            .Setup(repo => repo.GetByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync((string id) => customers.FirstOrDefault(customer => customer.Id == id));
             
             List<Address> addresses = new List<Address>
             {
@@ -226,7 +252,7 @@ namespace gozba_na_klik_backend_Tests
                     StreetNumber = 12,
                     City = "Belgrade",
                     ZipCode = "11000",
-                    CustomerId = 4
+                    CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh03"
                 },
                 new Address {
                     Id = 2,
@@ -234,7 +260,7 @@ namespace gozba_na_klik_backend_Tests
                     StreetNumber = 3,
                     City = "Novi Sad",
                     ZipCode = "21000",
-                    CustomerId = 4
+                    CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh03"
                 },
                 new Address {
                     Id = 3,
@@ -242,15 +268,15 @@ namespace gozba_na_klik_backend_Tests
                     StreetNumber = 44,
                     City = "Niš",
                     ZipCode = "18000",
-                    CustomerId = 5
+                    CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02"
                 }
             };
 
-            var addressStubRepository = new Mock<IAddressRepository>();
+        var addressStubRepository = new Mock<IAddressRepository>();
 
-            addressStubRepository
-                .Setup(repo => repo.GetByCustomerIdAsync(It.IsAny<int>()))
-                .ReturnsAsync((int customerId) => addresses.Where(a => a.CustomerId == customerId).ToList());
+        addressStubRepository
+            .Setup(repo => repo.GetByCustomerIdAsync(It.IsAny<string>()))
+                .ReturnsAsync((string customerId) => addresses.Where(a => a.CustomerId == customerId).ToList());
 
             addressStubRepository
                 .Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))
@@ -260,38 +286,38 @@ namespace gozba_na_klik_backend_Tests
                 .Setup(repo => repo.CreateAsync(It.IsAny<Address>()))
                 .ReturnsAsync((Address addr) =>
                 {
-                    addr.Id = addresses.Max(a => a.Id) + 1;
-                    addresses.Add(addr);
-                    return addr;
-                });
+            addr.Id = addresses.Max(a => a.Id) + 1;
+            addresses.Add(addr);
+            return addr;
+        });
 
             addressStubRepository
                 .Setup(repo => repo.UpdateAsync(It.IsAny<Address>()))
                 .ReturnsAsync((Address addr) =>
                 {
-                    var index = addresses.FindIndex(a => a.Id == addr.Id);
-                    if (index != -1)
-                    {
-                        addresses[index] = addr;
-                        return addr;
-                    }
-                    return null;
-                });
+            var index = addresses.FindIndex(a => a.Id == addr.Id);
+            if (index != -1)
+            {
+                addresses[index] = addr;
+                return addr;
+            }
+            return null;
+        });
 
             addressStubRepository
                 .Setup(repo => repo.DeleteAsync(It.IsAny<int>()))
                 .ReturnsAsync((int id) =>
                 {
-                    var addr = addresses.FirstOrDefault(a => a.Id == id);
-                    if (addr != null)
-                    {
-                        addresses.Remove(addr);
-                        return true;
-                    }
-                    return false;
-                });
+            var addr = addresses.FirstOrDefault(a => a.Id == id);
+            if (addr != null)
+            {
+                addresses.Remove(addr);
+                return true;
+            }
+            return false;
+        });
 
-            return (customerStubRepository.Object,  addressStubRepository.Object);
+            return (customerStubRepository.Object, addressStubRepository.Object);
         }
-    }
+}
 }
