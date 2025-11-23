@@ -11,7 +11,7 @@ namespace gozba_na_klik_backend.Settings.Mappings
         {
             CreateMap<Order, RestaurantOrderDTO>()
                    .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name + " " + src.Customer.Surname))
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.ApplicationUser.Name + " " + src.Customer.ApplicationUser.Surname))
                 .ForMember(dest => dest.CustomerAddress, opt => opt.MapFrom(src =>
                     src.Customer.Addresses.FirstOrDefault() != null
                         ? src.Customer.Addresses.FirstOrDefault().Street + ", " + src.Customer.Addresses.FirstOrDefault().City
