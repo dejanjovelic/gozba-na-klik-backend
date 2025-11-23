@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using gozba_na_klik_backend.Services.IServices;
 using gozba_na_klik_backend.Services;
+using gozba_na_klik_backend.DTOs;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace gozba_na_klik_backend.Controllers
 {
@@ -18,32 +21,43 @@ namespace gozba_na_klik_backend.Controllers
             _courierService = courierService;
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] Courier courier)
+        public async Task<IActionResult> CreateAsync([FromBody] RegistrationDto registrationDto)
         {
-            var created = await _courierService.CreateAsync(courier);
-            return Ok(created);
+            if (!ModelState.IsValid) 
+            {
+                return BadRequest(ModelState);
+            }
+            return Ok(await _courierService.CreateAsync(registrationDto));
         }
 
+        [Authorize(Roles ="Courier")]
         [HttpPut("{courierId}/working-hours")]
-        public async Task<IActionResult> UpdateWorkingHours(int courierId, [FromBody] List<WorkingHours> workingHours)
+        public async Task<IActionResult> UpdateWorkingHours(string courierId, [FromBody] List<WorkingHours> workingHours)
         {
-            await _courierService.UpdateWorkingHoursAsync(courierId, workingHours);
+            string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await _courierService.UpdateWorkingHoursAsync(courierId, workingHours, ownerId);
             return Ok(new { Message = "Working hours updated successfully" });
         }
 
+        [Authorize(Roles ="Courier")]
         [HttpGet("{courierId}")]
-        public async Task<IActionResult> GetCourierById(int courierId)
+        public async Task<IActionResult> GetCourierById(string courierId)
         {
-            var courier = await _courierService.GetByIdAsync(courierId);
+            string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var courier = await _courierService.GetByIdAsync(courierId, ownerId);
             return Ok(courier);
         }
+
         [HttpPut("status")]
         public async Task<IActionResult> UpdateCourierStatus()
         {
             await _courierService.UpdateCourierStatusAsync();
             return Ok("Courier status succesfully updated");
         }
+
+        [Authorize(Roles = "Courier")]
         [HttpGet]
         public async Task<IActionResult> GetAllCouriers()
         {

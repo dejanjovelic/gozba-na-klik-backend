@@ -1,6 +1,10 @@
-﻿using gozba_na_klik_backend.Model;
+﻿using gozba_na_klik_backend.DTOs;
+using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Repository;
+using gozba_na_klik_backend.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace gozba_na_klik_backend.Controllers
@@ -10,33 +14,23 @@ namespace gozba_na_klik_backend.Controllers
 
     public class RestaurantOwnersController : ControllerBase
     {
-        private readonly RestaurantOwnerRepository _restaurantOwnerRepository;
+        private readonly IRestaurantOwnerService _restaurantOwnerService;
 
-        public RestaurantOwnersController(AppDbContext context) 
+        public RestaurantOwnersController(IRestaurantOwnerService restaurantOwnerService)
         {
-            _restaurantOwnerRepository = new RestaurantOwnerRepository(context);
+            _restaurantOwnerService = restaurantOwnerService;
         }
 
         //POST api/restaurantowners
+        [Authorize(Roles ="Administrator")]
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] RestaurantOwner restaurantOwner)
+        public async Task<IActionResult> CreateAsync([FromBody] RegistrationDto registrationDto)
         {
-            if (restaurantOwner == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest("Invalid data.");
+                return BadRequest(ModelState);
             }
-
-            try
-            {
-                await _restaurantOwnerRepository.CreateAsync(restaurantOwner);
-                return Ok(restaurantOwner);
-            }
-            catch (Exception ex)
-            {
-                return Problem("An error occured while creating Restaurant Owner.");
-            }
-
+            return Ok(await _restaurantOwnerService.CreateAsync(registrationDto));
         }
-
     }
-}    
+}

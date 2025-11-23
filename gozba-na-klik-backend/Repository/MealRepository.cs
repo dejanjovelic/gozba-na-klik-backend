@@ -31,5 +31,11 @@ namespace gozba_na_klik_backend.Repository
             return meals;
         }
 
+        public async Task<List<Meal>> GetAllSelectedAsync(List<int> mealsIds)
+        {
+            return await _context.Meals
+                .Where(meal => mealsIds.Contains(meal.Id)).ToListAsync();
+        }
+
     }
 }

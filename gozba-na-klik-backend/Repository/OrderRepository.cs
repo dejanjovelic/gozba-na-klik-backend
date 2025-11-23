@@ -17,7 +17,7 @@ namespace gozba_na_klik_backend.Repository
             _mapper = mapper;
         }
 
-        public async Task<List<RestaurantOrderDTO>> GetOrdersByOwnerIdAsync(int ownerId)
+        public async Task<List<Order>> GetOrdersByOwnerIdAsync(string ownerId)
         {
             var restaurantIds = await _context.Restaurants
                 .Where(r => r.RestaurantOwnerId == ownerId)
@@ -25,19 +25,45 @@ namespace gozba_na_klik_backend.Repository
                 .ToListAsync();
 
             return await _context.Orders
-                .Where(o => restaurantIds.Contains(o.RestaurantId))
-                .ProjectTo<RestaurantOrderDTO>(_mapper.ConfigurationProvider)
+                .Include(o => o.Customer)
+               .ThenInclude(c => c.Addresses)
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Meal)
+                .Where(o => restaurantIds
+                .Contains(o.RestaurantId))
                 .ToListAsync();
         }
 
-        public async Task UpdateOrderStatusAsync(int orderId, OrderStatus newStatus, DateTime orderTime)
+        public async Task<Order> UpdateOrderStatusAsync(Order order)
         {
-            await _context.Orders
-                .Where(o => o.Id == orderId)
-                .ExecuteUpdateAsync(o => o
-                    .SetProperty(order => order.Status, order => newStatus)
-                    .SetProperty(order => order.OrderTime, order => orderTime)
-                );
+            await _context.SaveChangesAsync();
+                return order;
+        }
+
+        public async Task<Order> GetActiveOrderByCourierIdAsync(string courierId)
+        {
+            return await _context.Orders
+                .Include(order => order.Courier)
+                .Include(order => order.Customer)
+                .Include(order => order.DeliveryAddress)
+                .Include(order => order.Restaurant)
+                .Include(order=>order.OrderItems)
+                .ThenInclude(orderItem => orderItem.Meal)                
+                .FirstOrDefaultAsync(
+                order => order.CourierId == courierId &&
+                (order.Status == OrderStatus.PickupInProgress || order.Status == OrderStatus.DeliveryInProgress));
+        }
+
+        public async Task<Order> GetByIdAsync(int orderId)
+        {
+            var order =  await _context.Orders
+                .Include(order => order.Courier)
+                .Include(order => order.Customer)
+                .Include(order => order.DeliveryAddress)
+                .Include(order => order.Restaurant)
+                .Include(order => order.OrderItems)
+                .FirstOrDefaultAsync(order => order.Id == orderId);
+            return order;
         }
 
         public async Task<Order> GetOrderByIdAsync(int orderId)

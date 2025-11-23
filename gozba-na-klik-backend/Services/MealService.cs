@@ -24,15 +24,15 @@ namespace gozba_na_klik_backend.Services
             this._mapper = mapper;
         }
 
-        public async Task<MealFilterResponseDto> GetFilteredMealsAsync(MealFilterRequestDto mealFilterRequestDto, int page, int pageSize)
+        public async Task<MealFilterResponseDto> GetFilteredMealsAsync(MealFilterRequestDto mealFilterRequestDto, int page, int pageSize, string? ownerId)
         {
-            ValidateRequest(mealFilterRequestDto, page, pageSize);
+            ValidateRequest(mealFilterRequestDto, page, pageSize, ownerId);
 
             IQueryable<Meal> meals = _mealRepository.GetAll();
 
             List<Allergen> allergens = await _allergenService.GetAllAsync();
 
-            List<Allergen> customersAllergens = await _customerService.GetAllCustomerAllergensAsync(mealFilterRequestDto.CustomerId);
+            List<Allergen> customersAllergens = await _customerService.GetAllCustomerAllergensAsync(mealFilterRequestDto.CustomerId, ownerId);
             IEnumerable<int> combinedAllergensIds = GetCombinedAllergenIds(mealFilterRequestDto, customersAllergens);
 
 
@@ -95,8 +95,13 @@ namespace gozba_na_klik_backend.Services
             return combinedAllergensIds;
         }
 
-        private static void ValidateRequest(MealFilterRequestDto mealFilterRequestDto, int page, int pageSize)
+        private static void ValidateRequest(MealFilterRequestDto mealFilterRequestDto, int page, int pageSize, string? ownerId)
         {
+            if (ownerId != mealFilterRequestDto.CustomerId) 
+            {
+                throw new ForbiddenException("You do not have permission to perform this action.");
+            }
+
             if (mealFilterRequestDto == null)
             {
                 throw new BadRequestException("Request body cannot be null.");
@@ -118,6 +123,21 @@ namespace gozba_na_klik_backend.Services
 
             meals = meals.Where(meal => meal.MealName.ToLower().Contains(formatedQuery) || meal.Description.ToLower().Contains(formatedQuery));
 
+            return meals;
+        }
+
+        public async Task<List<Meal>> GetAllSelectedAsync(List<int> mealsIds)
+        {
+            List<Meal> meals = await _mealRepository.GetAllSelectedAsync(mealsIds);
+            if (meals == null || meals.Count == 0)
+            {
+                throw new NotFoundException("No meals were found for the provided IDs.");
+            }
+            if (meals.Count != mealsIds.Count)
+            {
+                var missingIds = mealsIds.Except(meals.Select(m => m.Id));
+                throw new NotFoundException($"Some meals could not be found: {string.Join(", ", missingIds)}.");
+            }
             return meals;
         }
 
