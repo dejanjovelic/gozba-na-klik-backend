@@ -28,16 +28,21 @@ namespace gozba_na_klik_backend.Services
                 throw new BadRequestException("Invalid data.");
             }
 
-            return await _orderRepository.GetOrdersByOwnerIdAsync(ownerId);
+            var orders = await _orderRepository.GetOrdersByOwnerIdAsync(ownerId);
+            return _mapper.Map<List<RestaurantOrderDTO>>(orders);
         }
 
-        public async Task UpdateOrderStatusAsync(int orderId, OrderStatus newStatus, DateTime orderTime)
+        public async Task UpdateOrderStatusAsync(int orderId, OrderStatus newStatus, DateTime? orderTime)
         {
             if (orderId == 0)
+            {
                 throw new BadRequestException("Invalid data.");
+            }
 
             if (newStatus != OrderStatus.Cancelled && newStatus != OrderStatus.Accepted)
+            {
                 throw new ArgumentException("Status must be either Denied or Accepted", nameof(newStatus));
+            }
 
             await _orderRepository.UpdateOrderStatusAsync(orderId, newStatus, orderTime);
         }

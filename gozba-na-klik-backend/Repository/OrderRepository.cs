@@ -17,7 +17,7 @@ namespace gozba_na_klik_backend.Repository
             _mapper = mapper;
         }
 
-        public async Task<List<RestaurantOrderDTO>> GetOrdersByOwnerIdAsync(int ownerId)
+        public async Task<List<Order>> GetOrdersByOwnerIdAsync(int ownerId)
         {
             var restaurantIds = await _context.Restaurants
                 .Where(r => r.RestaurantOwnerId == ownerId)
@@ -25,12 +25,15 @@ namespace gozba_na_klik_backend.Repository
                 .ToListAsync();
 
             return await _context.Orders
+                .Include(o => o.Customer)
+                    .ThenInclude(c => c.Addresses)
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Meal)
                 .Where(o => restaurantIds.Contains(o.RestaurantId))
-                .ProjectTo<RestaurantOrderDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
         }
 
-        public async Task UpdateOrderStatusAsync(int orderId, OrderStatus newStatus, DateTime orderTime)
+        public async Task UpdateOrderStatusAsync(int orderId, OrderStatus newStatus, DateTime? orderTime)
         {
             await _context.Orders
                 .Where(o => o.Id == orderId)
