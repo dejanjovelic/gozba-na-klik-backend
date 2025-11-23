@@ -121,6 +121,21 @@ namespace gozba_na_klik_backend.Services
             return meals;
         }
 
+        public async Task<List<Meal>> GetAllSelectedAsync(List<int> mealsIds)
+        {
+            List<Meal> meals = await _mealRepository.GetAllSelectedAsync(mealsIds);
+            if (meals == null || meals.Count == 0)
+            {
+                throw new NotFoundException("No meals were found for the provided IDs.");
+            }
+            if (meals.Count != mealsIds.Count)
+            {
+                var missingIds = mealsIds.Except(meals.Select(m => m.Id));
+                throw new NotFoundException($"Some meals could not be found: {string.Join(", ", missingIds)}.");
+            }
+            return meals;
+        }
+
     }
 }
 

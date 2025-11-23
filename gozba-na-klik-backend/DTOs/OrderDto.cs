@@ -1,10 +1,10 @@
 ﻿using gozba_na_klik_backend.Model;
-using gozba_na_klik_backend.DTOs;
 
-namespace gozba_na_klik_backend.Model
+namespace gozba_na_klik_backend.DTOs
 {
-    public class Order
+    public class OrderDto
     {
+
         public int Id { get; set; }
         public Customer? Customer { get; set; }
         public int CustomerId { get; set; }
@@ -12,15 +12,13 @@ namespace gozba_na_klik_backend.Model
         public int DeliveryAddressId { get; set; }
         public Restaurant? Restaurant { get; set; }
         public int RestaurantId { get; set; }
-        public DateTime? OrderTime { get; set; }
+        public TimeSpan? OrderTime { get; set; }
         public OrderStatus Status { get; set; }
         public List<OrderMeal> OrderItems { get; set; } = new List<OrderMeal>();
         public double TotalPrice { get; set; } = 0;
-        public DateTime? DeliveryStartedAt { get; set; }
-        public DateTime? DeliveredAt { get; set; }
+        public TimeSpan? DeliveryStartedAt { get; set; }
+        public TimeSpan? DeliveredAt { get; set; }
         public Courier? Courier { get; set; }
         public int CourierId { get; set; }
-
     }
 }
-

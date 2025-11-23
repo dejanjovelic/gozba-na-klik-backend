@@ -42,5 +42,38 @@ namespace gozba_na_klik_backend.Repository
                     .SetProperty(order => order.OrderTime, order => orderTime)
                 );
         }
+        public async Task<Order> GetActiveOrderByCourierIdAsync(int courierId)
+        {
+            return await _context.Orders
+                .Include(order => order.Courier)
+                .Include(order => order.Customer)
+                .Include(order => order.DeliveryAddress)
+                .Include(order => order.Restaurant)
+                .Include(order=>order.OrderItems)
+                .ThenInclude(orderItem => orderItem.Meal)                
+                .FirstOrDefaultAsync(
+                order => order.CourierId == courierId &&
+                (order.Status == OrderStatus.PickupInProgress || order.Status == OrderStatus.DeliveryInProgress));
+        }
+
+        public async Task<Order> GetByIdAsync(int orderId)
+        {
+            var order =  await _context.Orders
+                .Include(order => order.Courier)
+                .Include(order => order.Customer)
+                .Include(order => order.DeliveryAddress)
+                .Include(order => order.Restaurant)
+                .Include(order => order.OrderItems)
+                .FirstOrDefaultAsync(order => order.Id == orderId);
+            return order;
+        }
+
+        public async Task<Order> UpdateCourierActiveOrderStatusAsync(Order order)
+        {
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
+            return order;
+        }
+
     }
 }
