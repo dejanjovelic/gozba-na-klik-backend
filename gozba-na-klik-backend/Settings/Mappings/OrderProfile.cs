@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using gozba_na_klik_backend.DTOs;
+using gozba_na_klik_backend.DTOs.Order;
 using gozba_na_klik_backend.Model;
 using System.Linq;
 
@@ -32,6 +33,10 @@ namespace gozba_na_klik_backend.Settings.Mappings
             .ForMember(dest => dest.OrderItems, opt => opt.Ignore());
 
             CreateMap<Order, OrderDto>();
+
+            CreateMap<Order, CustomerOrderResponseDto>()
+                .ForMember(dest => dest.OrderDate, opt => opt.MapFrom(src => src.OrderTime.HasValue ? (DateOnly?)DateOnly.FromDateTime(src.OrderTime.Value) : null))
+                .ForMember(dest => dest.RestaurantImageUrl, opt => opt.MapFrom(src => src.Restaurant.RestaurantImageUrl));
         }
     }
 }
