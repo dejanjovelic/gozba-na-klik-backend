@@ -1,6 +1,8 @@
 ﻿using gozba_na_klik_backend.DTOs;
 using gozba_na_klik_backend.DTOs.Order;
 using gozba_na_klik_backend.Model;
+using System;
+using System.Threading.Tasks;
 
 namespace gozba_na_klik_backend.Services.IServices
 {
@@ -11,5 +13,6 @@ namespace gozba_na_klik_backend.Services.IServices
         Task<ResponseOrderDto> CreateOrderAsync(CreateOrderDto dto);
         Task HandleOrderConfirmationAsync(int orderId, OrderStatus status);
         Task<CourierOrderDto> GetActiveOrderByCourierIdAsync(string courierId, string? authenticatedUserId);
+        Task AssignOrderToCourierAsync();
     }
 }
