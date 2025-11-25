@@ -1,8 +1,13 @@
-﻿namespace gozba_na_klik_backend.Model
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+namespace gozba_na_klik_backend.Model
 {
-    public class Employee : User
+    public class Employee
     {
-        public override Role Role => Role.Employee;
+        [Key]
+        public string Id { get; set; }
+        [ForeignKey(nameof(Id))]
+        public ApplicationUser? ApplicationUser { get; set; }
         public bool IsSuspended { get; set; } = false;
     }
 }
