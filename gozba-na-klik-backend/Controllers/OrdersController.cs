@@ -2,9 +2,10 @@
 using gozba_na_klik_backend.DTOs.Order;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Services.IServices;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace gozba_na_klik_backend.Controllers
 {
@@ -79,6 +80,12 @@ namespace gozba_na_klik_backend.Controllers
         {
             string authenticatedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return Ok(await _orderService.GetActiveOrderByCourierIdAsync(courierId, authenticatedUserId));
+        }
+        [HttpPatch("/couriers")]
+        public async Task<IActionResult> AssignOrderToCourierAsync()
+        {
+            await _orderService.AssignOrderToCourierAsync();
+            return NoContent();
         }
     }
 }

@@ -5,6 +5,7 @@ using gozba_na_klik_backend.DTOs.Order;
 using gozba_na_klik_backend.Exceptions;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
+using gozba_na_klik_backend.Repository;
 using gozba_na_klik_backend.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -326,5 +327,9 @@ namespace gozba_na_klik_backend.Services
                 }).ToList()
             };
         }
+        public async Task AssignOrderToCourierAsync()
+        {
+           await _orderRepository.AssignOrderToCourierAsync();
+        }
     }
-}
+ }

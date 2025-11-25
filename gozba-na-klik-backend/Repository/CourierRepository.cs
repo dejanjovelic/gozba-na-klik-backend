@@ -31,6 +31,7 @@ namespace gozba_na_klik_backend.Repository
             return await _context.Couriers
              .Include(c => c.ApplicationUser)
              .Include(c => c.WorkingHours)
+             .Include(c => c.Orders)
              .ToListAsync();
         }
 

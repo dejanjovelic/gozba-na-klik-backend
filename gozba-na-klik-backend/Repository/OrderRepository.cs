@@ -122,5 +122,44 @@ namespace gozba_na_klik_backend.Repository
             await _context.SaveChangesAsync();
             return order;
         }
+        public async Task AssignOrderToCourierAsync()
+        {
+            var orders = await _context.Orders
+                .Where(o => string.IsNullOrWhiteSpace(o.CourierId) && o.Status == OrderStatus.Accepted)
+                .ToListAsync();
+
+            if(!orders.Any())
+            {
+                return;
+            }
+            var couriers = await _context.Couriers
+                .Include(c => c.Orders)
+                .Where(c => c.Active == true)
+                .ToListAsync();
+
+            if(!couriers.Any())
+            {
+                return;
+            }
+            foreach(var courier in couriers)
+            {
+                if(courier.Orders.Any(o => o.Status == OrderStatus.DeliveryInProgress || o.Status == OrderStatus.PickupInProgress))
+                {
+                    continue;
+                }
+                var nextOrder = orders.FirstOrDefault(o => o.CourierId == null);
+                if(nextOrder==null)
+                {
+                    break;
+                }
+                nextOrder.CourierId= courier.Id;
+                nextOrder.Status = OrderStatus.PickupInProgress;
+                nextOrder.AssignedAt = DateTime.UtcNow;
+
+                courier.Orders.Add(nextOrder);
+            }
+         
+            await _context.SaveChangesAsync();
+        }
     }
 }
