@@ -4,8 +4,10 @@ using gozba_na_klik_backend.DTOs.Order;
 using gozba_na_klik_backend.Exceptions;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
+using gozba_na_klik_backend.Repository;
 using gozba_na_klik_backend.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace gozba_na_klik_backend.Services
 {
@@ -19,10 +21,25 @@ namespace gozba_na_klik_backend.Services
         private readonly IMapper _mapper;
         private readonly IMealService _mealService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IInvoiceService _invoiceService;
+        private readonly IPdfGeneratorService _pdfGeneratorService;
+        private readonly IInvoiceRepository _invoiceRepository;
         private const double deliveryPrice = 2;
 
-        public OrderService(IOrderRepository orderRepository, IRestaurantRepository restaurantRepository, ICustomerRepository customerRepository, 
-                            IRestaurantService restaurantService, IMealRepository mealRepository, IMapper mapper, IMealService mealService, IHttpContextAccessor httpContextAccessor)
+        public OrderService(
+            IOrderRepository orderRepository,
+            IRestaurantRepository restaurantRepository,
+            ICustomerRepository customerRepository,
+            IRestaurantService restaurantService,
+            IMealRepository mealRepository,
+            IMapper mapper,
+            IMealService mealService,
+            IHttpContextAccessor httpContextAccessor,
+            IInvoiceService invoiceService,
+            IPdfGeneratorService pdfGeneratorService,
+            IInvoiceRepository invoiceRepository
+
+            )
         {
             _orderRepository = orderRepository;
             _restaurantRepository = restaurantRepository;
@@ -32,6 +49,9 @@ namespace gozba_na_klik_backend.Services
             _mapper = mapper;
             _mealService = mealService;
             _httpContextAccessor = httpContextAccessor;
+            _invoiceService = invoiceService;
+            _pdfGeneratorService = pdfGeneratorService;
+            _invoiceRepository = invoiceRepository;
         }
 
         public async Task<List<RestaurantOrderDTO>> GetOrdersByOwnerIdAsync(string ownerId, string? currentOwnerId)
@@ -63,7 +83,7 @@ namespace gozba_na_klik_backend.Services
             Order order = await _orderRepository.GetByIdAsync(orderId);
 
             ValidateActiveOrderUpdateData(orderId, dto.NewStatus, authenticatedUserId, order, roles);
-            
+
             order.Status = dto.NewStatus;
 
             if (roles.Contains("Customer"))
@@ -87,6 +107,13 @@ namespace gozba_na_klik_backend.Services
             }
 
             Order updatedOrder = await _orderRepository.UpdateOrderStatusAsync(order);
+
+            if (updatedOrder.Status.ToString().Trim().ToLower() == "delivered")
+            {
+                Invoice invoice = _mapper.Map<Invoice>(order);
+                await _invoiceService.CreateAsync(invoice);
+            }
+
             return _mapper.Map<CourierOrderDto>(updatedOrder);
         }
 
@@ -98,7 +125,7 @@ namespace gozba_na_klik_backend.Services
                 return new List<string>();
             }
             var roles = user.Claims
-                            .Where(c => c.Type == "role")
+                            .Where(c => c.Type == ClaimTypes.Role)
                             .Select(c => c.Value)
                             .ToList();
             return roles;
@@ -129,7 +156,7 @@ namespace gozba_na_klik_backend.Services
                 }
             }
 
-            if (roles.Contains("Courier")) 
+            if (roles.Contains("Courier"))
             {
                 if (order.CourierId != authenticatedUserId)
                 {
@@ -205,7 +232,7 @@ namespace gozba_na_klik_backend.Services
             .Any(meal => meal.Allergens
             .Any(a => customer.Allergens.Any(ca => ca.Id == a.Id)));
 
-            Order newOrder = CreateOrderEntity(meals ,customer, dto, totalPrice);
+            Order newOrder = CreateOrderEntity(meals, customer, dto, totalPrice);
 
             Order createdOrder = await _orderRepository.CreateOrderAsync(newOrder);
 
@@ -232,7 +259,7 @@ namespace gozba_na_klik_backend.Services
             if (restaurant == null) throw new NotFoundException($"Restaurant with ID {restaurantId} not found.");
 
             //Trebaju biti definisani workinghours da bi ovaj if radio
-            if (!_restaurantService.IsRestaurantOpen(restaurant)) 
+            if (!_restaurantService.IsRestaurantOpen(restaurant))
                 throw new BadRequestException("Restaurant is closed.");
 
             return restaurant;
@@ -258,7 +285,7 @@ namespace gozba_na_klik_backend.Services
             return totalPrice;
         }
 
-        private Order CreateOrderEntity(List<Meal> meals, Customer customer,CreateOrderDto dto, double totalPrice)
+        private Order CreateOrderEntity(List<Meal> meals, Customer customer, CreateOrderDto dto, double totalPrice)
         {
             var deliveryAddress = customer.Addresses
             .FirstOrDefault(a => a.Id == dto.DeliveryAddressId);
@@ -283,6 +310,37 @@ namespace gozba_na_klik_backend.Services
                     Quantity = item.Quantity
                 }).ToList()
             };
+        }
+
+
+        public async Task<byte[]> GetPdfInvoiceForOrderAsync(int orderId, string? customerId)
+        {
+            if (orderId == null)
+            {
+                throw new BadRequestException("Invalid order Id data.");
+            }
+
+            Order order = await _orderRepository.GetByIdAsync(orderId);
+
+            if (order == null)
+            {
+                throw new NotFoundException($"Order with Id: {orderId} not found");
+            }
+
+            if (order.CustomerId != customerId)
+            {
+                throw new ForbiddenException($"Order with Id: {orderId}  is not isued to Customer with Id: {customerId}.");
+            }
+
+            Invoice invoice = await _invoiceRepository.GetByOrderIdAsync(orderId);
+
+            if (invoice == null)
+            {
+                throw new BadRequestException($"Invoice for order with Id: {orderId} not found.");
+            }
+
+            return _pdfGeneratorService.GenerateInvoicePdf(invoice);
+
         }
     }
 }

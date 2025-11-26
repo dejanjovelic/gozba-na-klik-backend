@@ -1,9 +1,10 @@
 ﻿using gozba_na_klik_backend.DTOs;
 using gozba_na_klik_backend.DTOs.Order;
 using gozba_na_klik_backend.Model;
+using gozba_na_klik_backend.Services;
 using gozba_na_klik_backend.Services.IServices;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace gozba_na_klik_backend.Controllers
@@ -65,6 +66,23 @@ namespace gozba_na_klik_backend.Controllers
         {
             string authenticatedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return Ok(await _orderService.GetActiveOrderByCourierIdAsync(courierId, authenticatedUserId));
+        }
+
+        //GET api/orders/orderId/invoice
+        [Authorize(Roles = "Customer")]
+        [HttpGet("{orderId}/invoice")]
+        public async Task<IActionResult> GetPdfInvoiceForOrderAsync(int orderId)
+        {
+            string customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+
+            var pdfBytes = await _orderService.GetPdfInvoiceForOrderAsync(orderId, customerId);
+
+            return File(
+            fileContents: pdfBytes,
+            contentType: "application/pdf",
+            fileDownloadName: $"Faktura.pdf"
+            );
         }
     }
 }

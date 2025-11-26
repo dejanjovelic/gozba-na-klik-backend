@@ -11,5 +11,6 @@ namespace gozba_na_klik_backend.Services.IServices
         Task<ResponseOrderDto> CreateOrderAsync(CreateOrderDto dto);
         Task HandleOrderConfirmationAsync(int orderId, OrderStatus status);
         Task<CourierOrderDto> GetActiveOrderByCourierIdAsync(string courierId, string? authenticatedUserId);
+        Task<byte[]> GetPdfInvoiceForOrderAsync(int orderId, string? customerId);
     }
 }
