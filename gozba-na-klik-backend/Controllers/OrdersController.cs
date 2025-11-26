@@ -6,6 +6,7 @@ using gozba_na_klik_backend.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace gozba_na_klik_backend.Controllers
 {
@@ -25,6 +26,20 @@ namespace gozba_na_klik_backend.Controllers
         {
             string currentOwnerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return Ok(await _orderService.GetOrdersByOwnerIdAsync(ownerId, currentOwnerId));
+        }
+
+        [Authorize(Roles = "Customer")]
+        [HttpGet("active/customer")]
+        public async Task<IActionResult> GetActiveOrdersByCustomerIdAsync()
+        {
+            return Ok(await _orderService.GetActiveOrdersByCustomerIdAsync(User));
+        }
+
+        [Authorize(Roles = "Customer")]
+        [HttpGet("inactive/customer")]
+        public async Task<IActionResult> GetInactiveOrdersByCustomerIdAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            return Ok(await _orderService.GetInactiveOrdersByCustomerIdAsync(User, page, pageSize));
         }
 
         [Authorize(Roles = "Customer")]
@@ -84,5 +99,12 @@ namespace gozba_na_klik_backend.Controllers
             fileDownloadName: $"Faktura.pdf"
             );
         }
+        [HttpPatch("/couriers")]
+        public async Task<IActionResult> AssignOrderToCourierAsync()
+        {
+            await _orderService.AssignOrderToCourierAsync();
+            return NoContent();
+        }
     }
 }
+

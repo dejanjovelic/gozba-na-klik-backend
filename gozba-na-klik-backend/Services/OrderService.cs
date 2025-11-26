@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using gozba_na_klik_backend.DTOs;
 using gozba_na_klik_backend.DTOs.Order;
 using gozba_na_klik_backend.Exceptions;
@@ -8,6 +9,7 @@ using gozba_na_klik_backend.Repository;
 using gozba_na_klik_backend.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace gozba_na_klik_backend.Services
 {
@@ -69,6 +71,45 @@ namespace gozba_na_klik_backend.Services
             var orders = await _orderRepository.GetOrdersByOwnerIdAsync(ownerId);
             return _mapper.Map<List<RestaurantOrderDTO>>(orders);
         }
+
+        public async Task<List<CustomerOrderResponseDto>> GetActiveOrdersByCustomerIdAsync(ClaimsPrincipal userPrincipal)
+        {
+            var customerId = userPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (customerId == null) throw new BadRequestException("Token is invalid");
+
+            var orders = await _orderRepository.GetActiveOrdersByCustomerIdAsync(customerId);
+
+            return _mapper.Map<List<CustomerOrderResponseDto>>(orders);
+        }
+
+
+        public async Task<PaginatedListDto<CustomerOrderResponseDto>> GetInactiveOrdersByCustomerIdAsync(
+            ClaimsPrincipal userPrincipal, int page, int pageSize)
+        {
+            var customerId = userPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (customerId == null) throw new BadRequestException("Token is invalid");
+
+            if (page < 1)
+                throw new BadRequestException("Page must be greater than 0.");
+
+            if (pageSize < 1 || pageSize > 18)
+                throw new BadRequestException("Page size must be between 1 and 18.");
+
+            var paginatedOrders = await _orderRepository
+                .GetInactiveOrdersByCustomerIdAsync(customerId, page, pageSize);
+
+            return new PaginatedListDto<CustomerOrderResponseDto>()
+            {
+                Items = _mapper.Map<List<CustomerOrderResponseDto>>(paginatedOrders.Items),
+                TotalRowsCount = paginatedOrders.TotalRowsCount,
+                PageIndex = paginatedOrders.PageIndex,
+                TotalPages = paginatedOrders.TotalPages,
+                HasNextPage = paginatedOrders.HasNextPage,
+                HasPreviousPage = paginatedOrders.HasPreviousPage
+            };
+
+        }
+
 
 
         public async Task<CourierOrderDto> UpdateOrderStatusAsync(int orderId, UpdateOrderDTO dto, string? authenticatedUserId)
@@ -340,7 +381,11 @@ namespace gozba_na_klik_backend.Services
             }
 
             return _pdfGeneratorService.GenerateInvoicePdf(invoice);
+        }
 
+        public async Task AssignOrderToCourierAsync()
+        {
+           await _orderRepository.AssignOrderToCourierAsync();
         }
     }
-}
+ }

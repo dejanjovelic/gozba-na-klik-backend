@@ -14,7 +14,7 @@ using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+using gozba_na_klik_backend.Services.BackgroundServices;
 
 namespace gozba_na_klik_backend
 {
@@ -70,6 +70,8 @@ namespace gozba_na_klik_backend
 
             builder.Services.AddSingleton<IInvoiceRepository, InvoiceRepository>();
 
+            builder.Services.AddHostedService<OrderBackgroundService>();
+            builder.Services.AddHostedService<CourierBackgroundService>();
             builder.Services.AddAutoMapper(cfg =>
             {
                 cfg.AddProfile<MealProfile>();

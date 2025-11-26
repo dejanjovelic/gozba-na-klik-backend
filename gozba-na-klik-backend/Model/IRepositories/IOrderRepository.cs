@@ -1,6 +1,9 @@
 ﻿using gozba_na_klik_backend.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace gozba_na_klik_backend.Model.IRepositories
 {
@@ -11,5 +14,8 @@ namespace gozba_na_klik_backend.Model.IRepositories
         Task<Order> CreateOrderAsync(Order order);
         Task<Order> GetByIdAsync(int orderId);
         Task<Order> GetActiveOrderByCourierIdAsync(string courierId);
+        Task<List<Order>> GetActiveOrdersByCustomerIdAsync(string customerId);
+        Task<PaginatedListDto<Order>> GetInactiveOrdersByCustomerIdAsync(string customerId, int page, int pageSize);
+        Task AssignOrderToCourierAsync();
     }
 }

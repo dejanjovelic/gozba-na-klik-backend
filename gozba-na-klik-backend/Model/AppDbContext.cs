@@ -82,7 +82,12 @@ namespace gozba_na_klik_backend.Model
                       .HasForeignKey(o => o.RestaurantId)
                       .OnDelete(DeleteBehavior.Restrict);
 
-                entity.Property(o => o.OrderTime).IsRequired(false);
+        entity.HasOne(o => o.Courier)
+       .WithMany(c => c.Orders)
+       .HasForeignKey(o => o.CourierId)
+       .OnDelete(DeleteBehavior.SetNull);
+
+        entity.Property(o => o.OrderTime).IsRequired(false); 
 
                 entity.Property(o => o.Status)
                       .HasConversion<int>()

@@ -7,7 +7,6 @@ namespace gozba_na_klik_backend.Model
     {
         [Key]
         public string Id { get; set; }
-
         [ForeignKey(nameof(Id))]
         public ApplicationUser?  ApplicationUser { get; set; }
         public List<Allergen>? Allergens { get; set; } = new List<Allergen>();
