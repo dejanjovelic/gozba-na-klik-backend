@@ -28,6 +28,20 @@ namespace gozba_na_klik_backend.Controllers
         }
 
         [Authorize(Roles = "Customer")]
+        [HttpGet("active/customer")]
+        public async Task<IActionResult> GetActiveOrdersByCustomerIdAsync()
+        {
+            return Ok(await _orderService.GetActiveOrdersByCustomerIdAsync(User));
+        }
+
+        [Authorize(Roles = "Customer")]
+        [HttpGet("inactive/customer")]
+        public async Task<IActionResult> GetInactiveOrdersByCustomerIdAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            return Ok(await _orderService.GetInactiveOrdersByCustomerIdAsync(User, page, pageSize));
+        }
+
+        [Authorize(Roles = "Customer")]
         [HttpPost]
         public async Task<IActionResult> CreateOrder(CreateOrderDto dto)
         {
