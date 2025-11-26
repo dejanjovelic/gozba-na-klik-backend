@@ -34,7 +34,7 @@ namespace gozba_na_klik_backend.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("CustomerAllergens");
+                    b.ToTable("CustomerAllergens", (string)null);
                 });
 
             modelBuilder.Entity("MealAllergens", b =>
@@ -49,7 +49,7 @@ namespace gozba_na_klik_backend.Migrations
 
                     b.HasIndex("MealId");
 
-                    b.ToTable("MealAllergens");
+                    b.ToTable("MealAllergens", (string)null);
 
                     b.HasData(
                         new
@@ -449,7 +449,7 @@ namespace gozba_na_klik_backend.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
 
                     b.HasData(
                         new
@@ -605,7 +605,7 @@ namespace gozba_na_klik_backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Administrators");
+                    b.ToTable("Administrators", (string)null);
                 });
 
             modelBuilder.Entity("gozba_na_klik_backend.Model.Allergen", b =>
@@ -622,7 +622,7 @@ namespace gozba_na_klik_backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Allergens");
+                    b.ToTable("Allergens", (string)null);
 
                     b.HasData(
                         new
@@ -850,7 +850,7 @@ namespace gozba_na_klik_backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Couriers");
+                    b.ToTable("Couriers", (string)null);
                 });
 
             modelBuilder.Entity("gozba_na_klik_backend.Model.Customer", b =>
@@ -860,7 +860,7 @@ namespace gozba_na_klik_backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("gozba_na_klik_backend.Model.Employee", b =>
@@ -873,7 +873,7 @@ namespace gozba_na_klik_backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("gozba_na_klik_backend.Model.Extras", b =>
@@ -901,7 +901,7 @@ namespace gozba_na_klik_backend.Migrations
 
                     b.HasIndex("MealId");
 
-                    b.ToTable("Extras");
+                    b.ToTable("Extras", (string)null);
                 });
 
             modelBuilder.Entity("gozba_na_klik_backend.Model.Meal", b =>
@@ -933,7 +933,7 @@ namespace gozba_na_klik_backend.Migrations
 
                     b.HasIndex("RestaurantId");
 
-                    b.ToTable("Meals");
+                    b.ToTable("Meals", (string)null);
 
                     b.HasData(
                         new
@@ -1136,7 +1136,7 @@ namespace gozba_na_klik_backend.Migrations
 
                     b.HasIndex("RestaurantId");
 
-                    b.ToTable("NonWorkingDate");
+                    b.ToTable("NonWorkingDate", (string)null);
                 });
 
             modelBuilder.Entity("gozba_na_klik_backend.Model.Order", b =>
@@ -1188,7 +1188,7 @@ namespace gozba_na_klik_backend.Migrations
 
                     b.HasIndex("RestaurantId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
 
                     b.HasData(
                         new
@@ -1310,7 +1310,7 @@ namespace gozba_na_klik_backend.Migrations
 
                     b.HasIndex("MealId");
 
-                    b.ToTable("OrderMeal");
+                    b.ToTable("OrderMeal", (string)null);
                 });
 
             modelBuilder.Entity("gozba_na_klik_backend.Model.Restaurant", b =>
@@ -1354,7 +1354,7 @@ namespace gozba_na_klik_backend.Migrations
 
                     b.HasIndex("RestaurantOwnerId");
 
-                    b.ToTable("Restaurants");
+                    b.ToTable("Restaurants", (string)null);
 
                     b.HasData(
                         new
@@ -1606,7 +1606,7 @@ namespace gozba_na_klik_backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RestaurantOwners");
+                    b.ToTable("RestaurantOwners", (string)null);
                 });
 
             modelBuilder.Entity("gozba_na_klik_backend.Model.WorkingHours", b =>
@@ -1626,7 +1626,7 @@ namespace gozba_na_klik_backend.Migrations
                     b.Property<TimeSpan>("EndingTime")
                         .HasColumnType("interval");
 
-                    b.Property<int?>("RestaurantId")
+                    b.Property<int>("RestaurantId")
                         .HasColumnType("integer");
 
                     b.Property<TimeSpan>("StartingTime")
@@ -1638,7 +1638,7 @@ namespace gozba_na_klik_backend.Migrations
 
                     b.HasIndex("RestaurantId");
 
-                    b.ToTable("WorkingHours");
+                    b.ToTable("WorkingHours", (string)null);
                 });
 
             modelBuilder.Entity("CustomerAllergens", b =>
@@ -1808,7 +1808,7 @@ namespace gozba_na_klik_backend.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("gozba_na_klik_backend.Model.Customer", "Customer")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1820,7 +1820,7 @@ namespace gozba_na_klik_backend.Migrations
                         .IsRequired();
 
                     b.HasOne("gozba_na_klik_backend.Model.Restaurant", "Restaurant")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1837,7 +1837,7 @@ namespace gozba_na_klik_backend.Migrations
             modelBuilder.Entity("gozba_na_klik_backend.Model.OrderMeal", b =>
                 {
                     b.HasOne("gozba_na_klik_backend.Model.Meal", "Meal")
-                        .WithMany()
+                        .WithMany("OrderMeals")
                         .HasForeignKey("MealId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1849,6 +1849,17 @@ namespace gozba_na_klik_backend.Migrations
                         .IsRequired();
 
                     b.Navigation("Meal");
+                });
+
+            modelBuilder.Entity("gozba_na_klik_backend.Model.Restaurant", b =>
+                {
+                    b.HasOne("gozba_na_klik_backend.Model.RestaurantOwner", "RestaurantOwner")
+                        .WithMany()
+                        .HasForeignKey("RestaurantOwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RestaurantOwner");
                 });
 
             modelBuilder.Entity("gozba_na_klik_backend.Model.RestaurantOwner", b =>
@@ -1868,9 +1879,13 @@ namespace gozba_na_klik_backend.Migrations
                         .WithMany("WorkingHours")
                         .HasForeignKey("CourierId");
 
-                    b.HasOne("gozba_na_klik_backend.Model.Restaurant", null)
+                    b.HasOne("gozba_na_klik_backend.Model.Restaurant", "Restaurant")
                         .WithMany("WorkingHours")
-                        .HasForeignKey("RestaurantId");
+                        .HasForeignKey("RestaurantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Restaurant");
                 });
 
             modelBuilder.Entity("gozba_na_klik_backend.Model.Courier", b =>
@@ -1883,11 +1898,15 @@ namespace gozba_na_klik_backend.Migrations
             modelBuilder.Entity("gozba_na_klik_backend.Model.Customer", b =>
                 {
                     b.Navigation("Addresses");
+
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("gozba_na_klik_backend.Model.Meal", b =>
                 {
                     b.Navigation("Extras");
+
+                    b.Navigation("OrderMeals");
                 });
 
             modelBuilder.Entity("gozba_na_klik_backend.Model.Order", b =>
@@ -1900,6 +1919,8 @@ namespace gozba_na_klik_backend.Migrations
                     b.Navigation("MealsOnMenu");
 
                     b.Navigation("NonWorkingDates");
+
+                    b.Navigation("Orders");
 
                     b.Navigation("WorkingHours");
                 });

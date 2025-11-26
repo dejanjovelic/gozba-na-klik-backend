@@ -68,7 +68,7 @@ namespace gozba_na_klik_backend
             builder.Services.AddScoped<IPdfGeneratorService, PdfGeneratorService>();
 
 
-            builder.Services.AddSingleton<IInvoiceRepository, InvoiceRepository>();
+            builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 
             builder.Services.AddHostedService<OrderBackgroundService>();
             builder.Services.AddHostedService<CourierBackgroundService>();
