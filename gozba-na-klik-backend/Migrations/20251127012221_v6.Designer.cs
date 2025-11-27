@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using gozba_na_klik_backend.Model;
@@ -11,9 +12,11 @@ using gozba_na_klik_backend.Model;
 namespace gozba_na_klik_backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251127012221_v6")]
+    partial class v6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -282,31 +285,31 @@ namespace gozba_na_klik_backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3bd044b0-1ed9-444b-b548-8824cd418e2e",
+                            Id = "d5d475c8-9674-4eba-b8d5-ad3d438fdfba",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "73a3cf71-d9f4-4a28-a173-dae559ab6a64",
+                            Id = "4e5ab966-9158-4d80-afd1-1a434acc2ad9",
                             Name = "Courier",
                             NormalizedName = "COURIER"
                         },
                         new
                         {
-                            Id = "0cabcac1-4f31-4104-9e57-bcbcf763bfc3",
+                            Id = "cda7a015-831a-40a2-9212-b7836525f10a",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "49250648-f6cb-4655-abf7-0597af4d3c7d",
+                            Id = "1af19ce0-b29d-4de5-9572-27ab3c6460c5",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         },
                         new
                         {
-                            Id = "342e1832-a9a3-426c-b2bd-c925b855587c",
+                            Id = "75cf0aa5-b689-43fb-9a52-bc7217547fcc",
                             Name = "RestaurantOwner",
                             NormalizedName = "RESTAURANTOWNER"
                         });
@@ -1227,7 +1230,7 @@ namespace gozba_na_klik_backend.Migrations
                             CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh15",
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02",
                             DeliveryAddressId = 3,
-                            OrderTime = new DateTime(2025, 11, 27, 17, 27, 26, 493, DateTimeKind.Utc).AddTicks(2160),
+                            OrderTime = new DateTime(2025, 11, 27, 1, 22, 21, 99, DateTimeKind.Utc).AddTicks(6611),
                             RestaurantId = 19,
                             Status = 5,
                             TotalPrice = 0.0
@@ -1308,7 +1311,7 @@ namespace gozba_na_klik_backend.Migrations
                             CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh23",
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh10",
                             DeliveryAddressId = 16,
-                            OrderTime = new DateTime(2025, 11, 27, 17, 27, 26, 493, DateTimeKind.Utc).AddTicks(2175),
+                            OrderTime = new DateTime(2025, 11, 27, 1, 22, 21, 99, DateTimeKind.Utc).AddTicks(6626),
                             RestaurantId = 20,
                             Status = 4,
                             TotalPrice = 0.0
@@ -1907,13 +1910,11 @@ namespace gozba_na_klik_backend.Migrations
 
             modelBuilder.Entity("gozba_na_klik_backend.Model.OrderReview", b =>
                 {
-                    b.HasOne("gozba_na_klik_backend.Model.Order", "Order")
+                    b.HasOne("gozba_na_klik_backend.Model.Order", null)
                         .WithOne("OrderReview")
                         .HasForeignKey("gozba_na_klik_backend.Model.OrderReview", "OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("gozba_na_klik_backend.Model.Restaurant", b =>

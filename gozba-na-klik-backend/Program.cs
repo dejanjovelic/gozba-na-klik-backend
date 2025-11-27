@@ -66,6 +66,8 @@ namespace gozba_na_klik_backend
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddHostedService<OrderBackgroundService>();
             builder.Services.AddHostedService<CourierBackgroundService>();
+            builder.Services.AddScoped<IOrderReviewService, OrderReviewService>();
+            builder.Services.AddScoped<IOrderReviewRepository, OrderReviewRepository>();
             builder.Services.AddAutoMapper(cfg =>
             {
                 cfg.AddProfile<MealProfile>();

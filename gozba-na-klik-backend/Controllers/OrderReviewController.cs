@@ -1,6 +1,8 @@
 ﻿using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace gozba_na_klik_backend.Controllers
 {
@@ -14,12 +16,12 @@ namespace gozba_na_klik_backend.Controllers
         {
             _orderReviewService = orderReviewService;
         }
-
-        [HttpPost("/orderReview")]
+  
+        [HttpPost]       
         public async Task<IActionResult> CreateReviewAsync([FromBody] OrderReview orderReview)
         {
-            await _orderReviewService.CreateOrderReviewAsync(orderReview);
-            return NoContent();
+                await _orderReviewService.CreateOrderReviewAsync(orderReview);
+                return NoContent();
         }
     }
 }

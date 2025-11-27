@@ -11,5 +11,6 @@ namespace gozba_na_klik_backend.DTOs.Order
         public DateTime? EstimatedDeliveryTime { get; set; }
         public DateOnly? OrderDate { get; set; }
         public double TotalPrice { get; set; }
-    }
+        public int? OrderReviewId { get; set; }
+     }
 }

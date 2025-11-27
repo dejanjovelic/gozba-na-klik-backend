@@ -3,5 +3,6 @@
     public interface IOrderReviewRepository
     {
         Task CreateOrderReviewAsync(OrderReview orderReview);
+        Task<Order?> GetOrderByIdAsync(int orderId);
     }
 }

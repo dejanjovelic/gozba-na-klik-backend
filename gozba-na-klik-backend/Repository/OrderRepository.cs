@@ -64,7 +64,8 @@ namespace gozba_na_klik_backend.Repository
                 .Include(order => order.DeliveryAddress)
                 .Include(order => order.Restaurant)
                 .Include(order => order.OrderItems)
-                .ThenInclude(orderItem => orderItem.Meal);
+                .ThenInclude(orderItem => orderItem.Meal)
+                .Include(order => order.OrderReview);
         }
 
         public async Task<List<Order>> GetActiveOrdersByCustomerIdAsync(string customerId)
