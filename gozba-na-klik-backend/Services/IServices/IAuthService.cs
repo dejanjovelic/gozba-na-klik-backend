@@ -7,5 +7,7 @@ namespace gozba_na_klik_backend.Services.IServices
     {
         Task<string> LoginAsync(LoginDto loginData);
         Task<AuthResponseDto> RegisterUserAsync(RegistrationDto registrationDto, string role);
+        Task ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto);
+        Task<string> ResetPasswordAsync(ResetPassworDto resetPassworDto);
     }
 }

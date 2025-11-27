@@ -16,17 +16,20 @@ namespace gozba_na_klik_backend.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
 
         public AuthService
             (
             UserManager<ApplicationUser> userManager,
             IConfiguration configuration,
-            IMapper mapper
+            IMapper mapper,
+            IEmailService emailService
             )
         {
             _userManager = userManager;
             _mapper = mapper;
             _configuration = configuration;
+            _emailService = emailService;
         }
 
         public async Task<string> LoginAsync(LoginDto loginData)
@@ -70,6 +73,55 @@ namespace gozba_na_klik_backend.Services
                 AplicationUserId = user.Id,
                 Token = token
             };
+        }
+
+        public async Task ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto) 
+        {
+            var user = await _userManager.FindByEmailAsync(forgotPasswordDto.Email);
+            if (user == null) 
+            {
+                throw new NotFoundException($"User with {forgotPasswordDto.Email} not found.");
+            }
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var encodedToken = Uri.EscapeDataString(token);
+
+            var resetUrl = $"{forgotPasswordDto.ResetUrlBase}?email={user.Email}&token={encodedToken}";
+
+            string bodyMessage = $@"
+           <p>Hi {user.Name},</p>
+            <p>We received a request to reset your password.</p>
+            <p>If you initiated this request, please click the link below to set a new password:</p>
+            <p>👉 <a href='{resetUrl}'>Click here to reset password</a></p>
+            <p>(This link will remain active for the next 60 minutes.)</p>
+            <p>If you did not request a password reset, please ignore this email. Your current password will remain unchanged.</p>
+            <p>Thanks,<br/>
+            The Gozba Na Klik Team</p>";
+
+            await _emailService.SendEmailAsync(user.Email, "Reset Password", bodyMessage);
+        }
+
+        public async Task<string> ResetPasswordAsync(ResetPassworDto resetPassworDto) 
+        {
+            var user = await _userManager.FindByEmailAsync(resetPassworDto.Email);
+            if (user == null) 
+            { 
+                throw new NotFoundException($"User with {resetPassworDto.Email} not found.");
+            };
+
+            var decodedToken = Uri.UnescapeDataString(resetPassworDto.Token);
+            var result = await _userManager.ResetPasswordAsync(user, decodedToken, resetPassworDto.NewPassword);
+
+            if (!result.Succeeded) 
+            {
+                throw new BadRequestException($"{result.Errors}");
+            }
+            string bodyMessage = $@"
+           <h2>Your password was successfully changed</h2>
+            <p>The password for your GozbaNaKlik.com account {user.Email} was changed.</p>
+            <p>Thanks,<br/>
+            The Gozba Na Klik Team</p>";
+            await _emailService.SendEmailAsync(user.Email, "Passsword reset confirmation", bodyMessage);
+            return _configuration["FrontendUrl"] + "/login";
         }
 
 

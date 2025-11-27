@@ -25,5 +25,21 @@ namespace gozba_na_klik_backend.Controllers
             }
             return Ok(await _authService.LoginAsync(loginData));
         }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPasswordAsync([FromBody] ForgotPasswordDto forgotPasswordDto)
+        {
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
+            await _authService.ForgotPasswordAsync(forgotPasswordDto);
+            return Ok();
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPassworDto resetPassworDto) 
+        {
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
+            
+            return Ok(await _authService.ResetPasswordAsync(resetPassworDto));
+        }
     }
 }

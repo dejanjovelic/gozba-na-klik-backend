@@ -25,13 +25,16 @@ namespace gozba_na_klik_backend.Model
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<IdentityRole>().HasData(
-                            new IdentityRole { Name = "Administrator", NormalizedName = "ADMINISTRATOR" },
+            new IdentityRole { Name = "Administrator", NormalizedName = "ADMINISTRATOR" },
             new IdentityRole { Name = "Courier", NormalizedName = "COURIER" },
             new IdentityRole { Name = "Customer", NormalizedName = "CUSTOMER" },
             new IdentityRole { Name = "Employee", NormalizedName = "EMPLOYEE" },
             new IdentityRole { Name = "RestaurantOwner", NormalizedName = "RESTAURANTOWNER" }
-                );
+            );
 
+            modelBuilder.Entity<IdentityUser>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
 
             modelBuilder.Entity<Customer>()
                 .HasMany(customer => customer.Addresses)
