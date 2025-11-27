@@ -1,6 +1,7 @@
 ﻿using gozba_na_klik_backend.DTOs;
 using gozba_na_klik_backend.Services.IServices;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace gozba_na_klik_backend.Controllers
@@ -24,6 +25,19 @@ namespace gozba_na_klik_backend.Controllers
                 return BadRequest(ModelState);
             }
             return Ok(await _authService.LoginAsync(loginData));
+        }
+
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmailAsync([FromQuery] string userId, [FromQuery] string token)
+        {
+            return Redirect(await _authService.ConfirmEmailAsync(userId, token));
+        }
+
+        [HttpPost("resend-confirmation-email")]
+        public async Task<IActionResult> ResendConfirmationEmail(string username)
+        {
+            await _authService.ResendConfirmationEmailAsync(username);
+            return Ok(new { Message = "Confirmation email sent. Please check your inbox." });
         }
     }
 }
