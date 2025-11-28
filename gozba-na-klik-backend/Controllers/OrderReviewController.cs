@@ -1,4 +1,6 @@
-﻿using gozba_na_klik_backend.Model;
+﻿using AutoMapper;
+using gozba_na_klik_backend.DTOs;
+using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,16 +13,21 @@ namespace gozba_na_klik_backend.Controllers
     public class OrderReviewController : ControllerBase
     {
         private readonly IOrderReviewService _orderReviewService;
-
-        public OrderReviewController(IOrderReviewService orderReviewService)
+        private readonly IMapper _mapper;
+        public OrderReviewController(IOrderReviewService orderReviewService, IMapper mapper)
         {
             _orderReviewService = orderReviewService;
+            _mapper = mapper;
         }
   
         [HttpPost]       
-        public async Task<IActionResult> CreateReviewAsync([FromBody] OrderReview orderReview)
+        public async Task<IActionResult> CreateReviewAsync([FromBody] CreateOrderReviewDTO dto)
         {
-                await _orderReviewService.CreateOrderReviewAsync(orderReview);
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+                await _orderReviewService.CreateOrderReviewAsync(dto);
                 return NoContent();
         }
     }

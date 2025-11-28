@@ -79,6 +79,7 @@ namespace gozba_na_klik_backend
                 cfg.AddProfile<ApplicationUserProfile>();
                 cfg.AddProfile<RestauranOwnerProfile>();
                 cfg.AddProfile<AddressProfile>();
+                cfg.AddProfile<OrderReviewProfile>();
             });
 
             // Adding Authentication
