@@ -85,5 +85,10 @@ namespace gozba_na_klik_backend.Services
 
             return now >= todayHours.StartingTime && now <= todayHours.EndingTime;
         }
+        public async Task UpdateRestaurantAverageRatingAsync(int restaurantId)
+        {       
+            await _restaurantRepository.UpdateRestaurantAverageRatingAsync(restaurantId);
+        }
+
     }
 }

@@ -24,6 +24,7 @@ namespace gozba_na_klik_backend.Model
         public List<Meal>? MealsOnMenu { get; set; } = new List<Meal>();
         public List<WorkingHours>? WorkingHours { get; set; } = new List<WorkingHours>();
         public List<NonWorkingDate>? NonWorkingDates { get; set; } = new List<NonWorkingDate>();
+        public List<Order>? Orders { get; set; } = new List<Order>();
 
     }
 }

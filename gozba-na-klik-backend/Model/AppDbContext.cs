@@ -18,6 +18,7 @@ namespace gozba_na_klik_backend.Model
         public DbSet<Administrator> Administrators { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<RestaurantOwner> RestaurantOwners { get; set; }
+        public DbSet<OrderReview> OrderReviews { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -77,22 +78,30 @@ namespace gozba_na_klik_backend.Model
                       .HasForeignKey(o => o.CustomerId)
                       .OnDelete(DeleteBehavior.Restrict);
 
+                // ⭐ FIXED: Tell EF this is the 1-to-many Restaurant → Orders relationship
                 entity.HasOne(o => o.Restaurant)
-                      .WithMany()
+                      .WithMany(r => r.Orders)   // ⭐ IMPORTANT!
                       .HasForeignKey(o => o.RestaurantId)
                       .OnDelete(DeleteBehavior.Restrict);
 
-        entity.HasOne(o => o.Courier)
-       .WithMany(c => c.Orders)
-       .HasForeignKey(o => o.CourierId)
-       .OnDelete(DeleteBehavior.SetNull);
+                entity.HasOne(o => o.Courier)
+                      .WithMany(c => c.Orders)
+                      .HasForeignKey(o => o.CourierId)
+                      .OnDelete(DeleteBehavior.SetNull);
 
-        entity.Property(o => o.OrderTime).IsRequired(false); 
+                entity.Property(o => o.OrderTime).IsRequired(false);
 
                 entity.Property(o => o.Status)
                       .HasConversion<int>()
                       .IsRequired();
             });
+
+            // One-to-one Order ↔ OrderReview
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.OrderReview)
+                .WithOne(or => or.Order)
+                .HasForeignKey<OrderReview>(or => or.OrderId);
+
 
 
             // OrderMeal (join entity to track quantity)
@@ -154,10 +163,7 @@ namespace gozba_na_klik_backend.Model
                 .WithOne()
                 .HasForeignKey<RestaurantOwner>(ro => ro.Id)
                 .OnDelete(DeleteBehavior.Cascade);
-
-
-
-
+       
             modelBuilder.Entity<Allergen>().HasData(
                 new Allergen { Id = 1, Name = "wheat" },
                 new Allergen { Id = 2, Name = "rye" },
@@ -634,7 +640,31 @@ namespace gozba_na_klik_backend.Model
                  },
                  new Order
                  {
-                     Id = 2,
+                     Id = 11,
+                     // Customer 4 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01
+                     CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01",
+                     RestaurantId = 20,
+                     DeliveryAddressId = 1,
+                     // Courier 14 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14
+                     CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14",
+                     OrderTime = null,
+                     Status = OrderStatus.Delivered
+                 },
+                 new Order
+                 {
+                     Id = 12,
+                     // Customer 4 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01
+                     CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01",
+                     RestaurantId = 20,
+                     DeliveryAddressId = 1,
+                     // Courier 14 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14
+                     CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14",
+                     OrderTime = null,
+                     Status = OrderStatus.Delivered
+                 },
+                 new Order
+                 {
+                     Id = 13,
                      // Customer 5 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02
                      CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02",
                      RestaurantId = 19,
@@ -642,7 +672,7 @@ namespace gozba_na_klik_backend.Model
                      // Courier 15 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh15
                      CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh15",
                      OrderTime = DateTime.UtcNow,
-                     Status = OrderStatus.Cancelled
+                     Status = OrderStatus.Delivered
                  },
                  new Order
                  {

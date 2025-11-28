@@ -1,4 +1,5 @@
 ﻿using gozba_na_klik_backend.DTOs;
+using gozba_na_klik_backend.Exceptions;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -49,10 +50,12 @@ namespace gozba_na_klik_backend.Repository
         public async Task<Restaurant?> GetRestaurantByIdAsync(int restaurantId)
         {
             return await _context.Restaurants
-                .Include(r => r.WorkingHours)
-                .Include(r => r.MealsOnMenu)
-                .ThenInclude(m => m.Allergens)
-                .FirstOrDefaultAsync(r => r.Id == restaurantId);
+         .Include(r => r.Orders)
+             .ThenInclude(o => o.OrderReview)
+         .Include(r => r.WorkingHours)
+         .Include(r => r.MealsOnMenu)
+             .ThenInclude(m => m.Allergens)
+         .FirstOrDefaultAsync(r => r.Id == restaurantId);
         }
 
         private static IQueryable<Restaurant> FilterRestaurants(IQueryable<Restaurant> restaurants, RestaurantFilterDto filter)
@@ -96,6 +99,22 @@ namespace gozba_na_klik_backend.Repository
                 (int)RestaurantSortType.AVERAGE_RATING_DECS => restaurants.OrderByDescending(restaurant => restaurant.AverageRating),
                 _ => restaurants.OrderBy(restaurant => restaurant.Name)
             };
+        }
+        public async Task UpdateRestaurantAverageRatingAsync(int restaurantId)
+        {
+            var restaurant = await GetRestaurantByIdAsync(restaurantId);
+
+            if (restaurant == null)
+                throw new NotFoundException("Restaurant not found.");
+
+            var reviews = restaurant.Orders
+                .Where(o => o.OrderReview != null)
+                .Select(o => o.OrderReview!.RestaurantRating)
+                .ToList();
+
+            restaurant.AverageRating = reviews.Count > 0 ? reviews.Average() : 0;
+
+            await _context.SaveChangesAsync();
         }
     }
 }
