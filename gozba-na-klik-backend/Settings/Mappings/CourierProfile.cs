@@ -8,7 +8,10 @@ namespace gozba_na_klik_backend.Settings.Mappings
     {
         public CourierProfile()
         {
-            CreateMap<Courier, CourierShortDto>();
+            CreateMap<Courier, CourierShortDto>()
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.ApplicationUser.UserName))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.ApplicationUser.Name))
+                .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.ApplicationUser.Surname));
             CreateMap<Courier, NewCourierDto>();
         }
     }

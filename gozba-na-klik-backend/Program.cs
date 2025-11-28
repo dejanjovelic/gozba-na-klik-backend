@@ -65,6 +65,12 @@ namespace gozba_na_klik_backend
             builder.Services.AddScoped<IRestaurantOwnerRepository, RestaurantOwnerRepository>();
             builder.Services.AddScoped<IRestaurantOwnerService, RestaurantOwnerService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IInvoiceService, InvoiceService>();
+            builder.Services.AddScoped<IPdfGeneratorService, PdfGeneratorService>();
+
+
+            builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+
             builder.Services.AddHostedService<OrderBackgroundService>();
             builder.Services.AddHostedService<CourierBackgroundService>();
             builder.Services.AddAutoMapper(cfg =>
@@ -78,6 +84,7 @@ namespace gozba_na_klik_backend
                 cfg.AddProfile<ApplicationUserProfile>();
                 cfg.AddProfile<RestauranOwnerProfile>();
                 cfg.AddProfile<AddressProfile>();
+                cfg.AddProfile<InvoiceProfile>();
             });
 
             // Adding Authentication

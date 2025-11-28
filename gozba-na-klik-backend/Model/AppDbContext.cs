@@ -73,12 +73,12 @@ namespace gozba_na_klik_backend.Model
                 entity.HasKey(o => o.Id);
 
                 entity.HasOne(o => o.Customer)
-                      .WithMany(c => c.Orders)
+                      .WithMany()
                       .HasForeignKey(o => o.CustomerId)
                       .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(o => o.Restaurant)
-                      .WithMany(r => r.Orders)
+                      .WithMany()
                       .HasForeignKey(o => o.RestaurantId)
                       .OnDelete(DeleteBehavior.Restrict);
 
@@ -101,7 +101,7 @@ namespace gozba_na_klik_backend.Model
                 entity.HasKey(om => new { om.OrderId, om.MealId });
 
                 entity.HasOne(om => om.Meal)
-                 .WithMany(m => m.OrderMeals)
+                 .WithMany()
                  .HasForeignKey(om => om.MealId)
                  .OnDelete(DeleteBehavior.Cascade);
 

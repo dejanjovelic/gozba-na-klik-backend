@@ -38,19 +38,22 @@ namespace gozba_na_klik_backend.Repository
 
         public async Task<Order> UpdateOrderStatusAsync(Order order)
         {
+            _context.Update(order);
             await _context.SaveChangesAsync();
-                return order;
+            return order;
         }
 
         public async Task<Order> GetActiveOrderByCourierIdAsync(string courierId)
         {
             return await _context.Orders
                 .Include(order => order.Courier)
+                .ThenInclude(courier => courier.ApplicationUser)
                 .Include(order => order.Customer)
+                .ThenInclude(customer => customer.ApplicationUser)
                 .Include(order => order.DeliveryAddress)
                 .Include(order => order.Restaurant)
-                .Include(order=>order.OrderItems)
-                .ThenInclude(orderItem => orderItem.Meal)                
+                .Include(order => order.OrderItems)
+                .ThenInclude(orderItem => orderItem.Meal)
                 .FirstOrDefaultAsync(
                 order => order.CourierId == courierId &&
                 (order.Status == OrderStatus.PickupInProgress || order.Status == OrderStatus.DeliveryInProgress));
@@ -101,12 +104,16 @@ namespace gozba_na_klik_backend.Repository
 
         public async Task<Order> GetByIdAsync(int orderId)
         {
-            var order =  await _context.Orders
+            var order = await _context.Orders
+                .AsNoTracking()
                 .Include(order => order.Courier)
+                    .ThenInclude(courier => courier.ApplicationUser)
                 .Include(order => order.Customer)
+                    .ThenInclude(customer => customer.ApplicationUser)
                 .Include(order => order.DeliveryAddress)
                 .Include(order => order.Restaurant)
                 .Include(order => order.OrderItems)
+                    .ThenInclude(orderItem => orderItem.Meal)
                 .FirstOrDefaultAsync(order => order.Id == orderId);
             return order;
         }

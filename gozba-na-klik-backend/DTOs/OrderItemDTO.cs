@@ -3,8 +3,8 @@
     public class OrderItemDTO
     {
         public string MealName { get; set; }
-        public double Price { get; set; }
+        public double MealPrice { get; set; }
         public int Quantity { get; set; }
-        public double Total => Price * Quantity; 
+        public double Total => MealPrice * Quantity; 
     }
 }
