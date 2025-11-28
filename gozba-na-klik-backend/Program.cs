@@ -46,6 +46,7 @@ namespace gozba_na_klik_backend
                 });
 
             builder.Services.AddTransient<ExceptionHandlingMiddleware>();
+            builder.Services.AddTransient<IEmailService, EmailService>();
 
             builder.Services.AddScoped<ICustomerService, CustomerService>();
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
@@ -99,6 +100,9 @@ namespace gozba_na_klik_backend
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 5;
             });
+
+            //Email configuration
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
 
             //Adding JWT Token
             builder.Services.AddAuthentication(options =>

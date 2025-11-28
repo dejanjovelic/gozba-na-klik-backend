@@ -29,6 +29,7 @@ namespace gozba_na_klik_backend.Settings
                 NotFoundException => StatusCodes.Status404NotFound,
                 ForbiddenException=>StatusCodes.Status403Forbidden,
                 ConflictException=>StatusCodes.Status409Conflict,
+                NotAuthorizedAccessException=>StatusCodes.Status401Unauthorized,
                 _ => StatusCodes.Status500InternalServerError
             };
             var response = new { error = exception.Message };
