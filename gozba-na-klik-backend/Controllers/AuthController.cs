@@ -32,7 +32,7 @@ namespace gozba_na_klik_backend.Controllers
         {
             if (!ModelState.IsValid) { return BadRequest(ModelState); }
             await _authService.ForgotPasswordAsync(forgotPasswordDto);
-            return Ok();
+            return Ok("Reset Password email is sent. Please check your inbox.");
         }
 
         [HttpPost("reset-password")]
@@ -41,6 +41,8 @@ namespace gozba_na_klik_backend.Controllers
             if (!ModelState.IsValid) { return BadRequest(ModelState); }
             
             return Ok(await _authService.ResetPasswordAsync(resetPassworDto));
+        }
+        
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmailAsync([FromQuery] string userId, [FromQuery] string token)
         {

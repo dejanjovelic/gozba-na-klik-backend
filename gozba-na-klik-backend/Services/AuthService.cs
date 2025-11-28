@@ -141,15 +141,17 @@ namespace gozba_na_klik_backend.Services
 
             if (!result.Succeeded) 
             {
-                throw new BadRequestException($"{result.Errors}");
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new BadRequestException(errors);
             }
+
             string bodyMessage = $@"
            <h2>Your password was successfully changed</h2>
             <p>The password for your GozbaNaKlik.com account {user.Email} was changed.</p>
             <p>Thanks,<br/>
             The Gozba Na Klik Team</p>";
             await _emailService.SendEmailAsync(user.Email, "Passsword reset confirmation", bodyMessage);
-            return _configuration["FrontendUrl"] + "/login";
+            return "/login";
         }
 
         public async Task<string> ConfirmEmailAsync(string userId, string token)
