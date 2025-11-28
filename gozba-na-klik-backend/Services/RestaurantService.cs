@@ -86,11 +86,7 @@ namespace gozba_na_klik_backend.Services
             return now >= todayHours.StartingTime && now <= todayHours.EndingTime;
         }
         public async Task UpdateRestaurantAverageRatingAsync(int restaurantId)
-        {
-            if(restaurantId==null)
-            {
-                throw new ArgumentNullException("restaurantId can't be null");
-            }
+        {       
             await _restaurantRepository.UpdateRestaurantAverageRatingAsync(restaurantId);
         }
 

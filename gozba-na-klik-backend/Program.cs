@@ -46,6 +46,7 @@ namespace gozba_na_klik_backend
                 });
 
             builder.Services.AddTransient<ExceptionHandlingMiddleware>();
+            builder.Services.AddTransient<IEmailService, EmailService>();
 
             builder.Services.AddScoped<ICustomerService, CustomerService>();
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
@@ -64,6 +65,12 @@ namespace gozba_na_klik_backend
             builder.Services.AddScoped<IRestaurantOwnerRepository, RestaurantOwnerRepository>();
             builder.Services.AddScoped<IRestaurantOwnerService, RestaurantOwnerService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IInvoiceService, InvoiceService>();
+            builder.Services.AddScoped<IPdfGeneratorService, PdfGeneratorService>();
+
+
+            builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+
             builder.Services.AddHostedService<OrderBackgroundService>();
             builder.Services.AddHostedService<CourierBackgroundService>();
             builder.Services.AddScoped<IOrderReviewService, OrderReviewService>();
@@ -79,6 +86,7 @@ namespace gozba_na_klik_backend
                 cfg.AddProfile<ApplicationUserProfile>();
                 cfg.AddProfile<RestauranOwnerProfile>();
                 cfg.AddProfile<AddressProfile>();
+                cfg.AddProfile<InvoiceProfile>();
                 cfg.AddProfile<OrderReviewProfile>();
             });
 
@@ -95,6 +103,9 @@ namespace gozba_na_klik_backend
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 5;
             });
+
+            //Email configuration
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
 
             //Adding JWT Token
             builder.Services.AddAuthentication(options =>

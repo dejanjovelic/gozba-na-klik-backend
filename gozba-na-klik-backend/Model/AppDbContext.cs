@@ -74,30 +74,34 @@ namespace gozba_na_klik_backend.Model
                 entity.HasKey(o => o.Id);
 
                 entity.HasOne(o => o.Customer)
-                      .WithMany(c => c.Orders)
+                      .WithMany()
                       .HasForeignKey(o => o.CustomerId)
                       .OnDelete(DeleteBehavior.Restrict);
 
+                // ⭐ FIXED: Tell EF this is the 1-to-many Restaurant → Orders relationship
                 entity.HasOne(o => o.Restaurant)
-                      .WithMany(r => r.Orders)
+                      .WithMany(r => r.Orders)   // ⭐ IMPORTANT!
                       .HasForeignKey(o => o.RestaurantId)
                       .OnDelete(DeleteBehavior.Restrict);
 
-        entity.HasOne(o => o.Courier)
-       .WithMany(c => c.Orders)
-       .HasForeignKey(o => o.CourierId)
-       .OnDelete(DeleteBehavior.SetNull);
+                entity.HasOne(o => o.Courier)
+                      .WithMany(c => c.Orders)
+                      .HasForeignKey(o => o.CourierId)
+                      .OnDelete(DeleteBehavior.SetNull);
 
-        entity.Property(o => o.OrderTime).IsRequired(false); 
+                entity.Property(o => o.OrderTime).IsRequired(false);
 
                 entity.Property(o => o.Status)
                       .HasConversion<int>()
                       .IsRequired();
             });
+
+            // One-to-one Order ↔ OrderReview
             modelBuilder.Entity<Order>()
-       .HasOne(o => o.OrderReview)
-       .WithOne(or => or.Order) 
-       .HasForeignKey<OrderReview>(or => or.OrderId); 
+                .HasOne(o => o.OrderReview)
+                .WithOne(or => or.Order)
+                .HasForeignKey<OrderReview>(or => or.OrderId);
+
 
 
             // OrderMeal (join entity to track quantity)
@@ -106,7 +110,7 @@ namespace gozba_na_klik_backend.Model
                 entity.HasKey(om => new { om.OrderId, om.MealId });
 
                 entity.HasOne(om => om.Meal)
-                 .WithMany(m => m.OrderMeals)
+                 .WithMany()
                  .HasForeignKey(om => om.MealId)
                  .OnDelete(DeleteBehavior.Cascade);
 
