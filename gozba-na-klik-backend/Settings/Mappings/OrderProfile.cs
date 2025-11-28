@@ -24,13 +24,16 @@ namespace gozba_na_klik_backend.Settings.Mappings
                     src.OrderItems.Select(oi => new OrderItemDTO
                     {
                         MealName = oi.Meal.MealName,
-                        Price = oi.Meal.Price,
+                        MealPrice = oi.Meal.Price,
                         Quantity = oi.Quantity
                     }).ToList()));
 
             CreateMap<Order, CourierOrderDto>()
-                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.ApplicationUser.Name + " " + src.Customer.ApplicationUser.Surname))
-            .ForMember(dest => dest.OrderItems, opt => opt.Ignore());
+                    .ForMember(dest => dest.CustomerName, opt => 
+                    opt.MapFrom(src => 
+                    src.Customer.ApplicationUser.Name + " " + src.Customer.ApplicationUser.Surname))
+                    .ForMember(dest => dest.Courier, opt => opt.MapFrom(src => src.Courier))
+                    .ForMember(dest => dest.OrderItems, opt => opt.Ignore());
 
             CreateMap<Order, OrderDto>();
 

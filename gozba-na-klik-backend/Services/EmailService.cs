@@ -8,6 +8,10 @@ namespace gozba_na_klik_backend.Services
 {
     public class EmailService : IEmailService
     {
+        //Izvucena konfiguracija iz appsettings u EmailSettings
+        //Lakse za implementaciju laznog mocka 
+        //var options = Options.Create(new EmailSettings { From = "test@test.com" });
+
         private readonly EmailSettings _emailSettings;
 
         public EmailService(IOptions<EmailSettings> emailSettings)
