@@ -39,7 +39,6 @@ namespace gozba_na_klik_backend.Controllers
             return Ok(await _restaurantService.GetAllFilteredAndSortedAndPagedAsync(restaurantFilter, sortType, page, pageSize));
         }
 
-        [Authorize(Roles = "Customer")]
         //GET api/restaurants/id/meals
         [HttpGet("{restaurantId}/meals")]
         public async Task<IActionResult> GetRestaurantWithMealsAsync(int restaurantId)

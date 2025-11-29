@@ -14,5 +14,6 @@ namespace gozba_na_klik_backend.Model
         [Range(1, 10)]
         public int CourierRating { get; set; }
         public string? CourierComment { get; set; }
+        public DateTime PostedAt { get; set; } = DateTime.UtcNow;
     }
 }
