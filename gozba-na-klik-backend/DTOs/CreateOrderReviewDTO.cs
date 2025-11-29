@@ -3,10 +3,10 @@
     public class CreateOrderReviewDTO
     {      
          public int OrderId { get; set; }
-         public int RestaurantRating { get; set; }
+         public double RestaurantRating { get; set; }
          public string? RestaurantComment { get; set; }
          public string? RestaurantReviewImage { get; set; }
-         public int CourierRating { get; set; }
+         public double CourierRating { get; set; }
          public string? CourierComment { get; set; }
     }
 }
