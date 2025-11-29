@@ -18,7 +18,6 @@ namespace gozba_na_klik_backend.Services
         {
             _emailSettings = emailSettings.Value;
         }
-
         public async Task SendEmailAsync(string to, string subject, string body)
         {
             var smtp = new SmtpClient
@@ -41,7 +40,5 @@ namespace gozba_na_klik_backend.Services
 
             await smtp.SendMailAsync(message);
         }
-
-
     }
 }
