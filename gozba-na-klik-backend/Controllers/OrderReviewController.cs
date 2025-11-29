@@ -23,6 +23,8 @@ namespace gozba_na_klik_backend.Controllers
         [HttpPost]       
         public async Task<IActionResult> CreateReviewAsync([FromBody] CreateOrderReviewDTO dto)
         {
+            Console.WriteLine("Dosao");
+            Console.WriteLine(dto);
             if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
