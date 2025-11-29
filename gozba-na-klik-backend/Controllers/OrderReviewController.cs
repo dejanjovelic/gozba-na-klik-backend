@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using gozba_na_klik_backend.DTOs;
+using gozba_na_klik_backend.DTOs.Order;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
@@ -29,6 +30,22 @@ namespace gozba_na_klik_backend.Controllers
             }
                 await _orderReviewService.CreateOrderReviewAsync(dto);
                 return NoContent();
+        }
+
+        [HttpPost("paging")]
+        public async Task<IActionResult> GetReviewsByRestaurantIdAsync([FromBody] OrderReviewRequestDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            return Ok(await _orderReviewService.GetPagedReviewsByRestaurantIdAsync(dto));
+        }
+
+        [HttpGet("count/{restaurantId}")]
+        public async Task<IActionResult> GetReviewCountForRestaurantAsync(int restaurantId)
+        {
+            return Ok(await _orderReviewService.GetReviewCountForRestaurantAsync(restaurantId));
         }
     }
 }
