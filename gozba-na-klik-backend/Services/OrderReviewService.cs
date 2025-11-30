@@ -47,13 +47,5 @@ namespace gozba_na_klik_backend.Services
 
             return result;
         }
-
-        public async Task<int> GetReviewCountForRestaurantAsync(int restaurantId)
-        {
-            var restaurant = await _restaurantService.GetRestaurantWithMealsAsync(restaurantId);
-            if (restaurant == null) throw new NotFoundException($"Restaurant with ID {restaurantId} not found.");
-
-            return await _orderReviewRepository.GetReviewCountForRestaurantAsync(restaurantId);
-        }
     }
 }

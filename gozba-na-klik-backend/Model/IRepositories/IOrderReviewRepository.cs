@@ -7,6 +7,5 @@ namespace gozba_na_klik_backend.Model.IRepositories
         Task CreateOrderReviewAsync(OrderReview orderReview);
         Task<Order?> GetOrderByIdAsync(int orderId);
         Task<PaginatedListDto<OrderReview>> GetPagedReviewByRestaurantIdAsync(int restaurantId, int page);
-        Task<int> GetReviewCountForRestaurantAsync(int restaurantId);
     }
 }

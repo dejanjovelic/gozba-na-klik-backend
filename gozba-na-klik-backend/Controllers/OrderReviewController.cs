@@ -41,11 +41,5 @@ namespace gozba_na_klik_backend.Controllers
             }
             return Ok(await _orderReviewService.GetPagedReviewsByRestaurantIdAsync(dto));
         }
-
-        [HttpGet("count/{restaurantId}")]
-        public async Task<IActionResult> GetReviewCountForRestaurantAsync(int restaurantId)
-        {
-            return Ok(await _orderReviewService.GetReviewCountForRestaurantAsync(restaurantId));
-        }
     }
 }

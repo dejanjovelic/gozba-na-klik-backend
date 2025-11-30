@@ -8,6 +8,5 @@ namespace gozba_na_klik_backend.Services.IServices
     {
         Task CreateOrderReviewAsync(CreateOrderReviewDTO orderReviewDTO);
         Task<PaginatedListDto<OrderReviewResponseDto>> GetPagedReviewsByRestaurantIdAsync(OrderReviewRequestDto dto);
-        Task<int> GetReviewCountForRestaurantAsync(int restaurantId);
     }
 }

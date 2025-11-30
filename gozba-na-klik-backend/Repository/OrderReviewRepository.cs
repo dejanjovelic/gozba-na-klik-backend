@@ -37,20 +37,11 @@ namespace gozba_na_klik_backend.Repository
                 .OrderByDescending(review => review.PostedAt);
 
             int pageIndex = page - 1;
-            int totalRowsCount = await GetReviewCountForRestaurantAsync(restaurantId);
+            int totalRowsCount = await reviews.CountAsync();
 
             List<OrderReview> selectedReviews = await reviews.Skip(pageIndex * 10).Take(10).ToListAsync();
             PaginatedListDto<OrderReview> result = new PaginatedListDto<OrderReview>(selectedReviews, totalRowsCount, pageIndex, 10);
             return result;
-        }
-
-        public async Task<int> GetReviewCountForRestaurantAsync(int restaurantId)
-        {
-            int reviewsCount = await _context.OrderReviews
-                .Where(r => r.Order.RestaurantId == restaurantId)
-                .CountAsync();
-
-            return reviewsCount;
         }
     }
 }
