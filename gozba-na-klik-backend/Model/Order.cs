@@ -21,7 +21,7 @@ namespace gozba_na_klik_backend.Model
         public DateTime? DeliveredAt { get; set; }
         public Courier? Courier { get; set; }
         public string? CourierId { get; set; }
-
+        public OrderReview? OrderReview { get; set; }
     }
 }
 

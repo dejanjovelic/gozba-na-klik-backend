@@ -10,5 +10,6 @@ namespace gozba_na_klik_backend.Services.IServices
         List<RestaurantSortTypeOptionDto> GetAllSortTypes();
         Task<RestaurantWithMealsDto> GetRestaurantWithMealsAsync(int restaurantId);
         bool IsRestaurantOpen(Restaurant restaurant);
+        Task UpdateRestaurantAverageRatingAsync(int restaurantId);
     }
 }
