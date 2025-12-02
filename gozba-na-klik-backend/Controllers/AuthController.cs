@@ -1,5 +1,6 @@
 ﻿using gozba_na_klik_backend.DTOs;
 using gozba_na_klik_backend.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,6 @@ namespace gozba_na_klik_backend.Controllers
         {
             _authService = authService;
         }
-
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync(LoginDto loginData)
         {
