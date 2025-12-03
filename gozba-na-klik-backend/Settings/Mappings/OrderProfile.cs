@@ -15,7 +15,7 @@ namespace gozba_na_klik_backend.Settings.Mappings
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.ApplicationUser.Name + " " + src.Customer.ApplicationUser.Surname))
                 .ForMember(dest => dest.CustomerAddress, opt => opt.MapFrom(src =>
                     src.Customer.Addresses.FirstOrDefault() != null
-                        ? src.Customer.Addresses.FirstOrDefault().Street + ", " + src.Customer.Addresses.FirstOrDefault().City
+                        ? src.Customer.Addresses.FirstOrDefault().Street + " " + src.Customer.Addresses.FirstOrDefault().StreetNumber + ", " + src.Customer.Addresses.FirstOrDefault().City
                         : string.Empty))
                 .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src =>
                     src.OrderItems.Sum(oi => oi.Meal.Price * oi.Quantity)))

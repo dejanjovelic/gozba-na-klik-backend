@@ -21,18 +21,16 @@ namespace gozba_na_klik_backend.Repository
 
         public async Task<List<Order>> GetOrdersByOwnerIdAsync(string ownerId)
         {
-            var restaurantIds = await _context.Restaurants
-                .Where(r => r.RestaurantOwnerId == ownerId)
-                .Select(r => r.Id)
-                .ToListAsync();
-
             return await _context.Orders
+                .OrderByDescending(o => o.OrderTime)
                 .Include(o => o.Customer)
-               .ThenInclude(c => c.Addresses)
+                    .ThenInclude(c => c.Addresses)
+               .Include(o => o.Customer)
+                    .ThenInclude(c => c.ApplicationUser)
                 .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.Meal)
-                .Where(o => restaurantIds
-                .Contains(o.RestaurantId))
+                .Include(o => o.Restaurant)
+                .Where(o => o.Restaurant.RestaurantOwnerId == ownerId)
                 .ToListAsync();
         }
 
