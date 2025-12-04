@@ -300,7 +300,7 @@ namespace gozba_na_klik_backend.Services
             if (restaurant == null) throw new NotFoundException($"Restaurant with ID {restaurantId} not found.");
 
             //Trebaju biti definisani workinghours da bi ovaj if radio
-            if (!_restaurantService.IsRestaurantOpen(restaurant))
+            if (_restaurantService.IsRestaurantOpen(restaurant))
                 throw new BadRequestException("Restaurant is closed.");
 
             return restaurant;
