@@ -18,7 +18,13 @@ namespace gozba_na_klik_backend.Controllers
         {
             _mealService = mealService;
         }
-
+        //GET api/meals
+        [Authorize(Roles ="Customer")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllMealsAsync()
+        {
+            return Ok(await _mealService.GetallMealsAsync());
+        }
 
         //POST api/meals/filter
         [Authorize(Roles = "Customer")]

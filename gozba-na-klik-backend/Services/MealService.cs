@@ -22,6 +22,11 @@ namespace gozba_na_klik_backend.Services
             this._customerService = customerService;
             this._mapper = mapper;
         }
+        public async Task<List<MealDto>> GetallMealsAsync() 
+        {
+            List<Meal> meals = await _mealRepository.GetAllMealsAsync();
+            return meals.Select(_mapper.Map<MealDto>).ToList();
+        }
 
         public async Task<MealFilterResponseDto> GetFilteredMealsAsync(MealFilterRequestDto mealFilterRequestDto, int page, int pageSize, string? ownerId)
         {

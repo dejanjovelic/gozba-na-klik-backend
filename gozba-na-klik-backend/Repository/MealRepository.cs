@@ -14,6 +14,16 @@ namespace gozba_na_klik_backend.Repository
             _context = context;
         }
 
+        public async Task<List<Meal>> GetAllMealsAsync() 
+        {
+            return await _context.Meals
+                .OrderBy(meal => meal.Id)
+                .Include(meal=>meal.Allergens)
+                .Include(meal=>meal.Extras)
+                .Take(20)
+                .ToListAsync();
+        }
+
         public IQueryable<Meal> GetAll()
         {
             IQueryable<Meal> meals = _context.Meals

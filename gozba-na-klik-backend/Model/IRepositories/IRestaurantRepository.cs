@@ -4,6 +4,7 @@ namespace gozba_na_klik_backend.Model.IRepositories
 {
     public interface IRestaurantRepository
     {
+        Task<List<Restaurant>> GetTopRatedRestaurantsAsync();
         Task<PaginatedListDto<Restaurant>> GetAllRestaurantsPaginatedAsync(int page, int pageSize);
         Task<PaginatedListDto<Restaurant>> GetAllFilteredAndSortedAndPagedAsync(RestaurantFilterDto restaurantFilter, int sortType, int page, int pageSize);
         Task<int> CountAllRestaurantsAsync();
