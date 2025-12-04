@@ -32,27 +32,11 @@ namespace gozba_na_klik_backend.Services
         {
             ValidateRequest(mealFilterRequestDto, page, pageSize, ownerId);
 
-            IQueryable<Meal> meals = _mealRepository.GetAll();
-
             List<Allergen> allergens = await _allergenService.GetAllAsync();
+            List<AllergenWithFlagDto> allAllergensDtos = MapAllergensWithCustomersFlag(allergens, mealFilterRequestDto.AllergensIds);
 
-            List<Allergen> customersAllergens = await _customerService.GetAllCustomerAllergensAsync(mealFilterRequestDto.CustomerId, ownerId);
-            IEnumerable<int> combinedAllergensIds = GetCombinedAllergenIds(mealFilterRequestDto, customersAllergens);
-
-
-            if (!string.IsNullOrWhiteSpace(mealFilterRequestDto.Query))
-            {
-                meals = FilteredMeals(meals, mealFilterRequestDto.Query);
-            }
-
-            List<AllergenWithFlagDto> allAllergensDtos = MapAllergensWithCustomersFlag(allergens, combinedAllergensIds);
-
-            if (mealFilterRequestDto.HideMealsWithAllergens)
-            {
-                meals = meals.Where(meal => !meal.Allergens.Any(allergen => combinedAllergensIds.Contains(allergen.Id)));
-            }
-
-            PaginatedListDto<MealWithAllergensDto> searchedMealsPagePaginated = await PaginateMealsAsync(page, pageSize, meals, combinedAllergensIds);
+            PaginatedListDto<Meal> meals = await _mealRepository.GetAllFilateredAndSelectedAsync(page, pageSize, mealFilterRequestDto.Query, mealFilterRequestDto.HideMealsWithAllergens, mealFilterRequestDto.AllergensIds);
+            PaginatedListDto<MealWithAllergensDto> searchedMealsPagePaginated = await PaginateMealsAsync(meals, mealFilterRequestDto.AllergensIds, pageSize);
 
             return new MealFilterResponseDto
             {
@@ -61,14 +45,11 @@ namespace gozba_na_klik_backend.Services
             };
         }
 
-        private async Task<PaginatedListDto<MealWithAllergensDto>> PaginateMealsAsync(int page, int pageSize, IQueryable<Meal> meals, IEnumerable<int> combinedAllergensIds)
+        private async Task<PaginatedListDto<MealWithAllergensDto>> PaginateMealsAsync(PaginatedListDto<Meal> meals, IEnumerable<int> combinedAllergensIds, int pageSize)
         {
-            int pageIndex = page - 1;
-            int totalRowsCount = await meals.CountAsync();
-            List<Meal> selectedMeals = await meals.Skip(pageIndex * pageSize).Take(pageSize).ToListAsync();
-            List<MealWithAllergensDto> mealsDto = selectedMeals.Select(_mapper.Map<MealWithAllergensDto>).ToList();
+            List<MealWithAllergensDto> mealsDto = meals.Items.Select(_mapper.Map<MealWithAllergensDto>).ToList();
             MarkMealAllergens(combinedAllergensIds, mealsDto);
-            PaginatedListDto<MealWithAllergensDto> searchedMealsPagePaginated = new PaginatedListDto<MealWithAllergensDto>(mealsDto, totalRowsCount, pageIndex, pageSize);
+            PaginatedListDto<MealWithAllergensDto> searchedMealsPagePaginated = new PaginatedListDto<MealWithAllergensDto>(mealsDto, meals.TotalRowsCount, meals.PageIndex, pageSize);
             return searchedMealsPagePaginated;
         }
 
@@ -92,16 +73,9 @@ namespace gozba_na_klik_backend.Services
             return allAllergensDtos;
         }
 
-        private static IEnumerable<int> GetCombinedAllergenIds(MealFilterRequestDto mealFilterRequestDto, List<Allergen> customersAllergens)
-        {
-            var customerAllergensIds = customersAllergens.Select(allergen => allergen.Id).ToHashSet();
-            var combinedAllergensIds = customerAllergensIds.Union(mealFilterRequestDto.AdditionalAllergensIds);
-            return combinedAllergensIds;
-        }
-
         private static void ValidateRequest(MealFilterRequestDto mealFilterRequestDto, int page, int pageSize, string? ownerId)
         {
-            if (ownerId != mealFilterRequestDto.CustomerId) 
+            if (ownerId != mealFilterRequestDto.CustomerId)
             {
                 throw new ForbiddenException("You do not have permission to perform this action.");
             }
@@ -119,15 +93,6 @@ namespace gozba_na_klik_backend.Services
             {
                 throw new BadRequestException("Invalid pagination parameter: 'pageSize' must be a positive ineteger.");
             }
-        }
-
-        private static IQueryable<Meal> FilteredMeals(IQueryable<Meal> meals, string query)
-        {
-            string formatedQuery = query.Trim().ToLower();
-
-            meals = meals.Where(meal => meal.MealName.ToLower().Contains(formatedQuery) || meal.Description.ToLower().Contains(formatedQuery));
-
-            return meals;
         }
 
         public async Task<List<Meal>> GetAllSelectedAsync(List<int> mealsIds)
