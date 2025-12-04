@@ -183,6 +183,42 @@ namespace gozba_na_klik_backend.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
 
         }
+        public async Task<ProfileDTO> GetProfile(ClaimsPrincipal userPrincipal)
+        {
+            // Preuzimanje korisničkog imena iz tokena
+            var username = userPrincipal.FindFirstValue("username");
+
+            if (username == null)
+            {
+                throw new BadRequestException("Token is invalid");
+            }
+
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+            {
+                throw new NotFoundException("User with provided username does not exist");
+            }
+            var profile = _mapper.Map<ProfileDTO>(user);
+
+            var roles = await _userManager.GetRolesAsync(user);
+            profile.Role = roles.FirstOrDefault() ?? "User";
+
+            return profile;
+        }
+        public async Task UpdateImage(ClaimsPrincipal userPrincipal, string imageUrl)
+        {
+            var username = userPrincipal.FindFirstValue("username");
+            var user = await _userManager.FindByNameAsync(username);
+
+            if (user == null)
+                throw new NotFoundException("User not found.");
+
+            user.ProfileImageUrl = imageUrl;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+                throw new BadRequestException("Could not update profile image.");
+        }
 
     }
 }
