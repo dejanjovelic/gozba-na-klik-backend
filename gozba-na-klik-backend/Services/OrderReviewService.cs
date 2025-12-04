@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using gozba_na_klik_backend.DTOs;
+using gozba_na_klik_backend.DTOs.Order;
 using gozba_na_klik_backend.Exceptions;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
@@ -25,6 +26,26 @@ namespace gozba_na_klik_backend.Services
             if (order == null)
                 throw new NotFoundException("Order not found.");
             await _restaurantService.UpdateRestaurantAverageRatingAsync(order.RestaurantId);
+        }
+
+        public async Task<PaginatedListDto<OrderReviewResponseDto>> GetPagedReviewsByRestaurantIdAsync(OrderReviewRequestDto dto)
+        {
+            var restaurant = await _restaurantService.GetRestaurantWithMealsAsync(dto.RestaurantId);
+            if (restaurant == null) throw new NotFoundException($"Restaurant with ID {dto.RestaurantId} not found.");
+
+            var repoReviews = await _orderReviewRepository.GetPagedReviewByRestaurantIdAsync(dto.RestaurantId, dto.Page);
+
+            PaginatedListDto<OrderReviewResponseDto> result = new PaginatedListDto<OrderReviewResponseDto>
+            {
+                Items = _mapper.Map<List<OrderReviewResponseDto>>(repoReviews.Items),
+                PageIndex = repoReviews.PageIndex,
+                TotalPages = repoReviews.TotalPages,
+                TotalRowsCount = repoReviews.TotalRowsCount,
+                HasNextPage = repoReviews.HasNextPage,
+                HasPreviousPage = repoReviews.HasPreviousPage
+            };
+
+            return result;
         }
     }
 }

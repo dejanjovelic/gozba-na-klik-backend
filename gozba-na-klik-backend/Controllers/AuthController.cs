@@ -17,7 +17,6 @@ namespace gozba_na_klik_backend.Controllers
         {
             _authService = authService;
         }
-
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync(LoginDto loginData)
         {
@@ -28,6 +27,22 @@ namespace gozba_na_klik_backend.Controllers
             return Ok(await _authService.LoginAsync(loginData));
         }
 
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPasswordAsync([FromBody] ForgotPasswordDto forgotPasswordDto)
+        {
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
+            await _authService.ForgotPasswordAsync(forgotPasswordDto);
+            return Ok("Reset Password email is sent. Please check your inbox.");
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPassworDto resetPassworDto) 
+        {
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
+            
+            return Ok(await _authService.ResetPasswordAsync(resetPassworDto));
+        }
+        
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmailAsync([FromQuery] string userId, [FromQuery] string token)
         {
