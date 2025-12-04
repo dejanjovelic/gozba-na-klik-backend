@@ -26,7 +26,7 @@ namespace gozba_na_klik_backend.Controllers
             return Ok(await _mealService.GetallMealsAsync());
         }
 
-        //POST api/meals/filter
+        //POST api/meals/filter?page=1&pageSize=6
         [Authorize(Roles = "Customer")]
         [HttpPost("filter")]
         public async Task<IActionResult> GetFilteredMealsAsync([FromBody] MealFilterRequestDto mealFilterRequestDto, [FromQuery] int page = 1, [FromQuery] int pageSize = 6)

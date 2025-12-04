@@ -22,7 +22,6 @@ namespace gozba_na_klik_backend.Repository
                 .OrderBy(meal => meal.Id)
                 .Include(meal=>meal.Allergens)
                 .Include(meal=>meal.Extras)
-                .Take(20)
                 .ToListAsync();
         }
 
