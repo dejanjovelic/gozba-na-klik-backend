@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace gozba_na_klik_backend.Repository
 {
-    public class RestaurantRepository:IRestaurantRepository
+    public class RestaurantRepository : IRestaurantRepository
     {
         private readonly AppDbContext _context;
 
@@ -15,6 +15,15 @@ namespace gozba_na_klik_backend.Repository
         {
             _context = context;
         }
+
+        public async Task<List<Restaurant>> GetTopRatedRestaurantsAsync()
+        {
+            return await _context.Restaurants
+                .OrderByDescending(restaurant => restaurant.AverageRating)
+                .Take(10)
+                .ToListAsync();
+        }
+
 
         public async Task<PaginatedListDto<Restaurant>> GetAllRestaurantsPaginatedAsync(int page, int pageSize)
         {
@@ -27,7 +36,7 @@ namespace gozba_na_klik_backend.Repository
             PaginatedListDto<Restaurant> result = new PaginatedListDto<Restaurant>(selectedRestaurants, totalRowsCount, pageIndex, pageSize);
             return result;
         }
-        public async Task<PaginatedListDto<Restaurant>> GetAllFilteredAndSortedAndPagedAsync(RestaurantFilterDto restaurantFilter, int sortType, int page, int pageSize) 
+        public async Task<PaginatedListDto<Restaurant>> GetAllFilteredAndSortedAndPagedAsync(RestaurantFilterDto restaurantFilter, int sortType, int page, int pageSize)
         {
             IQueryable<Restaurant> restaurants = _context.Restaurants
                 .OrderBy(restaurant => restaurant.Id);
@@ -42,7 +51,7 @@ namespace gozba_na_klik_backend.Repository
             return paginatedRestaurantListDto;
         }
 
-        public async Task<int> CountAllRestaurantsAsync() 
+        public async Task<int> CountAllRestaurantsAsync()
         {
             return await _context.Restaurants.CountAsync();
         }

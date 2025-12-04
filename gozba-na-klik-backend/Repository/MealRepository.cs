@@ -16,6 +16,15 @@ namespace gozba_na_klik_backend.Repository
             _context = context;
         }
 
+        public async Task<List<Meal>> GetAllMealsAsync() 
+        {
+            return await _context.Meals
+                .OrderBy(meal => meal.Id)
+                .Include(meal=>meal.Allergens)
+                .Include(meal=>meal.Extras)
+                .ToListAsync();
+        }
+
         public async Task<PaginatedListDto<Meal>> GetAllFilateredAndSelectedAsync(int page, int pageSize, string query, bool HideMealsWithAllergens, IEnumerable<int> combinedAllergensIds)
         {
             IQueryable<Meal> meals = _context.Meals
