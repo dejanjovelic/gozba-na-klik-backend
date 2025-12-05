@@ -11,6 +11,7 @@ namespace gozba_na_klik_backend.DTOs
         public double TotalPrice { get; set; }
         public string Status { get; set; }
         public DateTime? OrderTime { get; set; }
+        public DateTime? PickupReadyAt { get; set; }
         public int TotalQuantity { get; set; }
         public List<OrderItemDTO>? OrderItems { get; set; }
     }

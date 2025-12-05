@@ -127,13 +127,12 @@ namespace gozba_na_klik_backend.Services
 
             order.Status = dto.NewStatus;
 
-            if (roles.Contains("Customer"))
+            if (roles.Contains("RestaurantOwner"))
             {
-                //TO DO treba mi vreme za update
-            }
-            else if (roles.Contains("RestaurantOwner"))
-            {
-                //TO DO treba mi vreme za update
+                if (dto.PickupReadyIn > 0)
+                {
+                    order.PickupReadyAt = dto.NewTime.AddMinutes(dto.PickupReadyIn); 
+                }
             }
             else if (roles.Contains("Courier"))
             {

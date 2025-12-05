@@ -13,6 +13,7 @@ namespace gozba_na_klik_backend.Model
         public Restaurant? Restaurant { get; set; }
         public int RestaurantId { get; set; }
         public DateTime? OrderTime { get; set; }
+        public DateTime? PickupReadyAt { get; set; }
         public DateTime? AssignedAt { get; set; }
         public OrderStatus Status { get; set; }
         public List<OrderMeal> OrderItems { get; set; } = new List<OrderMeal>();
