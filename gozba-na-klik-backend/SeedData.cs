@@ -26,7 +26,8 @@ namespace gozba_na_klik_backend
                     Email = "walkerlaura@example.net",
                     UserName = "admin1",
                     ProfileImageUrl = "https://example.com/admin1.png",
-                    PhoneNumber = "+381601112223"
+                    PhoneNumber = "+381601112223",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser
                 {
@@ -36,7 +37,8 @@ namespace gozba_na_klik_backend
                     Email = "davidmullins@example.org",
                     UserName = "admin2",
                     ProfileImageUrl = "https://example.com/admin2.png",
-                    PhoneNumber = "+381611234567"
+                    PhoneNumber = "+381611234567",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser
                 {
@@ -46,7 +48,8 @@ namespace gozba_na_klik_backend
                     Email = "andersonnicholas@example.com",
                     UserName = "admin3",
                     ProfileImageUrl = "https://example.com/admin3.png",
-                    PhoneNumber = "+381641234890"
+                    PhoneNumber = "+381641234890",
+                    EmailConfirmed = true
                 }
             };
 
@@ -95,7 +98,8 @@ namespace gozba_na_klik_backend
                     UserName = "customer4",
                     ProfileImageUrl = "https://example.com/customer4.png",
                     PhoneNumber = "+381621112223",
-                    DateOfBirth = new DateTime(1995, 5, 10, 0, 0, 0, DateTimeKind.Utc)
+                    DateOfBirth = new DateTime(1995, 5, 10, 0, 0, 0, DateTimeKind.Utc),
+                    EmailConfirmed = true
                 },
                 new ApplicationUser
                 {
@@ -106,7 +110,8 @@ namespace gozba_na_klik_backend
                     UserName = "customer5",
                     ProfileImageUrl = "https://example.com/customer5.png",
                     PhoneNumber = "+381631234567",
-                    DateOfBirth = new DateTime(2000, 1, 25, 0, 0, 0, DateTimeKind.Utc)
+                    DateOfBirth = new DateTime(2000, 1, 25, 0, 0, 0, DateTimeKind.Utc),
+                    EmailConfirmed = true
                 },
                 new ApplicationUser
                 {
@@ -117,7 +122,8 @@ namespace gozba_na_klik_backend
                     UserName = "customer6",
                     ProfileImageUrl = "https://example.com/customer6.png",
                     PhoneNumber = "+381601234321",
-                    DateOfBirth = new DateTime(1988, 12, 3, 0, 0, 0, DateTimeKind.Utc)
+                    DateOfBirth = new DateTime(1988, 12, 3, 0, 0, 0, DateTimeKind.Utc),
+                    EmailConfirmed = true
                 },
                 new ApplicationUser
                 {
@@ -128,7 +134,8 @@ namespace gozba_na_klik_backend
                     UserName = "customer7",
                     ProfileImageUrl = "https://example.com/customer7.png",
                     PhoneNumber = "+381641112233",
-                    DateOfBirth = new DateTime(1991, 7, 18, 0, 0, 0, DateTimeKind.Utc)
+                    DateOfBirth = new DateTime(1991, 7, 18, 0, 0, 0, DateTimeKind.Utc),
+                    EmailConfirmed = true
                 },
                 new ApplicationUser
                 {
@@ -139,7 +146,8 @@ namespace gozba_na_klik_backend
                     UserName = "customer8",
                     ProfileImageUrl = "https://example.com/customer8.png",
                     PhoneNumber = "+381611231231",
-                    DateOfBirth = new DateTime(1975, 4, 2, 0, 0, 0, DateTimeKind.Utc)
+                    DateOfBirth = new DateTime(1975, 4, 2, 0, 0, 0, DateTimeKind.Utc),
+                    EmailConfirmed = true
                 },
                 new ApplicationUser
                 {
@@ -150,7 +158,8 @@ namespace gozba_na_klik_backend
                     UserName = "customer9",
                     ProfileImageUrl = "https://example.com/customer9.png",
                     PhoneNumber = "+381621234890",
-                    DateOfBirth = new DateTime(2003, 11, 1, 0, 0, 0, DateTimeKind.Utc)
+                    DateOfBirth = new DateTime(2003, 11, 1, 0, 0, 0, DateTimeKind.Utc),
+                    EmailConfirmed = true
                 },
                 new ApplicationUser
                 {
@@ -161,7 +170,8 @@ namespace gozba_na_klik_backend
                     UserName = "customer10",
                     ProfileImageUrl = "https://example.com/customer10.png",
                     PhoneNumber = "+381601113355",
-                    DateOfBirth = new DateTime(1965, 9, 29, 0, 0, 0, DateTimeKind.Utc)
+                    DateOfBirth = new DateTime(1965, 9, 29, 0, 0, 0, DateTimeKind.Utc),
+                    EmailConfirmed = true
                 },
                 new ApplicationUser
                 {
@@ -172,7 +182,8 @@ namespace gozba_na_klik_backend
                     UserName = "customer11",
                     ProfileImageUrl = "https://example.com/customer11.png",
                     PhoneNumber = "+381631234444",
-                    DateOfBirth = new DateTime(1999, 3, 7, 0, 0, 0, DateTimeKind.Utc)
+                    DateOfBirth = new DateTime(1999, 3, 7, 0, 0, 0, DateTimeKind.Utc),
+                    EmailConfirmed = true
                 },
                 new ApplicationUser
                 {
@@ -183,7 +194,8 @@ namespace gozba_na_klik_backend
                     UserName = "customer12",
                     ProfileImageUrl = "https://example.com/customer12.png",
                     PhoneNumber = "+381641112567",
-                    DateOfBirth = new DateTime(1982, 6, 14, 0, 0, 0, DateTimeKind.Utc)
+                    DateOfBirth = new DateTime(1982, 6, 14, 0, 0, 0, DateTimeKind.Utc),
+                    EmailConfirmed = true
                 },
                 new ApplicationUser
                 {
@@ -194,7 +206,8 @@ namespace gozba_na_klik_backend
                     UserName = "customer13",
                     ProfileImageUrl = "https://example.com/customer13.png",
                     PhoneNumber = "+381611114455",
-                    DateOfBirth = new DateTime(1990, 2, 28, 0, 0, 0, DateTimeKind.Utc)
+                    DateOfBirth = new DateTime(1990, 2, 28, 0, 0, 0, DateTimeKind.Utc),
+                    EmailConfirmed = true
                 }
             };
 
@@ -241,7 +254,8 @@ namespace gozba_na_klik_backend
                     Email = "jameswells@example.net",
                     UserName = "courier14",
                     ProfileImageUrl = "https://example.com/courier14.png",
-                    PhoneNumber = "+381621234567"
+                    PhoneNumber = "+381621234567",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh15",
@@ -250,7 +264,8 @@ namespace gozba_na_klik_backend
                     Email = "turneremily@example.net",
                     UserName = "courier15",
                     ProfileImageUrl = "https://example.com/courier15.png",
-                    PhoneNumber = "+381631118889"
+                    PhoneNumber = "+381631118889",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh16",
@@ -259,7 +274,8 @@ namespace gozba_na_klik_backend
                     Email = "stephaniedavis@example.com",
                     UserName = "courier16",
                     ProfileImageUrl = "https://example.com/courier16.png",
-                    PhoneNumber = "+381601231111"
+                    PhoneNumber = "+381601231111",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh17",
@@ -268,7 +284,8 @@ namespace gozba_na_klik_backend
                     Email = "laura66@example.net",
                     UserName = "courier17",
                     ProfileImageUrl = "https://example.com/courier17.png",
-                    PhoneNumber = "+381641112001"
+                    PhoneNumber = "+381641112001",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh18",
@@ -277,7 +294,8 @@ namespace gozba_na_klik_backend
                     Email = "aliciamurray@example.org",
                     UserName = "courier18",
                     ProfileImageUrl = "https://example.com/courier18.png",
-                    PhoneNumber = "+381611234678"
+                    PhoneNumber = "+381611234678",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh19",
@@ -286,7 +304,8 @@ namespace gozba_na_klik_backend
                     Email = "michael37@example.com",
                     UserName = "courier19",
                     ProfileImageUrl = "https://example.com/courier19.png",
-                    PhoneNumber = "+381621112999"
+                    PhoneNumber = "+381621112999",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh20",
@@ -295,7 +314,8 @@ namespace gozba_na_klik_backend
                     Email = "sarahhill@example.com",
                     UserName = "courier20",
                     ProfileImageUrl = "https://example.com/courier20.png",
-                    PhoneNumber = "+381631234001"
+                    PhoneNumber = "+381631234001",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh21",
@@ -304,7 +324,8 @@ namespace gozba_na_klik_backend
                     Email = "keith54@example.com",
                     UserName = "courier21",
                     ProfileImageUrl = "https://example.com/courier21.png",
-                    PhoneNumber = "+381601118880"
+                    PhoneNumber = "+381601118880",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh22",
@@ -313,7 +334,8 @@ namespace gozba_na_klik_backend
                     Email = "jessicaduncan@example.org",
                     UserName = "courier22",
                     ProfileImageUrl = "https://example.com/courier22.png",
-                    PhoneNumber = "+381641113456"
+                    PhoneNumber = "+381641113456",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh23",
@@ -322,7 +344,8 @@ namespace gozba_na_klik_backend
                     Email = "hannah67@example.org",
                     UserName = "courier23",
                     ProfileImageUrl = "https://example.com/courier23.png",
-                    PhoneNumber = "+381611231987"
+                    PhoneNumber = "+381611231987",
+                    EmailConfirmed = true
                 }
             };
 
@@ -366,7 +389,8 @@ namespace gozba_na_klik_backend
                     Email = "victor.diaz@example.com",
                     UserName = "owner24",
                     ProfileImageUrl = "https://example.com/owner24.png",
-                    PhoneNumber = "+381621111234"
+                    PhoneNumber = "+381621111234",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh25",
@@ -375,7 +399,8 @@ namespace gozba_na_klik_backend
                     Email = "laura.smith@example.com",
                     UserName = "owner25",
                     ProfileImageUrl = "https://example.com/owner25.png",
-                    PhoneNumber = "+381631234222"
+                    PhoneNumber = "+381631234222",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh26",
@@ -384,7 +409,8 @@ namespace gozba_na_klik_backend
                     Email = "james.johnson@example.com",
                     UserName = "owner26",
                     ProfileImageUrl = "https://example.com/owner26.png",
-                    PhoneNumber = "+381601118899"
+                    PhoneNumber = "+381601118899",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh27",
@@ -393,7 +419,8 @@ namespace gozba_na_klik_backend
                     Email = "olivia.brown@example.com",
                     UserName = "owner27",
                     ProfileImageUrl = "https://example.com/owner27.png",
-                    PhoneNumber = "+381641234654"
+                    PhoneNumber = "+381641234654",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh28",
@@ -402,7 +429,8 @@ namespace gozba_na_klik_backend
                     Email = "ethan.williams@example.com",
                     UserName = "owner28",
                     ProfileImageUrl = "https://example.com/owner28.png",
-                    PhoneNumber = "+381611112345"
+                    PhoneNumber = "+381611112345",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh29",
@@ -411,7 +439,8 @@ namespace gozba_na_klik_backend
                     Email = "sophia.jones@example.com",
                     UserName = "owner29",
                     ProfileImageUrl = "https://example.com/owner29.png",
-                    PhoneNumber = "+381621113333"
+                    PhoneNumber = "+381621113333",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh30",
@@ -420,7 +449,8 @@ namespace gozba_na_klik_backend
                     Email = "mason.garcia@example.com",
                     UserName = "owner30",
                     ProfileImageUrl = "https://example.com/owner30.png",
-                    PhoneNumber = "+381631112001"
+                    PhoneNumber = "+381631112001",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh31",
@@ -429,7 +459,8 @@ namespace gozba_na_klik_backend
                     Email = "isabella.martinez@example.com",
                     UserName = "owner31",
                     ProfileImageUrl = "https://example.com/owner31.png",
-                    PhoneNumber = "+381601118123"
+                    PhoneNumber = "+381601118123",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh32",
@@ -438,7 +469,8 @@ namespace gozba_na_klik_backend
                     Email = "logan.rodriguez@example.com",
                     UserName = "owner32",
                     ProfileImageUrl = "https://example.com/owner32.png",
-                    PhoneNumber = "+381641231231"
+                    PhoneNumber = "+381641231231",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh33",
@@ -447,7 +479,8 @@ namespace gozba_na_klik_backend
                     Email = "ava.lee@example.com",
                     UserName = "owner33",
                     ProfileImageUrl = "https://example.com/owner33.png",
-                    PhoneNumber = "+381611234432"
+                    PhoneNumber = "+381611234432",
+                    EmailConfirmed = true
                 }
             };
 
@@ -492,7 +525,8 @@ namespace gozba_na_klik_backend
                     Email = "noah.walker@example.com",
                     UserName = "employee34",
                     ProfileImageUrl = "https://example.com/employee34.png",
-                    PhoneNumber = "+381621112777"
+                    PhoneNumber = "+381621112777",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "e1a2b3c4-d5e6-7890-ab12-cd34ef56gh35",
@@ -501,7 +535,8 @@ namespace gozba_na_klik_backend
                     Email = "mia.hall@example.com",
                     UserName = "employee35",
                     ProfileImageUrl = "https://example.com/employee35.png",
-                    PhoneNumber = "+381631234123"
+                    PhoneNumber = "+381631234123",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "e1a2b3c4-d5e6-7890-ab12-cd34ef56gh36",
@@ -510,7 +545,8 @@ namespace gozba_na_klik_backend
                     Email = "liam.allen@example.com",
                     UserName = "employee36",
                     ProfileImageUrl = "https://example.com/employee36.png",
-                    PhoneNumber = "+381601119900"
+                    PhoneNumber = "+381601119900",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "e1a2b3c4-d5e6-7890-ab12-cd34ef56gh37",
@@ -519,7 +555,8 @@ namespace gozba_na_klik_backend
                     Email = "charlotte.young@example.com",
                     UserName = "employee37",
                     ProfileImageUrl = "https://example.com/employee37.png",
-                    PhoneNumber = "+381641118765"
+                    PhoneNumber = "+381641118765",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "e1a2b3c4-d5e6-7890-ab12-cd34ef56gh38",
@@ -528,7 +565,8 @@ namespace gozba_na_klik_backend
                     Email = "jacob.hernandez@example.com",
                     UserName = "employee38",
                     ProfileImageUrl = "https://example.com/employee38.png",
-                    PhoneNumber = "+381611112888"
+                    PhoneNumber = "+381611112888",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "e1a2b3c4-d5e6-7890-ab12-cd34ef56gh39",
@@ -537,7 +575,8 @@ namespace gozba_na_klik_backend
                     Email = "amelia.king@example.com",
                     UserName = "employee39",
                     ProfileImageUrl = "https://example.com/employee39.png",
-                    PhoneNumber = "+381621112555"
+                    PhoneNumber = "+381621112555",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "e1a2b3c4-d5e6-7890-ab12-cd34ef56gh40",
@@ -546,7 +585,8 @@ namespace gozba_na_klik_backend
                     Email = "evelyn.wright@example.com",
                     UserName = "employee40",
                     ProfileImageUrl = "https://example.com/employee40.png",
-                    PhoneNumber = "+381631119111"
+                    PhoneNumber = "+381631119111",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "e1a2b3c4-d5e6-7890-ab12-cd34ef56gh41",
@@ -555,7 +595,8 @@ namespace gozba_na_klik_backend
                     Email = "alexander.lopez@example.com",
                     UserName = "employee41",
                     ProfileImageUrl = "https://example.com/employee41.png",
-                    PhoneNumber = "+381601113789"
+                    PhoneNumber = "+381601113789",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "e1a2b3c4-d5e6-7890-ab12-cd34ef56gh42",
@@ -564,7 +605,8 @@ namespace gozba_na_klik_backend
                     Email = "ella.hill@example.com",
                     UserName = "employee42",
                     ProfileImageUrl = "https://example.com/employee42.png",
-                    PhoneNumber = "+381641112456"
+                    PhoneNumber = "+381641112456",
+                    EmailConfirmed = true
                 },
                 new ApplicationUser {
                     Id = "e1a2b3c4-d5e6-7890-ab12-cd34ef56gh43",
@@ -573,7 +615,8 @@ namespace gozba_na_klik_backend
                     Email = "michael.scott@example.com",
                     UserName = "employee43",
                     ProfileImageUrl = "https://example.com/employee43.png",
-                    PhoneNumber = "+381611231111"
+                    PhoneNumber = "+381611231111",
+                    EmailConfirmed = true
                 }
             };
 
