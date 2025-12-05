@@ -17,6 +17,7 @@ namespace gozba_na_klik_backend.Controllers
         {
             _authService = authService;
         }
+
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync(LoginDto loginData)
         {
@@ -55,18 +56,19 @@ namespace gozba_na_klik_backend.Controllers
             await _authService.ResendConfirmationEmailAsync(username);
             return Ok(new { Message = "Confirmation email sent. Please check your inbox." });
         }
+
         [Authorize]
         [HttpGet("profile")]
-        public async Task<IActionResult> Profile()
+        public async Task<IActionResult> GetProfileAsync()
         {
-            return Ok(await _authService.GetProfile(User));
+            return Ok(await _authService.GetProfileAsync(User));
         }
+
         [Authorize]
         [HttpPatch("profileImage")]
-        public async Task<IActionResult> UpdateImage([FromBody] UpdateImageDto dto)
+        public async Task<IActionResult> UpdateImageAsync([FromBody] UpdateImageDto dto)
         {
-            await _authService.UpdateImage(User, dto.ProfileImageUrl);
-            return NoContent();
+            return Ok(await _authService.UpdateImageAsync(User, dto.ProfileImageUrl));
         }
     }
 }
