@@ -55,5 +55,18 @@ namespace gozba_na_klik_backend.Controllers
             await _authService.ResendConfirmationEmailAsync(username);
             return Ok(new { Message = "Confirmation email sent. Please check your inbox." });
         }
+        [Authorize]
+        [HttpGet("profile")]
+        public async Task<IActionResult> Profile()
+        {
+            return Ok(await _authService.GetProfile(User));
+        }
+        [Authorize]
+        [HttpPatch("profileImage")]
+        public async Task<IActionResult> UpdateImage([FromBody] UpdateImageDto dto)
+        {
+            await _authService.UpdateImage(User, dto.ProfileImageUrl);
+            return NoContent();
+        }
     }
 }

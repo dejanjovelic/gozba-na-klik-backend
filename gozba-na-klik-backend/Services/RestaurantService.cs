@@ -21,6 +21,12 @@ namespace gozba_na_klik_backend.Services
             _mapper = mapper;
         }
 
+        public async Task<List<RestaurantDto>> GetTopRatedRestaurantsAsync()
+        {
+            List<Restaurant> restaurants = await _restaurantRepository.GetTopRatedRestaurantsAsync();
+            return restaurants.Select(_mapper.Map<RestaurantDto>).ToList();
+        }
+
         public async Task<PaginatedListDto<Restaurant>> GetAllRestaurantsPaginatedAsync(int page, int pageSize)
         {
             if (page < 1)
@@ -44,6 +50,7 @@ namespace gozba_na_klik_backend.Services
             }
             return restaurantSortTypeOptions;
         }
+
         public async Task<PaginatedListDto<Restaurant>> GetAllFilteredAndSortedAndPagedAsync(RestaurantFilterDto restaurantFilter, int sortType, int page, int pageSize)
         {
             if (page < 1)
@@ -57,8 +64,6 @@ namespace gozba_na_klik_backend.Services
 
             return await _restaurantRepository.GetAllFilteredAndSortedAndPagedAsync(restaurantFilter, sortType, page, pageSize);
         }
-
-
 
         public async Task<RestaurantWithMealsDto> GetRestaurantWithMealsAsync(int restaurantId)
         {
@@ -86,7 +91,7 @@ namespace gozba_na_klik_backend.Services
             return now >= todayHours.StartingTime && now <= todayHours.EndingTime;
         }
         public async Task UpdateRestaurantAverageRatingAsync(int restaurantId)
-        {       
+        {
             await _restaurantRepository.UpdateRestaurantAverageRatingAsync(restaurantId);
         }
 

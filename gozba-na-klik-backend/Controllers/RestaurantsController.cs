@@ -17,6 +17,13 @@ namespace gozba_na_klik_backend.Controllers
         {
             _restaurantService = restaurantService;
         }
+        [Authorize(Roles ="Customer")]
+        //GET api/restaurants/top-rated
+        [HttpGet("top-rated")]
+        public async Task<IActionResult> GetTopRatedRestaurantsAsync()
+        {
+            return Ok(await _restaurantService.GetTopRatedRestaurantsAsync());
+        }
 
         //GET api/restaurants/paging?page=1&pageSize=5
         [HttpGet("paging")]

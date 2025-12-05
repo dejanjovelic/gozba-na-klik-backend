@@ -34,6 +34,9 @@ namespace gozba_na_klik_backend.Settings.Mappings
             CreateMap<Order, CustomerOrderResponseDto>()
                 .ForMember(dest => dest.OrderDate, opt => opt.MapFrom(src => src.OrderTime.HasValue ? (DateOnly?)DateOnly.FromDateTime(src.OrderTime.Value) : null))
                 .ForMember(dest => dest.RestaurantImageUrl, opt => opt.MapFrom(src => src.Restaurant.RestaurantImageUrl));
+
+            CreateMap<Order, ResponseOrderDto>()
+               .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Id));
         }
     }
 }
