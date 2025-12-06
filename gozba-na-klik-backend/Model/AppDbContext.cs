@@ -166,7 +166,7 @@ namespace gozba_na_klik_backend.Model
                 .WithOne()
                 .HasForeignKey<RestaurantOwner>(ro => ro.Id)
                 .OnDelete(DeleteBehavior.Cascade);
-       
+
             modelBuilder.Entity<Allergen>().HasData(
                 new Allergen { Id = 1, Name = "wheat" },
                 new Allergen { Id = 2, Name = "rye" },
@@ -649,7 +649,7 @@ namespace gozba_na_klik_backend.Model
                 new Meal { Id = 40, MealName = "Paneer Curry", Description = "Indian curry with paneer cheese cubes.", Price = 9.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764955297/butter_paneer_curry_98394_16x9_n044l0.jpg", RestaurantId = 10 }
                 );
 
-           
+
 
 
             modelBuilder.Entity("MealAllergens").HasData(
@@ -814,6 +814,269 @@ namespace gozba_na_klik_backend.Model
 
             );
 
+            modelBuilder.Entity<Order>().HasData(
+                      new Order
+                      {
+                          Id = 1,
+                          // Customer 4 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01
+                          CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01",
+                          RestaurantId = 1,
+                          DeliveryAddressId = 1,
+                          // Courier 14 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14
+                          CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14",
+                          OrderTime = DateTime.UtcNow.AddMinutes(-10),
+                          Status = OrderStatus.Pending
+                      },
+                      new Order
+                      {
+                          Id = 11,
+                          // Customer 4 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01
+                          CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01",
+                          RestaurantId = 1,
+                          DeliveryAddressId = 1,
+                          // Courier 14 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14
+                          CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14",
+                          OrderTime = DateTime.UtcNow.AddMinutes(-9),
+                          Status = OrderStatus.Delivered
+                      },
+                     new Order
+                     {
+                         Id = 12,
+                         // Customer 4 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01
+                         CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01",
+                         RestaurantId = 2,
+                         DeliveryAddressId = 4,
+                         // Courier 14 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14
+                         CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14",
+                         OrderTime = DateTime.UtcNow.AddMinutes(-30),
+                         Status = OrderStatus.Delivered
+                     },
+                     new Order
+                     {
+                         Id = 13,
+                         // Customer 5 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02
+                         CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02",
+                         RestaurantId = 6,
+                         DeliveryAddressId = 3,
+                         // Courier 15 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh15
+                         CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh15",
+                         OrderTime = DateTime.UtcNow,
+                         Status = OrderStatus.Delivered
+                     },
+                     new Order
+                     {
+                         Id = 3,
+                         // Customer 6 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh03
+                         CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh03",
+                         RestaurantId = 6,
+                         DeliveryAddressId = 4,
+                         OrderTime = DateTime.UtcNow.AddMinutes(-8),
+                         Status = OrderStatus.Pending
+                     },
+                     new Order
+                     {
+                         Id = 4,
+                         // Customer 7 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh04
+                         CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh04",
+                         RestaurantId = 6,
+                         DeliveryAddressId = 7,
+                         OrderTime = DateTime.UtcNow.AddMinutes(-2),
+                         Status = OrderStatus.Pending
+                     },
+                     new Order
+                     {
+                         Id = 5,
+                         // Customer 8 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh05
+                         CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh05",
+                         RestaurantId = 1,
+                         DeliveryAddressId = 8,
+                         OrderTime = DateTime.UtcNow.AddMinutes(-6),
+                         Status = OrderStatus.Pending
+                     },
+                     new Order
+                     {
+                         Id = 6,
+                         // Customer 9 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh06
+                         CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh06",
+                         RestaurantId = 1,
+                         DeliveryAddressId = 10,
+                         OrderTime = DateTime.UtcNow.AddMinutes(-4),
+                         Status = OrderStatus.Pending
+                     },
+                     new Order
+                     {
+                         Id = 7,
+                         // Customer 10 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh07
+                         CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh07",
+                         RestaurantId = 1,
+                         DeliveryAddressId = 11,
+                         // Courier 20 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh20
+                         CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh20",
+                         OrderTime = DateTime.UtcNow.AddMinutes(-4),
+                         Status = OrderStatus.Accepted
+                     },
+                     new Order
+                     {
+                         Id = 8,
+                         // Customer 11 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh08
+                         CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh08",
+                         RestaurantId = 6,
+                         DeliveryAddressId = 13,
+                         // Courier 21 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh21
+                         CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh21",
+                         OrderTime = null,
+                         Status = OrderStatus.Accepted
+                     },
+                     new Order
+                     {
+                         Id = 9,
+                         // Customer 12 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh09
+                         CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh09",
+                         RestaurantId = 6,
+                         DeliveryAddressId = 14,
+                         // Courier 22 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh22
+                         CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh22",
+                         OrderTime = null,
+                         Status = OrderStatus.DeliveryInProgress
+                     },
+                     new Order
+                     {
+                         Id = 10,
+                         // Customer 13 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh10
+                         CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh10",
+                         RestaurantId = 7,
+                         DeliveryAddressId = 16,
+                         // Courier 23 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh23
+                         CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh23",
+                         OrderTime = DateTime.UtcNow,
+                         Status = OrderStatus.DeliveryInProgress
+                     }
+
+                    );
+
+            modelBuilder.Entity<OrderMeal>().HasData(
+                new OrderMeal
+                {
+                    OrderId = 1,
+                    MealId = 11,
+                    Quantity = 1
+                },
+                new OrderMeal
+                {
+                    OrderId = 1,
+                    MealId = 31,
+                    Quantity = 1
+                },
+                new OrderMeal
+                {
+                    OrderId = 5,
+                    MealId = 21,
+                    Quantity = 1
+                },
+                new OrderMeal
+                {
+                    OrderId = 5,
+                    MealId = 11,
+                    Quantity = 1
+                },
+                new OrderMeal
+                {
+                    OrderId = 11,
+                    MealId = 1,
+                    Quantity = 2
+                },
+                new OrderMeal
+                {
+                    OrderId = 11,
+                    MealId = 21,
+                    Quantity = 2
+                },
+                new OrderMeal
+                {
+                    OrderId = 6,
+                    MealId = 1,
+                    Quantity = 1
+                },
+                new OrderMeal
+                {
+                    OrderId = 6,
+                    MealId = 31,
+                    Quantity = 2
+                },
+                new OrderMeal
+                {
+                    OrderId = 7,
+                    MealId = 21,
+                    Quantity = 2
+                },
+                new OrderMeal
+                {
+                    OrderId = 7,
+                    MealId = 31,
+                    Quantity = 2
+                },
+                new OrderMeal
+                {
+                    OrderId = 13,
+                    MealId = 6,
+                    Quantity = 2
+                },
+                new OrderMeal
+                {
+                    OrderId = 13,
+                    MealId = 12,
+                    Quantity = 1
+                },
+                new OrderMeal
+                {
+                    OrderId = 3,
+                    MealId = 12,
+                    Quantity = 2
+                },
+                new OrderMeal
+                {
+                    OrderId = 3,
+                    MealId = 26,
+                    Quantity = 2
+                },
+                new OrderMeal
+                {
+                    OrderId = 4,
+                    MealId = 36,
+                    Quantity = 2
+                },
+                new OrderMeal
+                {
+                    OrderId = 4,
+                    MealId = 6,
+                    Quantity = 2
+                },
+                new OrderMeal
+                {
+                    OrderId = 8,
+                    MealId = 12,
+                    Quantity = 2
+                },
+                new OrderMeal
+                {
+                    OrderId = 8,
+                    MealId = 17,
+                    Quantity = 2
+                },
+                new OrderMeal
+                {
+                    OrderId = 9,
+                    MealId = 17,
+                    Quantity = 2
+                },
+                new OrderMeal
+                {
+                    OrderId = 9,
+                    MealId = 12,
+                    Quantity = 2
+                }
+
+            );
         }
     }
 }
