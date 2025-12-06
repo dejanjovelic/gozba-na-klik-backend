@@ -194,7 +194,8 @@ namespace gozba_na_klik_backend.Model
                 new Allergen { Id = 24, Name = "Lupin" },
                 new Allergen { Id = 25, Name = "mussels" },
                 new Allergen { Id = 26, Name = "oysters" },
-                new Allergen { Id = 27, Name = "squid" }
+                new Allergen { Id = 27, Name = "squid" },
+                new Allergen { Id = 28, Name = "sesame" }
                 );
 
             modelBuilder.Entity<Address>().HasData(
@@ -625,155 +626,30 @@ namespace gozba_na_klik_backend.Model
                 new Meal { Id = 17, MealName = "Tuna Steak", Description = "Grilled tuna fillet with lime and arugula.", Price = 13.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761220032/close-up-of-grilled-sliced-tuna-steak-medium-rare-1_zpdonx.jpg", RestaurantId = 6 },
                 new Meal { Id = 18, MealName = "Ćevapi with Onion", Description = "Traditional grilled minced meat served with flatbread and chopped onion.", Price = 6.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761220073/cevapi-with-onion-on-oval-plater-middle-eastern-cuisine-salad-plates-and-lavash-bread_tlphkv.jpg", RestaurantId = 7 },
                 new Meal { Id = 19, MealName = "Tom Yum Soup", Description = "Spicy Thai soup with shrimp, lemongrass, and chili.", Price = 7.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761220108/Tom-Yum-soup_2_ti1rim.jpg", RestaurantId = 8 },
-                new Meal { Id = 20, MealName = "Croque Monsieur", Description = "French toasted sandwich with ham and melted cheese.", Price = 6.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761220177/croque-monsieur-66a219aa5f0b2.jpg_h29478.jpg", RestaurantId = 9 }
-            );
+                new Meal { Id = 20, MealName = "Croque Monsieur", Description = "French toasted sandwich with ham and melted cheese.", Price = 6.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1761220177/croque-monsieur-66a219aa5f0b2.jpg_h29478.jpg", RestaurantId = 9 },
+                new Meal { Id = 21, MealName = "Goulash", Description = "Traditional beef stew with paprika.", Price = 7.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764954120/images_illzvj.webp", RestaurantId = 1 },
+                new Meal { Id = 22, MealName = "Margherita Pizza", Description = "Classic pizza with tomato, mozzarella, and basil.", Price = 7.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764954281/Margherita-Pizza-093_k22mse.jpg", RestaurantId = 2 },
+                new Meal { Id = 23, MealName = "Dragon Roll", Description = "Sushi roll with eel, avocado, and cucumber.", Price = 11.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764954346/Dragon-Roll-0293-II_pj3c3r.jpg", RestaurantId = 3 },
+                new Meal { Id = 24, MealName = "Pulled Pork Sandwich", Description = "Slow-cooked pork with BBQ sauce in a bun.", Price = 9.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764954479/Pulled-Pork-Sandwich-Recipe-ChelseasMessyApron-1200-1_namwcs.jpg", RestaurantId = 4 },
+                new Meal { Id = 25, MealName = "Hummus Plate", Description = "Creamy hummus served with pita bread.", Price = 6.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764954541/hummus-trio-I-howsweeteats.com-10_fmrefd.jpg", RestaurantId = 5 },
+                new Meal { Id = 26, MealName = "Shrimp Risotto", Description = "Creamy risotto with shrimp and parmesan.", Price = 12.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764954582/shrimp-risotto-22-scaled_xoli9f.jpg", RestaurantId = 6 },
+                new Meal { Id = 27, MealName = "Burek with Cheese", Description = "Traditional Balkan pastry filled with cheese.", Price = 5.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764954664/turkish-tray-borek-cheese-peynirli-tepsi-borek-6.jpg_uezh8i.webp", RestaurantId = 7 },
+                new Meal { Id = 28, MealName = "Green Curry", Description = "Thai curry with coconut milk and vegetables.", Price = 9.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764954686/IMG_4915_qjfrtt.jpg", RestaurantId = 8 },
+                new Meal { Id = 29, MealName = "Ratatouille", Description = "French vegetable stew with zucchini and eggplant.", Price = 7.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764954748/images_euol1a.webp", RestaurantId = 9 },
+                new Meal { Id = 30, MealName = "Butter Chicken", Description = "Indian chicken curry with butter and cream.", Price = 10.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764954797/butter-chicken-recipe-5_jiowpv.jpg", RestaurantId = 10 },
+                new Meal { Id = 31, MealName = "Pljeskavica", Description = "Serbian grilled meat patty with spices.", Price = 7.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764954834/images_bmioxo.webp", RestaurantId = 1 },
+                new Meal { Id = 32, MealName = "Prosciutto Pizza", Description = "Pizza topped with prosciutto and arugula.", Price = 9.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764954880/Prosciutto_and_Hot_Honey_Pizza_2400x1000-1700x708.1742499513_vioq1c.jpg", RestaurantId = 2 },
+                new Meal { Id = 33, MealName = "Tempura Shrimp", Description = "Crispy fried shrimp in tempura batter.", Price = 10.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764954927/shrimp-tempura-A_l9rfcm.jpg", RestaurantId = 3 },
+                new Meal { Id = 34, MealName = "Buffalo Wings", Description = "Spicy chicken wings with blue cheese dip.", Price = 8.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764954986/IMG_0509-scaled_npygwo.jpg", RestaurantId = 4 },
+                new Meal { Id = 35, MealName = "Tabbouleh Salad", Description = "Fresh salad with bulgur, parsley, and lemon.", Price = 6.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764955020/Grain-Free-Tabbouleh-Salad-11-500x500_w2ifr0.jpg", RestaurantId = 5 },
+                new Meal { Id = 36, MealName = "Calamari Rings", Description = "Fried calamari served with tartar sauce.", Price = 9.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764955065/fried-calamari-recipe-7-250x250_ypxk6a.jpg", RestaurantId = 6 },
+                new Meal { Id = 37, MealName = "Sarma", Description = "Cabbage rolls stuffed with minced meat.", Price = 6.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764955112/sarma_knkbrc.jpg", RestaurantId = 7 },
+                new Meal { Id = 38, MealName = "Massaman Curry", Description = "Thai curry with peanuts and potatoes.", Price = 9.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764955164/massaman-curry-recipe-9_ojxwjg.jpg", RestaurantId = 8 },
+                new Meal { Id = 39, MealName = "Soufflé", Description = "French dessert with chocolate or vanilla.", Price = 6.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764955206/images_qgzazn.webp", RestaurantId = 9 },
+                new Meal { Id = 40, MealName = "Paneer Curry", Description = "Indian curry with paneer cheese cubes.", Price = 9.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764955297/butter_paneer_curry_98394_16x9_n044l0.jpg", RestaurantId = 10 }
+                );
 
-            modelBuilder.Entity<Order>().HasData(
-                 new Order
-                 {
-                     Id = 1,
-                     // Customer 4 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01
-                     CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01",
-                     RestaurantId = 20,
-                     DeliveryAddressId = 1,
-                     // Courier 14 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14
-                     CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14",
-                     OrderTime = null,
-                     Status = OrderStatus.Pending
-                 },
-                 new Order
-                 {
-                     Id = 11,
-                     // Customer 4 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01
-                     CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01",
-                     RestaurantId = 20,
-                     DeliveryAddressId = 1,
-                     // Courier 14 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14
-                     CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14",
-                     OrderTime = null,
-                     Status = OrderStatus.Delivered
-                 },
-                 new Order
-                 {
-                     Id = 12,
-                     // Customer 4 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01
-                     CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01",
-                     RestaurantId = 20,
-                     DeliveryAddressId = 1,
-                     // Courier 14 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14
-                     CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14",
-                     OrderTime = null,
-                     Status = OrderStatus.Delivered
-                 },
-                 new Order
-                 {
-                     Id = 13,
-                     // Customer 5 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02
-                     CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02",
-                     RestaurantId = 19,
-                     DeliveryAddressId = 3,
-                     // Courier 15 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh15
-                     CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh15",
-                     OrderTime = DateTime.UtcNow,
-                     Status = OrderStatus.Delivered
-                 },
-                 new Order
-                 {
-                     Id = 3,
-                     // Customer 6 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh03
-                     CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh03",
-                     RestaurantId = 19,
-                     DeliveryAddressId = 4,
-                     // Courier 16 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh16
-                     CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh16",
-                     OrderTime = null,
-                     Status = OrderStatus.Pending
-                 },
-                 new Order
-                 {
-                     Id = 4,
-                     // Customer 7 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh04
-                     CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh04",
-                     RestaurantId = 18,
-                     DeliveryAddressId = 7,
-                     // Courier 17 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh17
-                     CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh17",
-                     OrderTime = null,
-                     Status = OrderStatus.Pending
-                 },
-                 new Order
-                 {
-                     Id = 5,
-                     // Customer 8 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh05
-                     CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh05",
-                     RestaurantId = 18,
-                     DeliveryAddressId = 8,
-                     // Courier 18 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh18
-                     CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh18",
-                     OrderTime = null,
-                     Status = OrderStatus.Pending
-                 },
-                 new Order
-                 {
-                     Id = 6,
-                     // Customer 9 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh06
-                     CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh06",
-                     RestaurantId = 18,
-                     DeliveryAddressId = 10,
-                     // Courier 19 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh19
-                     CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh19",
-                     OrderTime = null,
-                     Status = OrderStatus.Pending
-                 },
-                 new Order
-                 {
-                     Id = 7,
-                     // Customer 10 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh07
-                     CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh07",
-                     RestaurantId = 19,
-                     DeliveryAddressId = 11,
-                     // Courier 20 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh20
-                     CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh20",
-                     OrderTime = null,
-                     Status = OrderStatus.Accepted
-                 },
-                 new Order
-                 {
-                     Id = 8,
-                     // Customer 11 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh08
-                     CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh08",
-                     RestaurantId = 20,
-                     DeliveryAddressId = 13,
-                     // Courier 21 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh21
-                     CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh21",
-                     OrderTime = null,
-                     Status = OrderStatus.Accepted
-                 },
-                 new Order
-                 {
-                     Id = 9,
-                     // Customer 12 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh09
-                     CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh09",
-                     RestaurantId = 20,
-                     DeliveryAddressId = 14,
-                     // Courier 22 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh22
-                     CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh22",
-                     OrderTime = null,
-                     Status = OrderStatus.DeliveryInProgress
-                 },
-                 new Order
-                 {
-                     Id = 10,
-                     // Customer 13 -> f1a2b3c4-d5e6-7890-ab12-cd34ef56gh10
-                     CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh10",
-                     RestaurantId = 20,
-                     DeliveryAddressId = 16,
-                     // Courier 23 -> c1a2b3d4-e5f6-7890-ab12-cd34ef56gh23
-                     CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh23",
-                     OrderTime = DateTime.UtcNow,
-                     Status = OrderStatus.DeliveryInProgress
-                 }
-            );
+           
 
 
             modelBuilder.Entity("MealAllergens").HasData(
@@ -855,7 +731,87 @@ namespace gozba_na_klik_backend.Model
 
                 // Jelo 20: Croque Monsieur (Id=20) - Pšenica (1), Mleko (10)
                 new { MealId = 20, AllergenId = 1 },
-                new { MealId = 20, AllergenId = 10 }
+                new { MealId = 20, AllergenId = 10 },
+
+                // Jelo 21: Goulash – pšenica (1), celer (22)
+                new { MealId = 21, AllergenId = 1 },
+                new { MealId = 21, AllergenId = 22 },
+
+                // Jelo 22: Margherita Pizza – pšenica (1), mleko (10)
+                new { MealId = 22, AllergenId = 1 },
+                new { MealId = 22, AllergenId = 10 },
+
+                // Jelo 23: Dragon Roll – pšenica (1), riba (9), soja (12)
+                new { MealId = 23, AllergenId = 1 },
+                new { MealId = 23, AllergenId = 9 },
+                new { MealId = 23, AllergenId = 12 },
+
+                // Jelo 24: Pulled Pork Sandwich – pšenica (1), senf (23)
+                new { MealId = 24, AllergenId = 1 },
+                new { MealId = 24, AllergenId = 23 },
+
+                // Jelo 25: Hummus Plate – susam (dodaj novi AllergenId=28), lupin (24)
+                new { MealId = 25, AllergenId = 24 },
+                new { MealId = 25, AllergenId = 28 },
+
+                // Jelo 26: Shrimp Risotto – rakovi (5), mleko (10)
+                new { MealId = 26, AllergenId = 5 },
+                new { MealId = 26, AllergenId = 10 },
+
+                // Jelo 27: Burek with Cheese – pšenica (1), mleko (10)
+                new { MealId = 27, AllergenId = 1 },
+                new { MealId = 27, AllergenId = 10 },
+
+                // Jelo 28: Green Curry – mleko (10), kikiriki (11), indijski orah (16)
+                new { MealId = 28, AllergenId = 10 },
+                new { MealId = 28, AllergenId = 11 },
+                new { MealId = 28, AllergenId = 16 },
+
+                // Jelo 29: Ratatouille – celer (22)
+                new { MealId = 29, AllergenId = 22 },
+
+                // Jelo 30: Butter Chicken – mleko (10)
+                new { MealId = 30, AllergenId = 10 },
+
+                // Jelo 31: Pljeskavica – pšenica (1)
+                new { MealId = 31, AllergenId = 1 },
+
+                // Jelo 32: Prosciutto Pizza – pšenica (1), mleko (10)
+                new { MealId = 32, AllergenId = 1 },
+                new { MealId = 32, AllergenId = 10 },
+
+                // Jelo 33: Tempura Shrimp – pšenica (1), jaja (8), rakovi (5)
+                new { MealId = 33, AllergenId = 1 },
+                new { MealId = 33, AllergenId = 8 },
+                new { MealId = 33, AllergenId = 5 },
+
+                // Jelo 34: Buffalo Wings – mleko (10)
+                new { MealId = 34, AllergenId = 10 },
+
+                // Jelo 35: Tabbouleh Salad – pšenica (1), celer (22)
+                new { MealId = 35, AllergenId = 1 },
+                new { MealId = 35, AllergenId = 22 },
+
+                // Jelo 36: Calamari Rings – pšenica (1), lignje (27)
+                new { MealId = 36, AllergenId = 1 },
+                new { MealId = 36, AllergenId = 27 },
+
+                // Jelo 37: Sarma – pšenica (1), celer (22)
+                new { MealId = 37, AllergenId = 1 },
+                new { MealId = 37, AllergenId = 22 },
+
+                // Jelo 38: Massaman Curry – mleko (10), kikiriki (11), indijski orah (16)
+                new { MealId = 38, AllergenId = 10 },
+                new { MealId = 38, AllergenId = 11 },
+                new { MealId = 38, AllergenId = 16 },
+
+                // Jelo 39: Soufflé – jaja (8), mleko (10)
+                new { MealId = 39, AllergenId = 8 },
+                new { MealId = 39, AllergenId = 10 },
+
+                // Jelo 40: Paneer Curry – mleko (10)
+                new { MealId = 40, AllergenId = 10 }
+
             );
 
         }
