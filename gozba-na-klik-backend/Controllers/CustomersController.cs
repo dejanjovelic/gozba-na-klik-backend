@@ -1,6 +1,6 @@
-﻿using gozba_na_klik_backend.DTOs;
-using gozba_na_klik_backend.Model;
-using gozba_na_klik_backend.Repository;
+﻿using gozba_na_klik_backend.Model;
+using gozba_na_klik_backend.Services.DTOs;
+using gozba_na_klik_backend.Services.DTOs.AuthDtos;
 using gozba_na_klik_backend.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

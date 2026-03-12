@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using gozba_na_klik_backend.DTOs;
-using gozba_na_klik_backend.Exceptions;
+using gozba_na_klik_backend.Services.DTOs;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
 using gozba_na_klik_backend.Services;
+using gozba_na_klik_backend.Services.Exceptions;
 using gozba_na_klik_backend.Services.IServices;
 using Moq;
 using Shouldly;
@@ -39,7 +39,10 @@ namespace gozba_na_klik_backend_Tests
         [Fact]
         public async Task CreateAddressAsync_ValidInput_ShouldCreateAddress()
         {
-            CustomerService service = CreateCustomerService();
+            var (customerStubRepository, addressStubRepository) = CreateRepositories();
+            var allergenService = new Mock<IAllergenService>();
+            var authService = new Mock<IAuthService>();
+            var mapper = new Mock<IMapper>();
 
             var newAddress = new NewAddressDto
             {
@@ -48,6 +51,19 @@ namespace gozba_na_klik_backend_Tests
                 City = "Test City",
                 ZipCode = "12345"
             };
+
+            var addressFromDb = new Address
+            {
+                Street = "Test Street",
+                StreetNumber = 99,
+                City = "Test City",
+                ZipCode = "12345"
+            };
+
+            mapper.Setup(m => m.Map<Address>(newAddress))
+                .Returns(addressFromDb);
+
+            var service = new CustomerService(customerStubRepository, allergenService.Object, addressStubRepository, authService.Object, mapper.Object);
 
             var result = await service.CreateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01", newAddress, "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01");
 
@@ -66,7 +82,10 @@ namespace gozba_na_klik_backend_Tests
         [Fact]
         public async Task CreateAddressAsync_NonExistingCustomer_ThrowsNotFoundException()
         {
-            CustomerService service = CreateCustomerService();
+            var (customerStubRepository, addressStubRepository) = CreateRepositories();
+            var allergenService = new Mock<IAllergenService>();
+            var authService = new Mock<IAuthService>();
+            var mapper = new Mock<IMapper>();
 
             var newAddress = new NewAddressDto
             {
@@ -76,7 +95,21 @@ namespace gozba_na_klik_backend_Tests
                 ZipCode = "12345"
             };
 
+            var addressFromDb = new Address
+            {
+                Street = "Test Street",
+                StreetNumber = 99,
+                City = "Test City",
+                ZipCode = "12345"
+            };
+
+            mapper.Setup(m => m.Map<Address>(newAddress))
+                .Returns(addressFromDb);
+
+            var service = new CustomerService(customerStubRepository, allergenService.Object, addressStubRepository, authService.Object, mapper.Object);
+
             await Should.ThrowAsync<NotFoundException>(() => service.CreateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh00", newAddress, "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh00"));
+
         }
 
 
@@ -235,18 +268,18 @@ namespace gozba_na_klik_backend_Tests
                         PhoneNumber = "+381601234321",
                         DateOfBirth = new DateTime(1988, 12, 3, 0, 0, 0, DateTimeKind.Utc)
                     },
-                      
+
                  }
 
-              
+
             };
 
-        var customerStubRepository = new Mock<ICustomerRepository>();
+            var customerStubRepository = new Mock<ICustomerRepository>();
 
-        customerStubRepository
-            .Setup(repo => repo.GetByIdAsync(It.IsAny<string>()))
-                .ReturnsAsync((string id) => customers.FirstOrDefault(customer => customer.Id == id));
-            
+            customerStubRepository
+                .Setup(repo => repo.GetByIdAsync(It.IsAny<string>()))
+                    .ReturnsAsync((string id) => customers.FirstOrDefault(customer => customer.Id == id));
+
             List<Address> addresses = new List<Address>
             {
                 new Address {
@@ -275,11 +308,11 @@ namespace gozba_na_klik_backend_Tests
                 }
             };
 
-        var addressStubRepository = new Mock<IAddressRepository>();
+            var addressStubRepository = new Mock<IAddressRepository>();
 
-        addressStubRepository
-            .Setup(repo => repo.GetByCustomerIdAsync(It.IsAny<string>()))
-                .ReturnsAsync((string customerId) => addresses.Where(a => a.CustomerId == customerId).ToList());
+            addressStubRepository
+                .Setup(repo => repo.GetByCustomerIdAsync(It.IsAny<string>()))
+                    .ReturnsAsync((string customerId) => addresses.Where(a => a.CustomerId == customerId).ToList());
 
             addressStubRepository
                 .Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))
@@ -289,38 +322,38 @@ namespace gozba_na_klik_backend_Tests
                 .Setup(repo => repo.CreateAsync(It.IsAny<Address>()))
                 .ReturnsAsync((Address addr) =>
                 {
-            addr.Id = addresses.Max(a => a.Id) + 1;
-            addresses.Add(addr);
-            return addr;
-        });
+                    addr.Id = addresses.Max(a => a.Id) + 1;
+                    addresses.Add(addr);
+                    return addr;
+                });
 
             addressStubRepository
                 .Setup(repo => repo.UpdateAsync(It.IsAny<Address>()))
                 .ReturnsAsync((Address addr) =>
                 {
-            var index = addresses.FindIndex(a => a.Id == addr.Id);
-            if (index != -1)
-            {
-                addresses[index] = addr;
-                return addr;
-            }
-            return null;
-        });
+                    var index = addresses.FindIndex(a => a.Id == addr.Id);
+                    if (index != -1)
+                    {
+                        addresses[index] = addr;
+                        return addr;
+                    }
+                    return null;
+                });
 
             addressStubRepository
                 .Setup(repo => repo.DeleteAsync(It.IsAny<int>()))
                 .ReturnsAsync((int id) =>
                 {
-            var addr = addresses.FirstOrDefault(a => a.Id == id);
-            if (addr != null)
-            {
-                addresses.Remove(addr);
-                return true;
-            }
-            return false;
-        });
+                    var addr = addresses.FirstOrDefault(a => a.Id == id);
+                    if (addr != null)
+                    {
+                        addresses.Remove(addr);
+                        return true;
+                    }
+                    return false;
+                });
 
             return (customerStubRepository.Object, addressStubRepository.Object);
         }
-}
+    }
 }

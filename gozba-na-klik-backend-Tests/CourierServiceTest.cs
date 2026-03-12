@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
-using gozba_na_klik_backend.DTOs;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
 using gozba_na_klik_backend.Services;
+using gozba_na_klik_backend.Services.DTOs.AuthDtos;
+using gozba_na_klik_backend.Services.DTOs.CourierDtos;
 using gozba_na_klik_backend.Services.IServices;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using Shouldly;
 using System;
@@ -12,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace gozba_na_klik_backend_Tests
 {
@@ -24,7 +28,7 @@ namespace gozba_na_klik_backend_Tests
             var stubRepository = createRepository();
             var authService = new Mock<IAuthService>();
             var mapper = new Mock<IMapper>();
-            var userManager = new Mock<UserManager<ApplicationUser>>();
+            var userManager = CreateUserManager();
 
             var service = new CourierService(stubRepository, authService.Object, mapper.Object, userManager.Object);
 
@@ -44,7 +48,9 @@ namespace gozba_na_klik_backend_Tests
             var mockCourierRepository = new Mock<ICourierRepository>();
             var mockAuthService = new Mock<IAuthService>();
             var mapper = new Mock<IMapper>();
-            var userManager = new Mock<UserManager<ApplicationUser>>();
+            var userManager = CreateUserManager();
+            userManager.Setup(x => x.GetRolesAsync(It.IsAny<ApplicationUser>()))
+                .ReturnsAsync(new List<string> { "Courier" });
 
 
             var registrationDto = new RegistrationDto
@@ -58,6 +64,7 @@ namespace gozba_na_klik_backend_Tests
             };
 
             const string expectedUserId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh16";
+
             NewCourierDto expectedToken = new NewCourierDto
             {
                 Name = "New",
@@ -68,6 +75,35 @@ namespace gozba_na_klik_backend_Tests
                 Role = "Courier"
             };
 
+            Courier courierFromDB = new Courier
+            {
+                Id = expectedUserId,
+                ApplicationUser = new ApplicationUser
+                {
+                    Id = expectedUserId,
+                    Name = "New",
+                    Surname = "Courier",
+                    Email = "new.courier@example.com",
+                    UserName = "courier16",
+                    PhoneNumber = "+381621234567",
+                    ProfileImageUrl = null
+                }
+            };
+
+            NewCourierDto courierDto = new NewCourierDto
+            {
+                Name = "New",
+                Surname = "Courier",
+                Email = "new.courier@example.com",
+                UserName = "courier16",
+                PhoneNumber = "+381621234567",
+                ProfileImageUrl = null,
+                Role = null
+            };
+
+            mapper.Setup(m => m.Map<NewCourierDto>(courierFromDB))
+                .Returns(courierDto);
+
             mockAuthService.Setup(s => s.RegisterUserAsync(registrationDto, "Courier"))
                            .ReturnsAsync(new AuthResponseDto
                            {
@@ -76,9 +112,12 @@ namespace gozba_na_klik_backend_Tests
                            });
 
             Courier createdCourier = null;
+
             mockCourierRepository.Setup(r => r.CreateAsync(It.IsAny<Courier>()))
                                  .Callback<Courier>(courier => createdCourier = courier)
                                  .ReturnsAsync(new Courier { Id = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh16" });
+            mockCourierRepository.Setup(r => r.GetByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(courierFromDB);
 
             var service = new CourierService(mockCourierRepository.Object, mockAuthService.Object, mapper.Object, userManager.Object);
 
@@ -103,7 +142,7 @@ namespace gozba_na_klik_backend_Tests
             var mockRepo = new Mock<ICourierRepository>();
             var authService = new Mock<IAuthService>();
             var mapper = new Mock<IMapper>();
-            var userManager = new Mock<UserManager<ApplicationUser>>();
+            var userManager = CreateUserManager();
 
             var service = new CourierService(mockRepo.Object, authService.Object, mapper.Object, userManager.Object);
 
@@ -135,6 +174,25 @@ namespace gozba_na_klik_backend_Tests
                     workingHours),
                 Times.Once
             );
+        }
+
+        private static Mock<UserManager<ApplicationUser>> CreateUserManager()
+        {
+            var store = new Mock<IUserStore<ApplicationUser>>();
+
+            var userManager = new Mock<UserManager<ApplicationUser>>(
+                store.Object,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            );
+
+            return userManager;
         }
 
         private static ICourierRepository createRepository()
@@ -170,6 +228,7 @@ namespace gozba_na_klik_backend_Tests
             };
 
             var stubRepository = new Mock<ICourierRepository>();
+
             stubRepository.Setup(r => r.GetByIdAsync(It.IsAny<string>()))
                    .ReturnsAsync((string id) => _Couriers.FirstOrDefault(courier => courier.Id == id));
 

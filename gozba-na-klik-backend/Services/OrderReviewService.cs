@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using gozba_na_klik_backend.DTOs;
-using gozba_na_klik_backend.DTOs.Order;
-using gozba_na_klik_backend.Exceptions;
+using gozba_na_klik_backend.Services.Exceptions;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
 using gozba_na_klik_backend.Services.IServices;
+using gozba_na_klik_backend.Services.DTOs;
+using gozba_na_klik_backend.Services.DTOs.Order;
 namespace gozba_na_klik_backend.Services
 {
     public class OrderReviewService : IOrderReviewService

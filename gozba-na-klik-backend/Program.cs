@@ -1,11 +1,8 @@
 
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
-using gozba_na_klik_backend.Repository;
 using gozba_na_klik_backend.Services;
 using gozba_na_klik_backend.Services.IServices;
-using gozba_na_klik_backend.Settings;
-using gozba_na_klik_backend.Settings.Mappings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +12,10 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
 using gozba_na_klik_backend.Services.BackgroundServices;
+using gozba_na_klik_backend.Services.Mappings;
+using gozba_na_klik_backend.Controllers.Middleware;
+using gozba_na_klik_backend.Infrastructure;
+using gozba_na_klik_backend.Infrastructure.Repository;
 
 namespace gozba_na_klik_backend
 {
