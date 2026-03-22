@@ -23,12 +23,13 @@ namespace gozba_na_klik_backend_Tests
         public async Task GettingCustomerAllergens_throwsNotFoundException_whenCustomerDoesNotExist(string id)
         {
             var stubRepository = createRepository();
+            var mockICreditCardRespoitory = new Mock<ICreditCardRepository>();
             var allergenMockService = new Mock<IAllergenService>();
             var addressMockRepo = new Mock<IAddressRepository>();
             var authService = new Mock<IAuthService>();
             var mapper = new Mock<IMapper>();
 
-            var servise = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object, authService.Object, mapper.Object);
+            var servise = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object, mockICreditCardRespoitory.Object,authService.Object, mapper.Object);
 
             var ex = await Assert.ThrowsAsync<NotFoundException>(() => servise.GetAllCustomerAllergensAsync(id, id));
             ex.Message.ShouldContain($"Customer with ID: {id} not found.");
@@ -39,12 +40,13 @@ namespace gozba_na_klik_backend_Tests
         public async Task GetAllCustomerAllergensAsync_ShouldReturnAllergens_WhenCustomerExists(string id)
         {
             var stubRepository = createRepository();
+            var mockICreditCardRespoitory = new Mock<ICreditCardRepository>();
             var allergenMockService = new Mock<IAllergenService>();
             var addressMockRepo = new Mock<IAddressRepository>();
             var authService = new Mock<IAuthService>();
             var mapper = new Mock<IMapper>();
 
-            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object, authService.Object, mapper.Object);
+            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object, mockICreditCardRespoitory.Object, authService.Object, mapper.Object);
 
             var result = await service.GetAllCustomerAllergensAsync(id, id);
             result.ShouldNotBeNull();
@@ -57,12 +59,13 @@ namespace gozba_na_klik_backend_Tests
         public async Task GetAllCustomerAllergensAsync_ShouldReturnEmptyList_WhenCustomerHasNoAllergens(string id)
         {
             var stubRepository = createRepository();
+            var mockICreditCardRespoitory = new Mock<ICreditCardRepository>();
             var allergenMockService = new Mock<IAllergenService>();
             var addressMockRepo = new Mock<IAddressRepository>();
             var authService = new Mock<IAuthService>();
             var mapper = new Mock<IMapper>();
 
-            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object, authService.Object, mapper.Object);
+            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object, mockICreditCardRespoitory.Object, authService.Object, mapper.Object);
 
             var result = await service.GetAllCustomerAllergensAsync(id, id);
 
@@ -81,12 +84,13 @@ namespace gozba_na_klik_backend_Tests
         public async Task UpdateCustomerAllergensAsync_ShouldThrowNotFoundException_WhenCustomerDoesNotExist(string customerId, List<int> allergenIds)
         {
             var stubRepository = createRepository();
+            var mockICreditCardRespoitory = new Mock<ICreditCardRepository>();
             var allergenMockService = new Mock<IAllergenService>();
             var addressMockRepo = new Mock<IAddressRepository>();
             var authService = new Mock<IAuthService>();
             var mapper = new Mock<IMapper>();
 
-            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object, authService.Object, mapper.Object);
+            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object, mockICreditCardRespoitory.Object, authService.Object, mapper.Object);
 
             await Assert.ThrowsAsync<NotFoundException>(() => service.UpdateCustomerAllergensAsync(customerId, allergenIds, customerId));
         }
@@ -102,6 +106,7 @@ namespace gozba_na_klik_backend_Tests
         public async Task UpdateCustomerAllergensAsync_ShouldReturnListOfAllergen_WhenAllAllergensFromListExist(string customerId, List<int> allergenIds)
         {
             var stubRepository = createRepository();
+            var mockICreditCardRespoitory = new Mock<ICreditCardRepository>();
             var allergenMockService = new Mock<IAllergenService>();
             var addressMockRepo = new Mock<IAddressRepository>();
             var authService = new Mock<IAuthService>();
@@ -113,7 +118,7 @@ namespace gozba_na_klik_backend_Tests
            .Select(id => new Allergen { Id = id, Name = $"Allergen{id}" })
            .ToList());
 
-            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object, authService.Object, mapper.Object);
+            var service = new CustomerService(stubRepository, allergenMockService.Object, addressMockRepo.Object, mockICreditCardRespoitory.Object, authService.Object, mapper.Object);
 
             Customer result = await service.UpdateCustomerAllergensAsync(customerId, allergenIds, customerId);
 

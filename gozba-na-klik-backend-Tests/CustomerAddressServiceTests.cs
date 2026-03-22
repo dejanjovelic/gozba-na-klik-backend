@@ -40,6 +40,7 @@ namespace gozba_na_klik_backend_Tests
         public async Task CreateAddressAsync_ValidInput_ShouldCreateAddress()
         {
             var (customerStubRepository, addressStubRepository) = CreateRepositories();
+            var mockICreditCardRespoitory = new Mock<ICreditCardRepository>();
             var allergenService = new Mock<IAllergenService>();
             var authService = new Mock<IAuthService>();
             var mapper = new Mock<IMapper>();
@@ -63,7 +64,7 @@ namespace gozba_na_klik_backend_Tests
             mapper.Setup(m => m.Map<Address>(newAddress))
                 .Returns(addressFromDb);
 
-            var service = new CustomerService(customerStubRepository, allergenService.Object, addressStubRepository, authService.Object, mapper.Object);
+            var service = new CustomerService(customerStubRepository, allergenService.Object, addressStubRepository, mockICreditCardRespoitory.Object, authService.Object, mapper.Object);
 
             var result = await service.CreateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01", newAddress, "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01");
 
@@ -83,6 +84,7 @@ namespace gozba_na_klik_backend_Tests
         public async Task CreateAddressAsync_NonExistingCustomer_ThrowsNotFoundException()
         {
             var (customerStubRepository, addressStubRepository) = CreateRepositories();
+            var mockICreditCardRespoitory = new Mock<ICreditCardRepository>();
             var allergenService = new Mock<IAllergenService>();
             var authService = new Mock<IAuthService>();
             var mapper = new Mock<IMapper>();
@@ -106,7 +108,7 @@ namespace gozba_na_klik_backend_Tests
             mapper.Setup(m => m.Map<Address>(newAddress))
                 .Returns(addressFromDb);
 
-            var service = new CustomerService(customerStubRepository, allergenService.Object, addressStubRepository, authService.Object, mapper.Object);
+            var service = new CustomerService(customerStubRepository, allergenService.Object, addressStubRepository, mockICreditCardRespoitory.Object, authService.Object, mapper.Object);
 
             await Should.ThrowAsync<NotFoundException>(() => service.CreateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh00", newAddress, "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh00"));
 
@@ -116,7 +118,24 @@ namespace gozba_na_klik_backend_Tests
         [Fact]
         public async Task UpdateAddressAsync_ValidData_ShouldUpdateAddress()
         {
-            CustomerService service = CreateCustomerService();
+            var (customerStubRepository, addressStubRepository) = CreateRepositories();
+            var mockICreditCardRespoitory = new Mock<ICreditCardRepository>();
+            var allergenService = new Mock<IAllergenService>();
+            var authService = new Mock<IAuthService>();
+            var mapperMock = new Mock<IMapper>();
+            mapperMock
+                .Setup(m => m.Map<NewAddressDto, Address>(It.IsAny<NewAddressDto>(), It.IsAny<Address>()))
+                .Returns((NewAddressDto src, Address dest) =>
+                {
+                    dest.Street = src.Street;
+                    dest.StreetNumber = src.StreetNumber;
+                    dest.City = src.City;
+                    dest.ZipCode = src.ZipCode;
+                    return dest;
+                });
+
+
+            var service = new CustomerService(customerStubRepository, allergenService.Object, addressStubRepository, mockICreditCardRespoitory.Object, authService.Object, mapperMock.Object);
 
             var updatedAddress = new NewAddressDto
             {
@@ -126,11 +145,22 @@ namespace gozba_na_klik_backend_Tests
                 City = "Updated City",
                 ZipCode = "99999"
             };
+            var addressFromDb = new Address
+            {
+                Id = 3,
+                Street = "Updated Street",
+                StreetNumber = 100,
+                City = "Updated City",
+                ZipCode = "99999"
+            };
+
 
             var result = await service.UpdateAddressAsync("f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02", 3, updatedAddress, "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02");
 
+
             result.Street.ShouldBe("Updated Street");
             result.City.ShouldBe("Updated City");
+            mapperMock.Verify(m => m.Map<NewAddressDto, Address>(It.IsAny<NewAddressDto>(), It.IsAny<Address>()), Times.Once);
         }
 
         [Fact]
@@ -214,11 +244,12 @@ namespace gozba_na_klik_backend_Tests
         private static CustomerService CreateCustomerService()
         {
             var (customerStubRepository, addressStubRepository) = CreateRepositories();
+            var mockICreditCardRespoitory = new Mock<ICreditCardRepository>();
             var allergenService = new Mock<IAllergenService>();
             var authService = new Mock<IAuthService>();
             var mapper = new Mock<IMapper>();
 
-            var service = new CustomerService(customerStubRepository, allergenService.Object, addressStubRepository, authService.Object, mapper.Object);
+            var service = new CustomerService(customerStubRepository, allergenService.Object, addressStubRepository, mockICreditCardRespoitory.Object, authService.Object, mapper.Object);
 
             return service;
         }
@@ -341,17 +372,16 @@ namespace gozba_na_klik_backend_Tests
                 });
 
             addressStubRepository
-                .Setup(repo => repo.DeleteAsync(It.IsAny<int>()))
-                .ReturnsAsync((int id) =>
+                .Setup(repo => repo.DeleteAsync(It.IsAny<Address>()))
+                .Callback((Address address) =>
                 {
-                    var addr = addresses.FirstOrDefault(a => a.Id == id);
+                    var addr = addresses.FirstOrDefault(a => a.Id == address.Id);
                     if (addr != null)
                     {
                         addresses.Remove(addr);
-                        return true;
                     }
-                    return false;
-                });
+                })
+                .Returns(Task.CompletedTask);
 
             return (customerStubRepository.Object, addressStubRepository.Object);
         }
