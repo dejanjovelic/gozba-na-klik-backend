@@ -52,6 +52,7 @@ namespace gozba_na_klik_backend
             builder.Services.AddScoped<ICustomerService, CustomerService>();
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
             builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+            builder.Services.AddScoped<ICreditCardRepository, CreditCardRepository>();
             builder.Services.AddScoped<IAllergenService, AllergenService>();
             builder.Services.AddScoped<IAllergenRepository, AllergenRepository>();
             builder.Services.AddScoped<ICourierRepository, CourierRepository>();
@@ -87,6 +88,7 @@ namespace gozba_na_klik_backend
                 cfg.AddProfile<ApplicationUserProfile>();
                 cfg.AddProfile<RestauranOwnerProfile>();
                 cfg.AddProfile<AddressProfile>();
+                cfg.AddProfile<CreditCardProfile>();
                 cfg.AddProfile<InvoiceProfile>();
                 cfg.AddProfile<OrderReviewProfile>();
             });

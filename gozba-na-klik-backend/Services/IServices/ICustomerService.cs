@@ -6,6 +6,10 @@ namespace gozba_na_klik_backend.Services.IServices
 {
     public interface ICustomerService
     {
+        Task<List<CreditCardResponseDto>> GetCreditCardsAsync(string customerId, string? ownerId);
+        Task<CreditCardResponseDto> CreateCreditCardAsync(string customerId, NewCreditCardDto newCreditCard, string? ownerId);
+        Task<CreditCardResponseDto> UpdateCreditCardAsync(string customerId, int creditCardId, NewCreditCardDto updatedCreditCard, string? ownerId);
+        Task DeleteCreditCardAsync(string customerId, int creditCardId, string? ownerId);
         Task<Address> CreateAddressAsync(string customerId, NewAddressDto updatedAddress, string? ownerId);
         Task<string> CreateAsync(RegistrationDto registrationDto);
         Task DeleteAddressAsync(string customerId, int addressId, string? ownerId);

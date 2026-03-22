@@ -39,18 +39,10 @@ namespace gozba_na_klik_backend.Infrastructure.Repository
             return updatedAddress;
         }
 
-        public async Task<bool> DeleteAsync(int addressId)
+        public async Task DeleteAsync(Address address)
         {
-            Address address = await _context.Addresses.FindAsync(addressId);
-
-            if (address == null)
-            {
-                return false;
-            }
-
             _context.Addresses.Remove(address);
             await _context.SaveChangesAsync();
-            return true;
         }
     }
 }

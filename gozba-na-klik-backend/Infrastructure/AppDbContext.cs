@@ -20,6 +20,7 @@ namespace gozba_na_klik_backend.Infrastructure
         public DbSet<Employee> Employees { get; set; }
         public DbSet<RestaurantOwner> RestaurantOwners { get; set; }
         public DbSet<OrderReview> OrderReviews { get; set; }
+        public DbSet<CreditCard> CreditCards { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -42,6 +43,12 @@ namespace gozba_na_klik_backend.Infrastructure
                 .HasMany(customer => customer.Addresses)
                 .WithOne()
                 .HasForeignKey(address => address.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Customer>()
+                .HasMany(customer => customer.CreditCards)
+                .WithOne()
+                .HasForeignKey("OwnerId")
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Customer>()
@@ -1078,6 +1085,12 @@ namespace gozba_na_klik_backend.Infrastructure
                 }
 
             );
+
+            modelBuilder.Entity<CreditCard>().HasData(
+                new CreditCard { Id=1, Bank="Banca Intesa", CardNumber= "1234 5678 1478 5296", OwnerId= "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01" },
+                new CreditCard { Id=2, Bank="OTP Banka", CardNumber= "1234 5678 1478 5297", OwnerId= "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01" },
+                new CreditCard { Id = 3, Bank = "MOBI Banka", CardNumber = "1234 5678 1478 5298", OwnerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02" }
+                );
         }
     }
 }

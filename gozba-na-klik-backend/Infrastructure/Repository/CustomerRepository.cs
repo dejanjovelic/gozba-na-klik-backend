@@ -22,6 +22,9 @@ namespace gozba_na_klik_backend.Infrastructure.Repository
             return await _context.Customers
                 .OfType<Customer>()
                 .Include(customer => customer.ApplicationUser)
+                .Include(customer => customer.Allergens)
+                .Include(customer => customer.Addresses)
+                .Include(customer => customer.CreditCards)
                 .ToListAsync();
         }
 
@@ -32,6 +35,7 @@ namespace gozba_na_klik_backend.Infrastructure.Repository
                 .Include(customer=>customer.ApplicationUser)
                 .Include(customer => customer.Allergens)
                 .Include(customer => customer.Addresses)
+                .Include(customer=>customer.CreditCards)
                 .FirstOrDefaultAsync(customer => customer.Id == customerId);
         }
 
