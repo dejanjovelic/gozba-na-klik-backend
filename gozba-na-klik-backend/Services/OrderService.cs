@@ -1,15 +1,16 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using gozba_na_klik_backend.DTOs;
-using gozba_na_klik_backend.DTOs.Order;
-using gozba_na_klik_backend.Exceptions;
+using gozba_na_klik_backend.Services.Exceptions;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
-using gozba_na_klik_backend.Repository;
 using gozba_na_klik_backend.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using gozba_na_klik_backend.Services.DTOs;
+using gozba_na_klik_backend.Services.DTOs.CourierDtos;
+using gozba_na_klik_backend.Services.DTOs.Order;
+using gozba_na_klik_backend.Services.DTOs.RestaurantDtos;
 
 namespace gozba_na_klik_backend.Services
 {

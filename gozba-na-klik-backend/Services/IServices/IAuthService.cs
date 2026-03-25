@@ -1,5 +1,6 @@
-﻿using gozba_na_klik_backend.DTOs;
-using gozba_na_klik_backend.Model;
+﻿using gozba_na_klik_backend.Model;
+using gozba_na_klik_backend.Services.DTOs;
+using gozba_na_klik_backend.Services.DTOs.AuthDtos;
 using System.Security.Claims;
 
 namespace gozba_na_klik_backend.Services.IServices

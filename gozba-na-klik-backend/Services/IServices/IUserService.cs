@@ -1,5 +1,5 @@
 ﻿using gozba_na_klik_backend.Model;
-using gozba_na_klik_backend.DTOs;
+using gozba_na_klik_backend.Services.DTOs;
 namespace gozba_na_klik_backend.Services.IServices
 {
     public interface IUserService

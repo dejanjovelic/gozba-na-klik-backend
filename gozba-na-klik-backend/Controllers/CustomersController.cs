@@ -1,6 +1,6 @@
-﻿using gozba_na_klik_backend.DTOs;
-using gozba_na_klik_backend.Model;
-using gozba_na_klik_backend.Repository;
+﻿using gozba_na_klik_backend.Model;
+using gozba_na_klik_backend.Services.DTOs;
+using gozba_na_klik_backend.Services.DTOs.AuthDtos;
 using gozba_na_klik_backend.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -91,5 +91,43 @@ namespace gozba_na_klik_backend.Controllers
             await _customerService.DeleteAddressAsync(customerId, addressId, ownerId);
             return NoContent();
         }
+
+        //GET api/customers/8/credit-cards
+        [Authorize(Roles = "Customer")]
+        [HttpGet("{customerId}/credit-cards")]
+        public async Task<IActionResult> GetCreditCardsAsync(string customerId)
+        {
+            string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return Ok(await _customerService.GetCreditCardsAsync(customerId, ownerId));
+        }
+
+        //POST api/customers/8/credit-cards
+        [Authorize(Roles = "Customer")]
+        [HttpPost("{customerId}/credit-cards")]
+        public async Task<IActionResult> CreateCreditCardAsync(string customerId, [FromBody] NewCreditCardDto newCreditCard)
+        {
+            string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return Ok(await _customerService.CreateCreditCardAsync(customerId, newCreditCard, ownerId));
+        }
+
+        //PUT api/customers/8/credit-cards/2
+        [Authorize(Roles = "Customer")]
+        [HttpPut("{customerId}/credit-cards/{creditCardId}")]
+        public async Task<IActionResult> UpdateCreditCardAsync(string customerId, int creditCardId, [FromBody] NewCreditCardDto updatedCreditCard)
+        {
+            string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return Ok(await _customerService.UpdateCreditCardAsync(customerId, creditCardId, updatedCreditCard, ownerId));
+        }
+        //DELTE api/customers/8/credit-cards/2
+        [Authorize(Roles = "Customer")]
+        [HttpDelete("{customerId}/credit-cards/{creditCardId}")]
+        public async Task<IActionResult> DeleteCreditCardAsync(string customerId, int creditCardId)
+        {
+            string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await _customerService.DeleteCreditCardAsync(customerId, creditCardId, ownerId);
+            return NoContent();
+        }
+
+       
     }
 }

@@ -1,10 +1,9 @@
-﻿using gozba_na_klik_backend.DTOs;
-using gozba_na_klik_backend.Services.IServices;
+﻿using gozba_na_klik_backend.Services.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using gozba_na_klik_backend.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using gozba_na_klik_backend.Services.DTOs.MealDtos;
 
 namespace gozba_na_klik_backend.Controllers
 {
