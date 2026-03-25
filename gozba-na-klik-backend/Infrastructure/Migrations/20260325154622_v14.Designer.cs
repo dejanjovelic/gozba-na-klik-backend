@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using gozba_na_klik_backend.Infrastructure;
@@ -11,9 +12,11 @@ using gozba_na_klik_backend.Infrastructure;
 namespace gozba_na_klik_backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260325154622_v14")]
+    partial class v14
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -477,31 +480,31 @@ namespace gozba_na_klik_backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "aa7e2e4b-6f0c-4a28-af15-8c58269dbd4f",
+                            Id = "9580ebbe-9c10-4107-9d8e-9c22b4aa9619",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "a0a9ce25-efd2-44a6-9e57-544f36711ed3",
+                            Id = "9fcfec60-8852-4019-81b1-ea24b6cfad06",
                             Name = "Courier",
                             NormalizedName = "COURIER"
                         },
                         new
                         {
-                            Id = "ce32668d-6603-4be4-94cc-f664139bff3c",
+                            Id = "9561484c-ef17-4be5-b0ff-60bfed48201a",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "859957a6-efb6-4345-b9dd-ecbf4f220391",
+                            Id = "6b08bc92-22e5-48e2-81d0-4d00f450045e",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         },
                         new
                         {
-                            Id = "4256d8c5-8cd2-4e48-a18b-bad01afb11e0",
+                            Id = "35ff54d8-ee0f-41bb-aac6-0ec9151e70d9",
                             Name = "RestaurantOwner",
                             NormalizedName = "RESTAURANTOWNER"
                         });
@@ -1120,6 +1123,20 @@ namespace gozba_na_klik_backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Brand")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("Visa");
+
+                    b.Property<string>("CardHolderFirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CardHolderLastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("CardNumber")
                         .IsRequired()
                         .HasColumnType("text");
@@ -1139,6 +1156,9 @@ namespace gozba_na_klik_backend.Migrations
                         {
                             Id = 1,
                             Bank = "Banca Intesa",
+                            Brand = "Visa",
+                            CardHolderFirstName = "Marko",
+                            CardHolderLastName = "Markovic",
                             CardNumber = "1234 5678 1478 5296",
                             OwnerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01"
                         },
@@ -1146,6 +1166,9 @@ namespace gozba_na_klik_backend.Migrations
                         {
                             Id = 2,
                             Bank = "OTP Banka",
+                            Brand = "Mastercard",
+                            CardHolderFirstName = "Jelena",
+                            CardHolderLastName = "Jovanovic",
                             CardNumber = "1234 5678 1478 5297",
                             OwnerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01"
                         },
@@ -1153,6 +1176,9 @@ namespace gozba_na_klik_backend.Migrations
                         {
                             Id = 3,
                             Bank = "MOBI Banka",
+                            Brand = "Dina",
+                            CardHolderFirstName = "Petar",
+                            CardHolderLastName = "Petrovic",
                             CardNumber = "1234 5678 1478 5298",
                             OwnerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02"
                         });
@@ -1685,7 +1711,7 @@ namespace gozba_na_klik_backend.Migrations
                             CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14",
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01",
                             DeliveryAddressId = 1,
-                            OrderTime = new DateTime(2026, 3, 16, 21, 32, 29, 438, DateTimeKind.Utc).AddTicks(6195),
+                            OrderTime = new DateTime(2026, 3, 25, 15, 36, 21, 572, DateTimeKind.Utc).AddTicks(418),
                             RestaurantId = 1,
                             Status = 0,
                             TotalPrice = 0.0
@@ -1696,7 +1722,7 @@ namespace gozba_na_klik_backend.Migrations
                             CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14",
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01",
                             DeliveryAddressId = 1,
-                            OrderTime = new DateTime(2026, 3, 16, 21, 33, 29, 438, DateTimeKind.Utc).AddTicks(6206),
+                            OrderTime = new DateTime(2026, 3, 25, 15, 37, 21, 572, DateTimeKind.Utc).AddTicks(430),
                             RestaurantId = 1,
                             Status = 5,
                             TotalPrice = 0.0
@@ -1707,7 +1733,7 @@ namespace gozba_na_klik_backend.Migrations
                             CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14",
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01",
                             DeliveryAddressId = 4,
-                            OrderTime = new DateTime(2026, 3, 16, 21, 12, 29, 438, DateTimeKind.Utc).AddTicks(6277),
+                            OrderTime = new DateTime(2026, 3, 25, 15, 16, 21, 572, DateTimeKind.Utc).AddTicks(432),
                             RestaurantId = 2,
                             Status = 5,
                             TotalPrice = 0.0
@@ -1718,7 +1744,7 @@ namespace gozba_na_klik_backend.Migrations
                             CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh15",
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02",
                             DeliveryAddressId = 3,
-                            OrderTime = new DateTime(2026, 3, 16, 21, 42, 29, 438, DateTimeKind.Utc).AddTicks(6279),
+                            OrderTime = new DateTime(2026, 3, 25, 15, 46, 21, 572, DateTimeKind.Utc).AddTicks(434),
                             RestaurantId = 6,
                             Status = 5,
                             TotalPrice = 0.0
@@ -1728,7 +1754,7 @@ namespace gozba_na_klik_backend.Migrations
                             Id = 3,
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh03",
                             DeliveryAddressId = 4,
-                            OrderTime = new DateTime(2026, 3, 16, 21, 34, 29, 438, DateTimeKind.Utc).AddTicks(6281),
+                            OrderTime = new DateTime(2026, 3, 25, 15, 38, 21, 572, DateTimeKind.Utc).AddTicks(435),
                             RestaurantId = 6,
                             Status = 0,
                             TotalPrice = 0.0
@@ -1738,7 +1764,7 @@ namespace gozba_na_klik_backend.Migrations
                             Id = 4,
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh04",
                             DeliveryAddressId = 7,
-                            OrderTime = new DateTime(2026, 3, 16, 21, 40, 29, 438, DateTimeKind.Utc).AddTicks(6282),
+                            OrderTime = new DateTime(2026, 3, 25, 15, 44, 21, 572, DateTimeKind.Utc).AddTicks(437),
                             RestaurantId = 6,
                             Status = 0,
                             TotalPrice = 0.0
@@ -1748,7 +1774,7 @@ namespace gozba_na_klik_backend.Migrations
                             Id = 5,
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh05",
                             DeliveryAddressId = 8,
-                            OrderTime = new DateTime(2026, 3, 16, 21, 36, 29, 438, DateTimeKind.Utc).AddTicks(6284),
+                            OrderTime = new DateTime(2026, 3, 25, 15, 40, 21, 572, DateTimeKind.Utc).AddTicks(440),
                             RestaurantId = 1,
                             Status = 0,
                             TotalPrice = 0.0
@@ -1758,7 +1784,7 @@ namespace gozba_na_klik_backend.Migrations
                             Id = 6,
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh06",
                             DeliveryAddressId = 10,
-                            OrderTime = new DateTime(2026, 3, 16, 21, 38, 29, 438, DateTimeKind.Utc).AddTicks(6286),
+                            OrderTime = new DateTime(2026, 3, 25, 15, 42, 21, 572, DateTimeKind.Utc).AddTicks(441),
                             RestaurantId = 1,
                             Status = 0,
                             TotalPrice = 0.0
@@ -1769,7 +1795,7 @@ namespace gozba_na_klik_backend.Migrations
                             CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh20",
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh07",
                             DeliveryAddressId = 11,
-                            OrderTime = new DateTime(2026, 3, 16, 21, 38, 29, 438, DateTimeKind.Utc).AddTicks(6288),
+                            OrderTime = new DateTime(2026, 3, 25, 15, 42, 21, 572, DateTimeKind.Utc).AddTicks(443),
                             RestaurantId = 1,
                             Status = 1,
                             TotalPrice = 0.0
@@ -1800,7 +1826,7 @@ namespace gozba_na_klik_backend.Migrations
                             CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh23",
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh10",
                             DeliveryAddressId = 16,
-                            OrderTime = new DateTime(2026, 3, 16, 21, 42, 29, 438, DateTimeKind.Utc).AddTicks(6292),
+                            OrderTime = new DateTime(2026, 3, 25, 15, 46, 21, 572, DateTimeKind.Utc).AddTicks(447),
                             RestaurantId = 7,
                             Status = 4,
                             TotalPrice = 0.0

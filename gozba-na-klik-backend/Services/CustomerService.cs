@@ -148,6 +148,9 @@ namespace gozba_na_klik_backend.Services
 
             existingCreditCard.Bank = updatedCreditCard.Bank;
             existingCreditCard.CardNumber = updatedCreditCard.CardNumber;
+            existingCreditCard.Brand = updatedCreditCard.Brand;
+            existingCreditCard.CardHolderFirstName = updatedCreditCard.CardHolderFirstName;
+            existingCreditCard.CardHolderLastName = updatedCreditCard.CardHolderLastName;
 
             var updated = await _creditCardRepository.UpdateAsync(existingCreditCard);
             return _mapper.Map<CreditCardResponseDto>(updated);

@@ -9,6 +9,7 @@ namespace gozba_na_klik_backend.Services.Mappings
         public CreditCardProfile()
         {
             CreateMap<NewCreditCardDto, CreditCard>();
+
             CreateMap<CreditCard, CreditCardResponseDto>()
                 .ForMember(dest => dest.CardNumber, opt => opt.MapFrom(src => MaskCardNumber(src.CardNumber)));
         }

@@ -51,6 +51,12 @@ namespace gozba_na_klik_backend.Infrastructure
                 .HasForeignKey("OwnerId")
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<CreditCard>()
+                .Property(c => c.Brand)
+                .HasConversion<string>()
+                .HasDefaultValue(CardBrand.Visa)
+                .IsRequired();
+
             modelBuilder.Entity<Customer>()
                 .HasMany(customer => customer.Allergens)
                 .WithMany("Customers")
@@ -1087,9 +1093,9 @@ namespace gozba_na_klik_backend.Infrastructure
             );
 
             modelBuilder.Entity<CreditCard>().HasData(
-                new CreditCard { Id=1, Bank="Banca Intesa", CardNumber= "1234 5678 1478 5296", OwnerId= "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01" },
-                new CreditCard { Id=2, Bank="OTP Banka", CardNumber= "1234 5678 1478 5297", OwnerId= "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01" },
-                new CreditCard { Id = 3, Bank = "MOBI Banka", CardNumber = "1234 5678 1478 5298", OwnerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02" }
+                new CreditCard { Id = 1, Bank = "Banca Intesa", CardNumber = "1234 5678 1478 5296", OwnerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01", Brand = CardBrand.Visa, CardHolderFirstName = "Marko", CardHolderLastName = "Markovic" },
+                new CreditCard { Id = 2, Bank = "OTP Banka", CardNumber = "1234 5678 1478 5297", OwnerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01", Brand = CardBrand.Mastercard, CardHolderFirstName = "Jelena", CardHolderLastName = "Jovanovic" },
+                new CreditCard { Id = 3, Bank = "MOBI Banka", CardNumber = "1234 5678 1478 5298", OwnerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02", Brand = CardBrand.Dina, CardHolderFirstName = "Petar", CardHolderLastName = "Petrovic" }
                 );
         }
     }
