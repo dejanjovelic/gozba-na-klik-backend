@@ -92,6 +92,13 @@ namespace gozba_na_klik_backend.Controllers
             return NoContent();
         }
 
+        //GET api/customers/card-brands
+        [HttpGet("card-brands")]
+        public IActionResult GetCardBrands()
+        {
+            return Ok(_customerService.GetCardBrands());
+        }
+
         //GET api/customers/8/credit-cards
         [Authorize(Roles = "Customer")]
         [HttpGet("{customerId}/credit-cards")]
