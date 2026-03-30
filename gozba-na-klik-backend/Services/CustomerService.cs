@@ -54,6 +54,11 @@ namespace gozba_na_klik_backend.Services
             return authResponseDto.Token;
         }
 
+        public List<string> GetCardBrands()
+        {
+            return Enum.GetNames<CardBrand>().ToList();
+        }
+
 
         public async Task<Customer> GetByIdAsync(string customerId, string? ownerId)
         {
