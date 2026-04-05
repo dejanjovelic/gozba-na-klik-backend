@@ -45,7 +45,7 @@ namespace gozba_na_klik_backend_Tests
             var authService = new Mock<IAuthService>();
             var mapper = new Mock<IMapper>();
 
-            var newAddress = new NewAddressDto
+            var newAddress = new CreateAddressDto
             {
                 Street = "Test Street",
                 StreetNumber = 99,
@@ -89,7 +89,7 @@ namespace gozba_na_klik_backend_Tests
             var authService = new Mock<IAuthService>();
             var mapper = new Mock<IMapper>();
 
-            var newAddress = new NewAddressDto
+            var newAddress = new CreateAddressDto
             {
                 Street = "Test Street",
                 StreetNumber = 99,
@@ -124,8 +124,8 @@ namespace gozba_na_klik_backend_Tests
             var authService = new Mock<IAuthService>();
             var mapperMock = new Mock<IMapper>();
             mapperMock
-                .Setup(m => m.Map<NewAddressDto, Address>(It.IsAny<NewAddressDto>(), It.IsAny<Address>()))
-                .Returns((NewAddressDto src, Address dest) =>
+                .Setup(m => m.Map<CreateAddressDto, Address>(It.IsAny<CreateAddressDto>(), It.IsAny<Address>()))
+                .Returns((CreateAddressDto src, Address dest) =>
                 {
                     dest.Street = src.Street;
                     dest.StreetNumber = src.StreetNumber;
@@ -137,7 +137,7 @@ namespace gozba_na_klik_backend_Tests
 
             var service = new CustomerService(customerStubRepository, allergenService.Object, addressStubRepository, mockICreditCardRespoitory.Object, authService.Object, mapperMock.Object);
 
-            var updatedAddress = new NewAddressDto
+            var updatedAddress = new CreateAddressDto
             {
                 Id = 3,
                 Street = "Updated Street",
@@ -160,7 +160,7 @@ namespace gozba_na_klik_backend_Tests
 
             result.Street.ShouldBe("Updated Street");
             result.City.ShouldBe("Updated City");
-            mapperMock.Verify(m => m.Map<NewAddressDto, Address>(It.IsAny<NewAddressDto>(), It.IsAny<Address>()), Times.Once);
+            mapperMock.Verify(m => m.Map<CreateAddressDto, Address>(It.IsAny<CreateAddressDto>(), It.IsAny<Address>()), Times.Once);
         }
 
         [Fact]
@@ -168,7 +168,7 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            var updatedAddress = new NewAddressDto
+            var updatedAddress = new CreateAddressDto
             {
                 Id = 1,
                 Street = "Updated Street",
@@ -185,7 +185,7 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            var updatedAddress = new NewAddressDto
+            var updatedAddress = new CreateAddressDto
             {
                 Id = 1,
                 Street = "Updated Street",
@@ -202,7 +202,7 @@ namespace gozba_na_klik_backend_Tests
         {
             CustomerService service = CreateCustomerService();
 
-            var updatedAddress = new NewAddressDto
+            var updatedAddress = new CreateAddressDto
             {
                 Id = 999,
                 Street = "Updated Street",

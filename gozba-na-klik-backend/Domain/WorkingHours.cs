@@ -10,6 +10,6 @@ namespace gozba_na_klik_backend.Model
         public TimeSpan EndingTime { get; set; }
         public int? RestaurantId { get; set; }
         public string? CourierId { get; set; }
-       
+
     }
 }

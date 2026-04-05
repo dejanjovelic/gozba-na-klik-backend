@@ -4,6 +4,7 @@ using gozba_na_klik_backend.Model.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using gozba_na_klik_backend.Services.DTOs;
 using gozba_na_klik_backend.Services.DTOs.RestaurantDtos;
+using gozba_na_klik_backend.Utils;
 
 namespace gozba_na_klik_backend.Infrastructure.Repository
 {
@@ -24,7 +25,6 @@ namespace gozba_na_klik_backend.Infrastructure.Repository
                 .ToListAsync();
         }
 
-
         public async Task<PaginatedListDto<Restaurant>> GetAllRestaurantsPaginatedAsync(int page, int pageSize)
         {
             IQueryable<Restaurant> restaurants = _context.Restaurants
@@ -36,6 +36,44 @@ namespace gozba_na_klik_backend.Infrastructure.Repository
             PaginatedListDto<Restaurant> result = new PaginatedListDto<Restaurant>(selectedRestaurants, totalRowsCount, pageIndex, pageSize);
             return result;
         }
+
+        public async Task<List<Restaurant>> GetAllRestaurantsAsync()
+        {
+            return await _context.Restaurants
+                .Include(r => r.Orders)
+                     .ThenInclude(o => o.OrderReview)
+                 .Include(r => r.WorkingHours)
+                 .Include(r => r.NonWorkingDates)
+                 .Include(r => r.MealsOnMenu)
+                     .ThenInclude(m => m.Allergens)
+                .ToListAsync();
+        }
+
+        public async Task<List<Restaurant>> GetAllRestaurantsByOwnerIdAsync(string ownerId)
+        {
+            return await _context.Restaurants
+                .Where(r => r.RestaurantOwnerId == ownerId)
+                .Include(r => r.Orders)
+                     .ThenInclude(o => o.OrderReview)
+                 .Include(r => r.WorkingHours)
+                 .Include(r => r.NonWorkingDates)
+                 .Include(r => r.MealsOnMenu)
+                     .ThenInclude(m => m.Allergens)
+                .ToListAsync();
+        }
+
+        public async Task<Restaurant?> GetRestaurantByIdAsync(int restaurantId)
+        {
+            return await _context.Restaurants
+                 .Include(r => r.Orders)
+                     .ThenInclude(o => o.OrderReview)
+                 .Include(r => r.WorkingHours)
+                 .Include(r => r.NonWorkingDates)
+                 .Include(r => r.MealsOnMenu)
+                     .ThenInclude(m => m.Allergens)
+                 .FirstOrDefaultAsync(r => r.Id == restaurantId);
+        }
+
         public async Task<PaginatedListDto<Restaurant>> GetAllFilteredAndSortedAndPagedAsync(RestaurantFilterDto restaurantFilter, int sortType, int page, int pageSize)
         {
             IQueryable<Restaurant> restaurants = _context.Restaurants
@@ -56,15 +94,27 @@ namespace gozba_na_klik_backend.Infrastructure.Repository
             return await _context.Restaurants.CountAsync();
         }
 
-        public async Task<Restaurant?> GetRestaurantByIdAsync(int restaurantId)
+        public async Task<Restaurant> CreateRestaurantAsync(Restaurant restaurant)
         {
-            return await _context.Restaurants
-         .Include(r => r.Orders)
-             .ThenInclude(o => o.OrderReview)
-         .Include(r => r.WorkingHours)
-         .Include(r => r.MealsOnMenu)
-             .ThenInclude(m => m.Allergens)
-         .FirstOrDefaultAsync(r => r.Id == restaurantId);
+            _context.Add(restaurant);
+            await _context.SaveChangesAsync();
+            return restaurant;
+        }
+
+        public async Task UpdateRestaurantAsync(Restaurant restaurant)
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteRestaurantAsync(Restaurant restaurant)
+        {
+            _context.Remove(restaurant);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> RestaurantExistsAsync(int id)
+        {
+            return await _context.Restaurants.AnyAsync(r => r.Id == id);
         }
 
         private static IQueryable<Restaurant> FilterRestaurants(IQueryable<Restaurant> restaurants, RestaurantFilterDto filter)
@@ -108,22 +158,6 @@ namespace gozba_na_klik_backend.Infrastructure.Repository
                 (int)RestaurantSortType.AVERAGE_RATING_DECS => restaurants.OrderByDescending(restaurant => restaurant.AverageRating),
                 _ => restaurants.OrderBy(restaurant => restaurant.Name)
             };
-        }
-        public async Task UpdateRestaurantAverageRatingAsync(int restaurantId)
-        {
-            var restaurant = await GetRestaurantByIdAsync(restaurantId);
-
-            if (restaurant == null)
-                throw new NotFoundException("Restaurant not found.");
-
-            var reviews = restaurant.Orders
-                .Where(o => o.OrderReview != null)
-                .Select(o => o.OrderReview!.RestaurantRating)
-                .ToList();
-
-            restaurant.AverageRating = reviews.Count > 0 ? reviews.Average() : 0;
-
-            await _context.SaveChangesAsync();
         }
     }
 }

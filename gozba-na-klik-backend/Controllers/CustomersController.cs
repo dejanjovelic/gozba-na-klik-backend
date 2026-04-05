@@ -69,7 +69,7 @@ namespace gozba_na_klik_backend.Controllers
 
         [Authorize(Roles = "Customer")]
         [HttpPost("{customerId}/addresses")]
-        public async Task<IActionResult> CreateAddressAsync(string customerId, [FromBody] NewAddressDto newAddress)
+        public async Task<IActionResult> CreateAddressAsync(string customerId, [FromBody] CreateAddressDto newAddress)
         {
             string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return Ok(await _customerService.CreateAddressAsync(customerId, newAddress, ownerId));
@@ -77,7 +77,7 @@ namespace gozba_na_klik_backend.Controllers
 
         [Authorize(Roles = "Customer")]
         [HttpPut("{customerId}/addresses/{addressId}")]
-        public async Task<IActionResult> UpdateAddressAsync(string customerId, int addressId, [FromBody] NewAddressDto updatedAddress)
+        public async Task<IActionResult> UpdateAddressAsync(string customerId, int addressId, [FromBody] CreateAddressDto updatedAddress)
         {
             string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return Ok(await _customerService.UpdateAddressAsync(customerId, addressId, updatedAddress, ownerId));
@@ -111,7 +111,7 @@ namespace gozba_na_klik_backend.Controllers
         //POST api/customers/8/credit-cards
         [Authorize(Roles = "Customer")]
         [HttpPost("{customerId}/credit-cards")]
-        public async Task<IActionResult> CreateCreditCardAsync(string customerId, [FromBody] NewCreditCardDto newCreditCard)
+        public async Task<IActionResult> CreateCreditCardAsync(string customerId, [FromBody] CreateCreditCardDto newCreditCard)
         {
             string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return Ok(await _customerService.CreateCreditCardAsync(customerId, newCreditCard, ownerId));
@@ -120,11 +120,12 @@ namespace gozba_na_klik_backend.Controllers
         //PUT api/customers/8/credit-cards/2
         [Authorize(Roles = "Customer")]
         [HttpPut("{customerId}/credit-cards/{creditCardId}")]
-        public async Task<IActionResult> UpdateCreditCardAsync(string customerId, int creditCardId, [FromBody] NewCreditCardDto updatedCreditCard)
+        public async Task<IActionResult> UpdateCreditCardAsync(string customerId, int creditCardId, [FromBody] CreateCreditCardDto updatedCreditCard)
         {
             string ownerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return Ok(await _customerService.UpdateCreditCardAsync(customerId, creditCardId, updatedCreditCard, ownerId));
         }
+
         //DELTE api/customers/8/credit-cards/2
         [Authorize(Roles = "Customer")]
         [HttpDelete("{customerId}/credit-cards/{creditCardId}")]

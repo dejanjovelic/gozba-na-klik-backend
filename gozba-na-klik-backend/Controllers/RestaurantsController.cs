@@ -5,6 +5,8 @@ using gozba_na_klik_backend.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
+using System.Security.Claims;
 
 namespace gozba_na_klik_backend.Controllers
 {
@@ -18,12 +20,20 @@ namespace gozba_na_klik_backend.Controllers
         {
             _restaurantService = restaurantService;
         }
-        [Authorize(Roles ="Customer")]
+
+        [Authorize(Roles = "Customer")]
         //GET api/restaurants/top-rated
         [HttpGet("top-rated")]
         public async Task<IActionResult> GetTopRatedRestaurantsAsync()
         {
             return Ok(await _restaurantService.GetTopRatedRestaurantsAsync());
+        }
+
+        //GET api/restaurants/filterAndSortAndPaging
+        [HttpPost("filterAndSortAndPaging")]
+        public async Task<ActionResult<List<PaginatedListDto<Restaurant>>>> GetFilteredAndSortedRestaurantPageAsync([FromBody] RestaurantFilterDto restaurantFilter, [FromQuery] int sortType = (int)RestaurantSortType.NAME_ASC, [FromQuery] int page = 1, [FromQuery] int pageSize = 5)
+        {
+            return Ok(await _restaurantService.GetAllFilteredAndSortedAndPagedAsync(restaurantFilter, sortType, page, pageSize));
         }
 
         //GET api/restaurants/paging?page=1&pageSize=5
@@ -33,26 +43,84 @@ namespace gozba_na_klik_backend.Controllers
             return Ok(await _restaurantService.GetAllRestaurantsPaginatedAsync(page, pageSize));
         }
 
-        //GET api/restaurants/sortTypes
-        [HttpGet("sortTypes")]
-        public ActionResult GetAllSortTypes() 
+        [Authorize(Roles = "Administrator")]
+        //GET api/restaurants
+        [HttpGet]
+        public async Task<ActionResult<List<RestaurantShortenDto>>> GetAllRestaurantsAsync()
         {
-            return Ok(_restaurantService.GetAllSortTypes());
+            return Ok(await _restaurantService.GetAllRestaurantsAsync());
         }
 
-        //GET api/restaurants/
-        [HttpPost("filterAndSortAndPaging")]
-        public async Task<ActionResult<List<PaginatedListDto<Restaurant>>>> GetFilteredAndSortedRestaurantPageAsync([FromBody] RestaurantFilterDto restaurantFilter, [FromQuery] int sortType = (int)RestaurantSortType.NAME_ASC, [FromQuery] int page = 1, [FromQuery] int pageSize = 5 ) 
+        [Authorize(Roles = "RestaurantOwner")]
+        //GET api/restaurants/by-owner?ownerId=5
+        [HttpGet("by-owner")]
+        public async Task<ActionResult<List<RestaurantShortenDto>>> GetAllRestaurantsByOwnerIdAsync([FromQuery] string ownerId)
         {
-            return Ok(await _restaurantService.GetAllFilteredAndSortedAndPagedAsync(restaurantFilter, sortType, page, pageSize));
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return Ok(await _restaurantService.GetAllRestaurantsByOwnerIdAsync(userId, ownerId));
         }
 
-        //GET api/restaurants/id/meals
+        //GET api/restaurants/5/meals
         [HttpGet("{restaurantId}/meals")]
         public async Task<IActionResult> GetRestaurantWithMealsAsync(int restaurantId)
         {
             return Ok(await _restaurantService.GetRestaurantWithMealsAsync(restaurantId));
         }
 
+        //GET api/restaurants/5/with-working-time
+        [Authorize(Roles = "RestaurantOwner")]
+        [HttpGet("{id}/with-working-time")]
+        public async Task<ActionResult<RestaurantWithWorkingHoursAndNonWokingDaysDto>> GetRestaurantWithWorkingDaysAndNonWorkingDaysAsync(int id) 
+        { 
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return Ok( await _restaurantService.GetRestaurantWithWorkingDaysAndNonWorkingDaysAsync(userId, id));
+        }
+
+        //GET api/restaurants/sortTypes
+        [HttpGet("sortTypes")]
+        public ActionResult GetAllSortTypes()
+        {
+            return Ok(_restaurantService.GetAllSortTypes());
+        }
+
+        //POST api/restaurants
+        [Authorize(Roles = "Administrator")]
+        [HttpPost]
+        public async Task<ActionResult<RestaurantShortenDto>> CreateRestaurantAsync(CreateRestaurantDto restaurantDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            return Ok(await _restaurantService.CreateRestaurantAsync(restaurantDto));
+        }
+
+        //PUT api/restaurants/8
+        [Authorize(Roles = "Administrator, RestaurantOwner")]
+        [HttpPut("{id}")]
+        public async Task<ActionResult<RestaurantShortenDto>> UpdateRestaurantAsync(int id, UpdateRestaurantDto updateRestaurantDto) 
+        {
+            if (!ModelState.IsValid) 
+            {
+                return BadRequest(ModelState);
+            }
+            return Ok(await _restaurantService.UpdateRestaurantAsync(id, User, updateRestaurantDto));
+        }
+
+        //GET /api/restaurants/days-of-the-week
+        [HttpGet("days-of-the-week")]
+        public ActionResult<IEnumerable<string>> GetDaysOfTheWeek() 
+        {
+            return Ok(_restaurantService.GetDaysOfTheWeek());
+        }
+
+        //DELETE api/restaurants/8
+        [Authorize(Roles = "Administrator")]
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteRestaurantAsync(int id)
+        {
+            await _restaurantService.DeleteRestaurantAsync(id);
+            return NoContent();
+        }
     }
 }

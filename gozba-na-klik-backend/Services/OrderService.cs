@@ -117,7 +117,7 @@ namespace gozba_na_klik_backend.Services
         {
             var roles = GetUserRoles();
 
-            if (orderId == 0)
+            if (orderId <= 0)
             {
                 throw new BadRequestException("Invalid data.");
             }

@@ -1,6 +1,6 @@
-﻿namespace gozba_na_klik_backend.Services.DTOs.CourierDtos
+﻿namespace gozba_na_klik_backend.Services.DTOs.RestaurantOwnerDtos
 {
-    public class NewCourierDto
+    public class CreateRestaurantOwnerDto
     {
         public string Name { get; set; }
         public string Surname { get; set; }

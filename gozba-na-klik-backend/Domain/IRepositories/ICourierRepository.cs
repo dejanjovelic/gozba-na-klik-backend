@@ -6,8 +6,9 @@ namespace gozba_na_klik_backend.Model.IRepositories
     {
         Task<Courier> CreateAsync(Courier courier);
         Task<Courier?> GetByIdAsync(string courierId);
-        Task UpdateWorkingHoursAsync(Courier courier, List<WorkingHours> workingHours);
+        Task UpdateWorkingHoursAsync(List<WorkingHours> workingHours);
         Task<List<Courier>> GetAllAsync();
-        Task UpdateCourierStatusAsync();
+        Task UpdateCourierStatusAsync(List<Courier> couriers);
+        Task DeleteWorkingHoursAsync(List<WorkingHours> workingHours);
     }
 }

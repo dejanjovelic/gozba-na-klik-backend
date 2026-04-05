@@ -20,11 +20,23 @@ namespace gozba_na_klik_backend.Infrastructure.Repository
             return restaurantOwner;
         }
 
-        public async Task<RestaurantOwner> GetById(string restaurantOwnerId)
+        public async Task<RestaurantOwner> GetByIdAsync(string restaurantOwnerId)
         {
-           return await _context.RestaurantOwners
-                .Include(restaurantOwner=>restaurantOwner.ApplicationUser)
-                .FirstOrDefaultAsync(restaurantOwner => restaurantOwner.Id == restaurantOwnerId);
+            return await _context.RestaurantOwners
+                 .Include(restaurantOwner => restaurantOwner.ApplicationUser)
+                 .FirstOrDefaultAsync(restaurantOwner => restaurantOwner.Id == restaurantOwnerId);
+        }
+
+        public async Task<bool> RestaurantOwnerExistsByIdAsync(string id)
+        {
+            return await _context.RestaurantOwners
+                 .AnyAsync(ro => ro.Id == id);
+        }
+
+        public async Task<List<RestaurantOwner>> GetAllAsync() 
+        {
+            return await _context.RestaurantOwners
+                .Include(ro => ro.ApplicationUser).ToListAsync();
         }
     }
 }

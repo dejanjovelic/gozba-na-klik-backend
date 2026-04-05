@@ -1,6 +1,6 @@
 ﻿namespace gozba_na_klik_backend.Services.DTOs
 {
-    public class NewAddressDto
+    public class CreateAddressDto
     {
         public int Id { get; set; }
         public string Street { get; set; }

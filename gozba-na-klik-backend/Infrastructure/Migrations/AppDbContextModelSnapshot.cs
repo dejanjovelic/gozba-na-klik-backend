@@ -477,31 +477,31 @@ namespace gozba_na_klik_backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9580ebbe-9c10-4107-9d8e-9c22b4aa9619",
+                            Id = "cb706a3b-7229-4871-89b8-749f51f99028",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "9fcfec60-8852-4019-81b1-ea24b6cfad06",
+                            Id = "aa55fc6e-0b65-40f0-a08c-f1a45d0aa6d5",
                             Name = "Courier",
                             NormalizedName = "COURIER"
                         },
                         new
                         {
-                            Id = "9561484c-ef17-4be5-b0ff-60bfed48201a",
+                            Id = "5d0b75e0-6e0c-4677-8fd8-17cf693f066b",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "6b08bc92-22e5-48e2-81d0-4d00f450045e",
+                            Id = "3cf8192b-8e22-4225-a737-edf64a269a42",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         },
                         new
                         {
-                            Id = "35ff54d8-ee0f-41bb-aac6-0ec9151e70d9",
+                            Id = "03ea99c6-dcbb-4772-a774-e85d924583d0",
                             Name = "RestaurantOwner",
                             NormalizedName = "RESTAURANTOWNER"
                         });
@@ -1644,7 +1644,7 @@ namespace gozba_na_klik_backend.Migrations
 
                     b.HasIndex("RestaurantId");
 
-                    b.ToTable("NonWorkingDate");
+                    b.ToTable("NonWorkingDates");
                 });
 
             modelBuilder.Entity("gozba_na_klik_backend.Model.Order", b =>
@@ -1708,7 +1708,7 @@ namespace gozba_na_klik_backend.Migrations
                             CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14",
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01",
                             DeliveryAddressId = 1,
-                            OrderTime = new DateTime(2026, 3, 25, 15, 36, 21, 572, DateTimeKind.Utc).AddTicks(418),
+                            OrderTime = new DateTime(2026, 4, 4, 9, 18, 39, 248, DateTimeKind.Utc).AddTicks(6693),
                             RestaurantId = 1,
                             Status = 0,
                             TotalPrice = 0.0
@@ -1719,7 +1719,7 @@ namespace gozba_na_klik_backend.Migrations
                             CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14",
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01",
                             DeliveryAddressId = 1,
-                            OrderTime = new DateTime(2026, 3, 25, 15, 37, 21, 572, DateTimeKind.Utc).AddTicks(430),
+                            OrderTime = new DateTime(2026, 4, 4, 9, 19, 39, 248, DateTimeKind.Utc).AddTicks(6702),
                             RestaurantId = 1,
                             Status = 5,
                             TotalPrice = 0.0
@@ -1730,7 +1730,7 @@ namespace gozba_na_klik_backend.Migrations
                             CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh14",
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01",
                             DeliveryAddressId = 4,
-                            OrderTime = new DateTime(2026, 3, 25, 15, 16, 21, 572, DateTimeKind.Utc).AddTicks(432),
+                            OrderTime = new DateTime(2026, 4, 4, 8, 58, 39, 248, DateTimeKind.Utc).AddTicks(6704),
                             RestaurantId = 2,
                             Status = 5,
                             TotalPrice = 0.0
@@ -1741,7 +1741,7 @@ namespace gozba_na_klik_backend.Migrations
                             CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh15",
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02",
                             DeliveryAddressId = 3,
-                            OrderTime = new DateTime(2026, 3, 25, 15, 46, 21, 572, DateTimeKind.Utc).AddTicks(434),
+                            OrderTime = new DateTime(2026, 4, 4, 9, 28, 39, 248, DateTimeKind.Utc).AddTicks(6705),
                             RestaurantId = 6,
                             Status = 5,
                             TotalPrice = 0.0
@@ -1751,7 +1751,7 @@ namespace gozba_na_klik_backend.Migrations
                             Id = 3,
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh03",
                             DeliveryAddressId = 4,
-                            OrderTime = new DateTime(2026, 3, 25, 15, 38, 21, 572, DateTimeKind.Utc).AddTicks(435),
+                            OrderTime = new DateTime(2026, 4, 4, 9, 20, 39, 248, DateTimeKind.Utc).AddTicks(6707),
                             RestaurantId = 6,
                             Status = 0,
                             TotalPrice = 0.0
@@ -1761,7 +1761,7 @@ namespace gozba_na_klik_backend.Migrations
                             Id = 4,
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh04",
                             DeliveryAddressId = 7,
-                            OrderTime = new DateTime(2026, 3, 25, 15, 44, 21, 572, DateTimeKind.Utc).AddTicks(437),
+                            OrderTime = new DateTime(2026, 4, 4, 9, 26, 39, 248, DateTimeKind.Utc).AddTicks(6708),
                             RestaurantId = 6,
                             Status = 0,
                             TotalPrice = 0.0
@@ -1771,7 +1771,7 @@ namespace gozba_na_klik_backend.Migrations
                             Id = 5,
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh05",
                             DeliveryAddressId = 8,
-                            OrderTime = new DateTime(2026, 3, 25, 15, 40, 21, 572, DateTimeKind.Utc).AddTicks(440),
+                            OrderTime = new DateTime(2026, 4, 4, 9, 22, 39, 248, DateTimeKind.Utc).AddTicks(6710),
                             RestaurantId = 1,
                             Status = 0,
                             TotalPrice = 0.0
@@ -1781,7 +1781,7 @@ namespace gozba_na_klik_backend.Migrations
                             Id = 6,
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh06",
                             DeliveryAddressId = 10,
-                            OrderTime = new DateTime(2026, 3, 25, 15, 42, 21, 572, DateTimeKind.Utc).AddTicks(441),
+                            OrderTime = new DateTime(2026, 4, 4, 9, 24, 39, 248, DateTimeKind.Utc).AddTicks(6711),
                             RestaurantId = 1,
                             Status = 0,
                             TotalPrice = 0.0
@@ -1792,7 +1792,7 @@ namespace gozba_na_klik_backend.Migrations
                             CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh20",
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh07",
                             DeliveryAddressId = 11,
-                            OrderTime = new DateTime(2026, 3, 25, 15, 42, 21, 572, DateTimeKind.Utc).AddTicks(443),
+                            OrderTime = new DateTime(2026, 4, 4, 9, 24, 39, 248, DateTimeKind.Utc).AddTicks(6714),
                             RestaurantId = 1,
                             Status = 1,
                             TotalPrice = 0.0
@@ -1823,7 +1823,7 @@ namespace gozba_na_klik_backend.Migrations
                             CourierId = "c1a2b3d4-e5f6-7890-ab12-cd34ef56gh23",
                             CustomerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh10",
                             DeliveryAddressId = 16,
-                            OrderTime = new DateTime(2026, 3, 25, 15, 46, 21, 572, DateTimeKind.Utc).AddTicks(447),
+                            OrderTime = new DateTime(2026, 4, 4, 9, 28, 39, 248, DateTimeKind.Utc).AddTicks(6718),
                             RestaurantId = 7,
                             Status = 4,
                             TotalPrice = 0.0
@@ -2033,6 +2033,9 @@ namespace gozba_na_klik_backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsCreated")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -2057,6 +2060,7 @@ namespace gozba_na_klik_backend.Migrations
                             Capacity = 60,
                             City = "Belgrade",
                             Description = "Modern Serbian cuisine with a twist.",
+                            IsCreated = false,
                             Name = "Bistro Nova",
                             RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760980868/1701656104-Le-Petiti-Bistro-Blue-Centar-13_adciqg.jpg",
                             RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh24"
@@ -2069,6 +2073,7 @@ namespace gozba_na_klik_backend.Migrations
                             Capacity = 80,
                             City = "Novi Sad",
                             Description = "Authentic Italian trattoria.",
+                            IsCreated = false,
                             Name = "La Tavola",
                             RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981334/caption_e52wiq.jpg",
                             RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh24"
@@ -2081,6 +2086,7 @@ namespace gozba_na_klik_backend.Migrations
                             Capacity = 40,
                             City = "Niš",
                             Description = "Japanese sushi bar with minimalist ambiance.",
+                            IsCreated = false,
                             Name = "Sakura Zen",
                             RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981371/348s_o6zhl9.jpg",
                             RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh24"
@@ -2093,6 +2099,7 @@ namespace gozba_na_klik_backend.Migrations
                             Capacity = 100,
                             City = "Subotica",
                             Description = "American-style BBQ with craft beers.",
+                            IsCreated = false,
                             Name = "Grill & Chill",
                             RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981740/348s_jvrtl3.jpg",
                             RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh24"
@@ -2105,6 +2112,7 @@ namespace gozba_na_klik_backend.Migrations
                             Capacity = 50,
                             City = "Belgrade",
                             Description = "Vegan restaurant with organic dishes.",
+                            IsCreated = false,
                             Name = "Green Wave",
                             RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981837/AC9h4noKhAJV-_f5ucmgN7g1uu9vls7RQwFmyblYG2NoZPvK95_Go_jejqToiFswNCJ4-_fS2fTYgpCI5WdS_gfmLhjPLdx3iAPbXUCdeikQHC9o-ZPvLnI8UwM-jWS6mxXZ_bgEMXao_s680-w680-h510-rw_jdbfsp.webp",
                             RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh25"
@@ -2117,6 +2125,7 @@ namespace gozba_na_klik_backend.Migrations
                             Capacity = 90,
                             City = "Herceg Novi",
                             Description = "Mediterranean cuisine with a sea view.",
+                            IsCreated = false,
                             Name = "Casa del Mar",
                             RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981920/LaDama_10881_20_1_ojaujg.jpg",
                             RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh25"
@@ -2129,6 +2138,7 @@ namespace gozba_na_klik_backend.Migrations
                             Capacity = 70,
                             City = "Kragujevac",
                             Description = "Traditional homemade Serbian food.",
+                            IsCreated = false,
                             Name = "Grandma's Kitchen",
                             RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981760/im-65599456_e7zznz.jpg",
                             RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh26"
@@ -2141,6 +2151,7 @@ namespace gozba_na_klik_backend.Migrations
                             Capacity = 85,
                             City = "Novi Sad",
                             Description = "Fusion cuisine in a modern setting.",
+                            IsCreated = false,
                             Name = "Urban Spoon",
                             RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760982086/5dc498fe695b58645d6f1dbc_jexb15.png",
                             RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh27"
@@ -2153,6 +2164,7 @@ namespace gozba_na_klik_backend.Migrations
                             Capacity = 45,
                             City = "Belgrade",
                             Description = "French bistro with croissants and wine.",
+                            IsCreated = false,
                             Name = "Le Petit Café",
                             RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981871/images_yybf2j.jpg",
                             RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh27"
@@ -2165,6 +2177,7 @@ namespace gozba_na_klik_backend.Migrations
                             Capacity = 60,
                             City = "Zrenjanin",
                             Description = "Indian cuisine with authentic spices.",
+                            IsCreated = false,
                             Name = "Tandoori Flame",
                             RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985797/a-chef-is-cooking-in-his-restaurants-kitchen_gfpjj0.jpg",
                             RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh28"
@@ -2177,6 +2190,7 @@ namespace gozba_na_klik_backend.Migrations
                             Capacity = 55,
                             City = "Pančevo",
                             Description = "Gourmet burgers with homemade sauces.",
+                            IsCreated = false,
                             Name = "Burger Lab",
                             RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985725/premium_photo-1661883237884-263e8de8869b_fhmc5u.jpg",
                             RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh29"
@@ -2189,6 +2203,7 @@ namespace gozba_na_klik_backend.Migrations
                             Capacity = 75,
                             City = "Sombor",
                             Description = "Seafood specialties and river fish.",
+                            IsCreated = false,
                             Name = "Fish Pot",
                             RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981672/348s_gedljh.jpg",
                             RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh30"
@@ -2201,6 +2216,7 @@ namespace gozba_na_klik_backend.Migrations
                             Capacity = 65,
                             City = "Belgrade",
                             Description = "Fresh pasta and Italian desserts.",
+                            IsCreated = false,
                             Name = "Pasta Mia",
                             RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985883/348s_fheyvs.jpg",
                             RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh31"
@@ -2213,6 +2229,7 @@ namespace gozba_na_klik_backend.Migrations
                             Capacity = 80,
                             City = "Niš",
                             Description = "Asian cuisine with wok and curry dishes.",
+                            IsCreated = false,
                             Name = "Orient Express",
                             RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985977/348s_pumoab.jpg",
                             RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh32"
@@ -2225,6 +2242,7 @@ namespace gozba_na_klik_backend.Migrations
                             Capacity = 95,
                             City = "Novi Sad",
                             Description = "Premium steaks and fine wines.",
+                            IsCreated = false,
                             Name = "Steakhouse 21",
                             RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760986014/ejhsj8xcmjuwdsi8qdmj.jpg",
                             RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh33"
@@ -2237,6 +2255,7 @@ namespace gozba_na_klik_backend.Migrations
                             Capacity = 70,
                             City = "Belgrade",
                             Description = "Rustic ambiance with local specialties.",
+                            IsCreated = false,
                             Name = "Nest",
                             RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985649/Most_Beautiful_Restaurants_scotland_December23_PR_Global_pafswr.jpg",
                             RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh32"
@@ -2249,6 +2268,7 @@ namespace gozba_na_klik_backend.Migrations
                             Capacity = 60,
                             City = "Novi Sad",
                             Description = "Spanish tapas and sangria.",
+                            IsCreated = false,
                             Name = "Tapas Bar",
                             RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760970771/slikaRestorana1_hibuiy.png",
                             RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh28"
@@ -2261,6 +2281,7 @@ namespace gozba_na_klik_backend.Migrations
                             Capacity = 100,
                             City = "Valjevo",
                             Description = "Authentic tavern with live folk music.",
+                            IsCreated = false,
                             Name = "Marko's Tavern",
                             RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985542/07best-restaurants-nashville15-jbkq-videoSixteenByNineJumbo1600_ns15cb.jpg",
                             RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh28"
@@ -2273,6 +2294,7 @@ namespace gozba_na_klik_backend.Migrations
                             Capacity = 50,
                             City = "Belgrade",
                             Description = "Thai cuisine with exotic flavors.",
+                            IsCreated = false,
                             Name = "Thai Orchid",
                             RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760986076/ix3atyp8yzjh6a25r2ms.jpg",
                             RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh29"
@@ -2285,6 +2307,7 @@ namespace gozba_na_klik_backend.Migrations
                             Capacity = 40,
                             City = "Novi Sad",
                             Description = "Nordic cuisine with minimalist design.",
+                            IsCreated = false,
                             Name = "Nordic Table",
                             RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760986113/Hakkaiza-industrial-restaurant-design2_vyopcv.jpg",
                             RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh30"

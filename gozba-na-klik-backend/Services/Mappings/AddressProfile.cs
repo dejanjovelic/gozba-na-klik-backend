@@ -8,7 +8,7 @@ namespace gozba_na_klik_backend.Services.Mappings
     {
        public AddressProfile()
         {
-            CreateMap<NewAddressDto, Address>();
+            CreateMap<CreateAddressDto, Address>();
         }
     }
 }

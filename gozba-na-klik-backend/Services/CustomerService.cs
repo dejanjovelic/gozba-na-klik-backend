@@ -99,7 +99,7 @@ namespace gozba_na_klik_backend.Services
         }
 
 
-        public async Task<Address> CreateAddressAsync(string customerId, NewAddressDto updatedAddress, string? ownerId)
+        public async Task<Address> CreateAddressAsync(string customerId, CreateAddressDto updatedAddress, string? ownerId)
         {
             ValidateOwnership(customerId, ownerId);
 
@@ -123,7 +123,7 @@ namespace gozba_na_klik_backend.Services
             return customer.CreditCards.Select(c => _mapper.Map<CreditCardResponseDto>(c)).ToList();
         }
 
-        public async Task<CreditCardResponseDto> CreateCreditCardAsync(string customerId, NewCreditCardDto newCreditCard, string? ownerId)
+        public async Task<CreditCardResponseDto> CreateCreditCardAsync(string customerId, CreateCreditCardDto newCreditCard, string? ownerId)
         {
             ValidateOwnership(customerId, ownerId);
 
@@ -141,7 +141,7 @@ namespace gozba_na_klik_backend.Services
             return _mapper.Map<CreditCardResponseDto>(created);
         }
 
-        public async Task<CreditCardResponseDto> UpdateCreditCardAsync(string customerId, int creditCardId, NewCreditCardDto updatedCreditCard, string? ownerId)
+        public async Task<CreditCardResponseDto> UpdateCreditCardAsync(string customerId, int creditCardId, CreateCreditCardDto updatedCreditCard, string? ownerId)
         {
             ValidateOwnership(customerId, ownerId);
             ValidateCreditCardUpdateData(creditCardId, updatedCreditCard);
@@ -176,7 +176,7 @@ namespace gozba_na_klik_backend.Services
         }
 
 
-        public async Task<Address> UpdateAddressAsync(string customerId, int addressId, NewAddressDto updatedAddress, string? ownerId)
+        public async Task<Address> UpdateAddressAsync(string customerId, int addressId, CreateAddressDto updatedAddress, string? ownerId)
         {
             ValidateInputData(customerId, addressId, updatedAddress, ownerId);
 
@@ -229,7 +229,7 @@ namespace gozba_na_klik_backend.Services
             return customer;
         }
 
-        private static void ValidateInputData(string customerId, int addressId, NewAddressDto updatedAddress, string? ownerId)
+        private static void ValidateInputData(string customerId, int addressId, CreateAddressDto updatedAddress, string? ownerId)
         {
             ValidateOwnership(customerId, ownerId);
 
@@ -264,7 +264,7 @@ namespace gozba_na_klik_backend.Services
             return existing;
         }
 
-        private static void ValidateCreditCardUpdateData(int creditCardId, NewCreditCardDto updatedCreditCard)
+        private static void ValidateCreditCardUpdateData(int creditCardId, CreateCreditCardDto updatedCreditCard)
         {
             if (updatedCreditCard == null)
             {

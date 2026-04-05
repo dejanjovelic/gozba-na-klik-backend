@@ -21,6 +21,8 @@ namespace gozba_na_klik_backend.Infrastructure
         public DbSet<RestaurantOwner> RestaurantOwners { get; set; }
         public DbSet<OrderReview> OrderReviews { get; set; }
         public DbSet<CreditCard> CreditCards { get; set; }
+        public DbSet<WorkingHours> WorkingHours { get; set; }
+        public DbSet<NonWorkingDate> NonWorkingDates { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

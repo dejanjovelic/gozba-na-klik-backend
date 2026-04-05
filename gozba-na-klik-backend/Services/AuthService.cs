@@ -8,7 +8,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Web;
-using gozba_na_klik_backend.Services.DTOs;
 using gozba_na_klik_backend.Services.DTOs.AuthDtos;
 
 namespace gozba_na_klik_backend.Services
@@ -237,19 +236,7 @@ namespace gozba_na_klik_backend.Services
         }
         public async Task<ProfileDTO> GetProfileAsync(ClaimsPrincipal userPrincipal)
         {
-            // Preuzimanje korisničkog imena iz tokena
-            var username = userPrincipal.FindFirstValue("username");
-
-            if (username == null)
-            {
-                throw new BadRequestException("Token is invalid");
-            }
-
-            var user = await _userManager.FindByNameAsync(username);
-            if (user == null)
-            {
-                throw new NotFoundException("User with provided username does not exist");
-            }
+            ApplicationUser? user = await GetUserOrThrowAsync(userPrincipal);
             var profile = _mapper.Map<ProfileDTO>(user);
 
             var roles = await _userManager.GetRolesAsync(user);
@@ -257,16 +244,10 @@ namespace gozba_na_klik_backend.Services
 
             return profile;
         }
+
         public async Task<string> UpdateImageAsync(ClaimsPrincipal userPrincipal, string imageUrl)
         {
-            var username = userPrincipal.FindFirstValue("username");
-            var user = await _userManager.FindByNameAsync(username);
-
-            if (user == null)
-            {
-                throw new NotFoundException("User not found.");
-            }
-               
+            ApplicationUser? user = await GetUserOrThrowAsync(userPrincipal);
 
             user.ProfileImageUrl = imageUrl;
 
@@ -276,8 +257,26 @@ namespace gozba_na_klik_backend.Services
                 throw new BadRequestException("Could not update profile image.");
             }
             return await GenerateJwt(user);
-                
+
         }
 
+        private async Task<ApplicationUser?> GetUserOrThrowAsync(ClaimsPrincipal userPrincipal)
+        {
+            // Preuzimanje korisničkog imena iz tokena
+            var username = userPrincipal.FindFirstValue("username");
+
+            if (username == null)
+            {
+                throw new BadRequestException("Token is invalid");
+            }
+            var user = await _userManager.FindByNameAsync(username);
+
+            if (user == null)
+            {
+                throw new NotFoundException("User not found.");
+            }
+
+            return user;
+        }
     }
 }
