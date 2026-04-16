@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace gozba_na_klik_backend.Migrations
 {
     /// <inheritdoc />
-    public partial class v16 : Migration
+    public partial class v15 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,35 +24,27 @@ namespace gozba_na_klik_backend.Migrations
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "5c98d7da-c30d-49f9-b74a-b599df59f6a2");
+                keyValue: "35ff54d8-ee0f-41bb-aac6-0ec9151e70d9");
 
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "8b2ff1be-1bed-42c4-bad3-18d6c6ba7a48");
+                keyValue: "6b08bc92-22e5-48e2-81d0-4d00f450045e");
 
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "b2ba20cb-9525-4ca8-aec2-d4c72a290b8e");
+                keyValue: "9561484c-ef17-4be5-b0ff-60bfed48201a");
 
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "ecb04a14-5931-4bb9-88a4-d31b822f23ed");
+                keyValue: "9580ebbe-9c10-4107-9d8e-9c22b4aa9619");
 
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "edeaa4dc-6478-429d-8258-97c42a536f4b");
-
-            migrationBuilder.DropColumn(
-                name: "CreatedAt",
-                table: "WorkingHours");
-
-            migrationBuilder.DropColumn(
-                name: "IsActive",
-                table: "WorkingHours");
+                keyValue: "9fcfec60-8852-4019-81b1-ea24b6cfad06");
 
             migrationBuilder.RenameTable(
                 name: "NonWorkingDate",
@@ -62,6 +54,46 @@ namespace gozba_na_klik_backend.Migrations
                 name: "IX_NonWorkingDate_RestaurantId",
                 table: "NonWorkingDates",
                 newName: "IX_NonWorkingDates_RestaurantId");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Description",
+                table: "Restaurants",
+                type: "text",
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "text");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "City",
+                table: "Restaurants",
+                type: "text",
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "text");
+
+            migrationBuilder.AlterColumn<int>(
+                name: "Capacity",
+                table: "Restaurants",
+                type: "integer",
+                nullable: true,
+                oldClrType: typeof(int),
+                oldType: "integer");
+
+            migrationBuilder.AlterColumn<double>(
+                name: "AverageRating",
+                table: "Restaurants",
+                type: "double precision",
+                nullable: true,
+                oldClrType: typeof(double),
+                oldType: "double precision");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Address",
+                table: "Restaurants",
+                type: "text",
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "text");
 
             migrationBuilder.AddColumn<bool>(
                 name: "IsCreated",
@@ -80,11 +112,22 @@ namespace gozba_na_klik_backend.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "03ea99c6-dcbb-4772-a774-e85d924583d0", null, "RestaurantOwner", "RESTAURANTOWNER" },
-                    { "3cf8192b-8e22-4225-a737-edf64a269a42", null, "Employee", "EMPLOYEE" },
-                    { "5d0b75e0-6e0c-4677-8fd8-17cf693f066b", null, "Customer", "CUSTOMER" },
-                    { "aa55fc6e-0b65-40f0-a08c-f1a45d0aa6d5", null, "Courier", "COURIER" },
-                    { "cb706a3b-7229-4871-89b8-749f51f99028", null, "Administrator", "ADMINISTRATOR" }
+                    { "0fce4865-2aba-44c6-a499-35f64e8511c4", null, "Employee", "EMPLOYEE" },
+                    { "17a772e2-445d-40c1-a679-cc82726eb171", null, "Administrator", "ADMINISTRATOR" },
+                    { "40d58446-aca8-4f91-9c4b-d76013a5c391", null, "RestaurantOwner", "RESTAURANTOWNER" },
+                    { "62353bba-0fc0-4759-9c77-e68c5860d6d4", null, "Customer", "CUSTOMER" },
+                    { "95579f51-51e5-48a7-9c86-51b118cdb7a3", null, "Courier", "COURIER" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "NonWorkingDates",
+                columns: new[] { "Id", "Date", "RestaurantId" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2026, 4, 8, 0, 0, 0, 0, DateTimeKind.Utc), 5 },
+                    { 2, new DateTime(2026, 4, 9, 0, 0, 0, 0, DateTimeKind.Utc), 5 },
+                    { 3, new DateTime(2026, 4, 8, 0, 0, 0, 0, DateTimeKind.Utc), 6 },
+                    { 4, new DateTime(2026, 4, 9, 0, 0, 0, 0, DateTimeKind.Utc), 6 }
                 });
 
             migrationBuilder.UpdateData(
@@ -92,210 +135,225 @@ namespace gozba_na_klik_backend.Migrations
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "OrderTime",
-                value: new DateTime(2026, 4, 4, 9, 18, 39, 248, DateTimeKind.Utc).AddTicks(6693));
+                value: new DateTime(2026, 4, 16, 20, 6, 50, 177, DateTimeKind.Utc).AddTicks(279));
 
             migrationBuilder.UpdateData(
                 table: "Orders",
                 keyColumn: "Id",
                 keyValue: 3,
                 column: "OrderTime",
-                value: new DateTime(2026, 4, 4, 9, 20, 39, 248, DateTimeKind.Utc).AddTicks(6707));
+                value: new DateTime(2026, 4, 16, 20, 8, 50, 177, DateTimeKind.Utc).AddTicks(292));
 
             migrationBuilder.UpdateData(
                 table: "Orders",
                 keyColumn: "Id",
                 keyValue: 4,
                 column: "OrderTime",
-                value: new DateTime(2026, 4, 4, 9, 26, 39, 248, DateTimeKind.Utc).AddTicks(6708));
+                value: new DateTime(2026, 4, 16, 20, 14, 50, 177, DateTimeKind.Utc).AddTicks(294));
 
             migrationBuilder.UpdateData(
                 table: "Orders",
                 keyColumn: "Id",
                 keyValue: 5,
                 column: "OrderTime",
-                value: new DateTime(2026, 4, 4, 9, 22, 39, 248, DateTimeKind.Utc).AddTicks(6710));
+                value: new DateTime(2026, 4, 16, 20, 10, 50, 177, DateTimeKind.Utc).AddTicks(295));
 
             migrationBuilder.UpdateData(
                 table: "Orders",
                 keyColumn: "Id",
                 keyValue: 6,
                 column: "OrderTime",
-                value: new DateTime(2026, 4, 4, 9, 24, 39, 248, DateTimeKind.Utc).AddTicks(6711));
+                value: new DateTime(2026, 4, 16, 20, 12, 50, 177, DateTimeKind.Utc).AddTicks(297));
 
             migrationBuilder.UpdateData(
                 table: "Orders",
                 keyColumn: "Id",
                 keyValue: 7,
                 column: "OrderTime",
-                value: new DateTime(2026, 4, 4, 9, 24, 39, 248, DateTimeKind.Utc).AddTicks(6714));
+                value: new DateTime(2026, 4, 16, 20, 12, 50, 177, DateTimeKind.Utc).AddTicks(298));
 
             migrationBuilder.UpdateData(
                 table: "Orders",
                 keyColumn: "Id",
                 keyValue: 10,
                 column: "OrderTime",
-                value: new DateTime(2026, 4, 4, 9, 28, 39, 248, DateTimeKind.Utc).AddTicks(6718));
+                value: new DateTime(2026, 4, 16, 20, 16, 50, 177, DateTimeKind.Utc).AddTicks(302));
 
             migrationBuilder.UpdateData(
                 table: "Orders",
                 keyColumn: "Id",
                 keyValue: 11,
                 column: "OrderTime",
-                value: new DateTime(2026, 4, 4, 9, 19, 39, 248, DateTimeKind.Utc).AddTicks(6702));
+                value: new DateTime(2026, 4, 16, 20, 7, 50, 177, DateTimeKind.Utc).AddTicks(287));
 
             migrationBuilder.UpdateData(
                 table: "Orders",
                 keyColumn: "Id",
                 keyValue: 12,
                 column: "OrderTime",
-                value: new DateTime(2026, 4, 4, 8, 58, 39, 248, DateTimeKind.Utc).AddTicks(6704));
+                value: new DateTime(2026, 4, 16, 19, 46, 50, 177, DateTimeKind.Utc).AddTicks(289));
 
             migrationBuilder.UpdateData(
                 table: "Orders",
                 keyColumn: "Id",
                 keyValue: 13,
                 column: "OrderTime",
-                value: new DateTime(2026, 4, 4, 9, 28, 39, 248, DateTimeKind.Utc).AddTicks(6705));
+                value: new DateTime(2026, 4, 16, 20, 16, 50, 177, DateTimeKind.Utc).AddTicks(291));
 
             migrationBuilder.UpdateData(
                 table: "Restaurants",
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "IsCreated",
-                value: false);
+                value: true);
 
             migrationBuilder.UpdateData(
                 table: "Restaurants",
                 keyColumn: "Id",
                 keyValue: 2,
                 column: "IsCreated",
-                value: false);
+                value: true);
 
             migrationBuilder.UpdateData(
                 table: "Restaurants",
                 keyColumn: "Id",
                 keyValue: 3,
                 column: "IsCreated",
-                value: false);
+                value: true);
 
             migrationBuilder.UpdateData(
                 table: "Restaurants",
                 keyColumn: "Id",
                 keyValue: 4,
                 column: "IsCreated",
-                value: false);
+                value: true);
 
             migrationBuilder.UpdateData(
                 table: "Restaurants",
                 keyColumn: "Id",
                 keyValue: 5,
                 column: "IsCreated",
-                value: false);
+                value: true);
 
             migrationBuilder.UpdateData(
                 table: "Restaurants",
                 keyColumn: "Id",
                 keyValue: 6,
                 column: "IsCreated",
-                value: false);
+                value: true);
 
             migrationBuilder.UpdateData(
                 table: "Restaurants",
                 keyColumn: "Id",
                 keyValue: 7,
                 column: "IsCreated",
-                value: false);
+                value: true);
 
             migrationBuilder.UpdateData(
                 table: "Restaurants",
                 keyColumn: "Id",
                 keyValue: 8,
                 column: "IsCreated",
-                value: false);
+                value: true);
 
             migrationBuilder.UpdateData(
                 table: "Restaurants",
                 keyColumn: "Id",
                 keyValue: 9,
                 column: "IsCreated",
-                value: false);
+                value: true);
 
             migrationBuilder.UpdateData(
                 table: "Restaurants",
                 keyColumn: "Id",
                 keyValue: 10,
                 column: "IsCreated",
-                value: false);
+                value: true);
 
             migrationBuilder.UpdateData(
                 table: "Restaurants",
                 keyColumn: "Id",
                 keyValue: 11,
                 column: "IsCreated",
-                value: false);
+                value: true);
 
             migrationBuilder.UpdateData(
                 table: "Restaurants",
                 keyColumn: "Id",
                 keyValue: 12,
                 column: "IsCreated",
-                value: false);
+                value: true);
 
             migrationBuilder.UpdateData(
                 table: "Restaurants",
                 keyColumn: "Id",
                 keyValue: 13,
                 column: "IsCreated",
-                value: false);
+                value: true);
 
             migrationBuilder.UpdateData(
                 table: "Restaurants",
                 keyColumn: "Id",
                 keyValue: 14,
                 column: "IsCreated",
-                value: false);
+                value: true);
 
             migrationBuilder.UpdateData(
                 table: "Restaurants",
                 keyColumn: "Id",
                 keyValue: 15,
                 column: "IsCreated",
-                value: false);
+                value: true);
 
             migrationBuilder.UpdateData(
                 table: "Restaurants",
                 keyColumn: "Id",
                 keyValue: 16,
                 column: "IsCreated",
-                value: false);
+                value: true);
 
             migrationBuilder.UpdateData(
                 table: "Restaurants",
                 keyColumn: "Id",
                 keyValue: 17,
                 column: "IsCreated",
-                value: false);
+                value: true);
 
             migrationBuilder.UpdateData(
                 table: "Restaurants",
                 keyColumn: "Id",
                 keyValue: 18,
                 column: "IsCreated",
-                value: false);
+                value: true);
 
             migrationBuilder.UpdateData(
                 table: "Restaurants",
                 keyColumn: "Id",
                 keyValue: 19,
                 column: "IsCreated",
-                value: false);
+                value: true);
 
             migrationBuilder.UpdateData(
                 table: "Restaurants",
                 keyColumn: "Id",
                 keyValue: 20,
                 column: "IsCreated",
-                value: false);
+                value: true);
+
+            migrationBuilder.InsertData(
+                table: "WorkingHours",
+                columns: new[] { "Id", "CourierId", "DayOfTheWeek", "EndingTime", "RestaurantId", "StartingTime" },
+                values: new object[,]
+                {
+                    { 1, null, 1, new TimeSpan(0, 16, 0, 0, 0), 5, new TimeSpan(0, 8, 0, 0, 0) },
+                    { 2, null, 2, new TimeSpan(0, 16, 0, 0, 0), 5, new TimeSpan(0, 8, 0, 0, 0) },
+                    { 3, null, 3, new TimeSpan(0, 16, 0, 0, 0), 5, new TimeSpan(0, 8, 0, 0, 0) },
+                    { 4, null, 4, new TimeSpan(0, 16, 0, 0, 0), 5, new TimeSpan(0, 8, 0, 0, 0) },
+                    { 5, null, 1, new TimeSpan(0, 17, 0, 0, 0), 6, new TimeSpan(0, 9, 0, 0, 0) },
+                    { 6, null, 2, new TimeSpan(0, 17, 0, 0, 0), 6, new TimeSpan(0, 9, 0, 0, 0) },
+                    { 7, null, 3, new TimeSpan(0, 17, 0, 0, 0), 6, new TimeSpan(0, 9, 0, 0, 0) },
+                    { 8, null, 4, new TimeSpan(0, 17, 0, 0, 0), 6, new TimeSpan(0, 9, 0, 0, 0) }
+                });
 
             migrationBuilder.AddForeignKey(
                 name: "FK_NonWorkingDates_Restaurants_RestaurantId",
@@ -320,27 +378,87 @@ namespace gozba_na_klik_backend.Migrations
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "03ea99c6-dcbb-4772-a774-e85d924583d0");
+                keyValue: "0fce4865-2aba-44c6-a499-35f64e8511c4");
 
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "3cf8192b-8e22-4225-a737-edf64a269a42");
+                keyValue: "17a772e2-445d-40c1-a679-cc82726eb171");
 
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "5d0b75e0-6e0c-4677-8fd8-17cf693f066b");
+                keyValue: "40d58446-aca8-4f91-9c4b-d76013a5c391");
 
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "aa55fc6e-0b65-40f0-a08c-f1a45d0aa6d5");
+                keyValue: "62353bba-0fc0-4759-9c77-e68c5860d6d4");
 
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "cb706a3b-7229-4871-89b8-749f51f99028");
+                keyValue: "95579f51-51e5-48a7-9c86-51b118cdb7a3");
+
+            migrationBuilder.DeleteData(
+                table: "NonWorkingDates",
+                keyColumn: "Id",
+                keyValue: 1);
+
+            migrationBuilder.DeleteData(
+                table: "NonWorkingDates",
+                keyColumn: "Id",
+                keyValue: 2);
+
+            migrationBuilder.DeleteData(
+                table: "NonWorkingDates",
+                keyColumn: "Id",
+                keyValue: 3);
+
+            migrationBuilder.DeleteData(
+                table: "NonWorkingDates",
+                keyColumn: "Id",
+                keyValue: 4);
+
+            migrationBuilder.DeleteData(
+                table: "WorkingHours",
+                keyColumn: "Id",
+                keyValue: 1);
+
+            migrationBuilder.DeleteData(
+                table: "WorkingHours",
+                keyColumn: "Id",
+                keyValue: 2);
+
+            migrationBuilder.DeleteData(
+                table: "WorkingHours",
+                keyColumn: "Id",
+                keyValue: 3);
+
+            migrationBuilder.DeleteData(
+                table: "WorkingHours",
+                keyColumn: "Id",
+                keyValue: 4);
+
+            migrationBuilder.DeleteData(
+                table: "WorkingHours",
+                keyColumn: "Id",
+                keyValue: 5);
+
+            migrationBuilder.DeleteData(
+                table: "WorkingHours",
+                keyColumn: "Id",
+                keyValue: 6);
+
+            migrationBuilder.DeleteData(
+                table: "WorkingHours",
+                keyColumn: "Id",
+                keyValue: 7);
+
+            migrationBuilder.DeleteData(
+                table: "WorkingHours",
+                keyColumn: "Id",
+                keyValue: 8);
 
             migrationBuilder.DropColumn(
                 name: "IsCreated",
@@ -355,19 +473,55 @@ namespace gozba_na_klik_backend.Migrations
                 table: "NonWorkingDate",
                 newName: "IX_NonWorkingDate_RestaurantId");
 
-            migrationBuilder.AddColumn<DateTime>(
-                name: "CreatedAt",
-                table: "WorkingHours",
-                type: "timestamp with time zone",
+            migrationBuilder.AlterColumn<string>(
+                name: "Description",
+                table: "Restaurants",
+                type: "text",
                 nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "text",
+                oldNullable: true);
 
-            migrationBuilder.AddColumn<bool>(
-                name: "IsActive",
-                table: "WorkingHours",
-                type: "boolean",
+            migrationBuilder.AlterColumn<string>(
+                name: "City",
+                table: "Restaurants",
+                type: "text",
                 nullable: false,
-                defaultValue: false);
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "text",
+                oldNullable: true);
+
+            migrationBuilder.AlterColumn<int>(
+                name: "Capacity",
+                table: "Restaurants",
+                type: "integer",
+                nullable: false,
+                defaultValue: 0,
+                oldClrType: typeof(int),
+                oldType: "integer",
+                oldNullable: true);
+
+            migrationBuilder.AlterColumn<double>(
+                name: "AverageRating",
+                table: "Restaurants",
+                type: "double precision",
+                nullable: false,
+                defaultValue: 0.0,
+                oldClrType: typeof(double),
+                oldType: "double precision",
+                oldNullable: true);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Address",
+                table: "Restaurants",
+                type: "text",
+                nullable: false,
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "text",
+                oldNullable: true);
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_NonWorkingDate",
@@ -379,11 +533,11 @@ namespace gozba_na_klik_backend.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "5c98d7da-c30d-49f9-b74a-b599df59f6a2", null, "Administrator", "ADMINISTRATOR" },
-                    { "8b2ff1be-1bed-42c4-bad3-18d6c6ba7a48", null, "Customer", "CUSTOMER" },
-                    { "b2ba20cb-9525-4ca8-aec2-d4c72a290b8e", null, "Courier", "COURIER" },
-                    { "ecb04a14-5931-4bb9-88a4-d31b822f23ed", null, "RestaurantOwner", "RESTAURANTOWNER" },
-                    { "edeaa4dc-6478-429d-8258-97c42a536f4b", null, "Employee", "EMPLOYEE" }
+                    { "35ff54d8-ee0f-41bb-aac6-0ec9151e70d9", null, "RestaurantOwner", "RESTAURANTOWNER" },
+                    { "6b08bc92-22e5-48e2-81d0-4d00f450045e", null, "Employee", "EMPLOYEE" },
+                    { "9561484c-ef17-4be5-b0ff-60bfed48201a", null, "Customer", "CUSTOMER" },
+                    { "9580ebbe-9c10-4107-9d8e-9c22b4aa9619", null, "Administrator", "ADMINISTRATOR" },
+                    { "9fcfec60-8852-4019-81b1-ea24b6cfad06", null, "Courier", "COURIER" }
                 });
 
             migrationBuilder.UpdateData(
@@ -391,70 +545,70 @@ namespace gozba_na_klik_backend.Migrations
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "OrderTime",
-                value: new DateTime(2026, 4, 2, 20, 39, 20, 538, DateTimeKind.Utc).AddTicks(488));
+                value: new DateTime(2026, 3, 25, 15, 36, 21, 572, DateTimeKind.Utc).AddTicks(418));
 
             migrationBuilder.UpdateData(
                 table: "Orders",
                 keyColumn: "Id",
                 keyValue: 3,
                 column: "OrderTime",
-                value: new DateTime(2026, 4, 2, 20, 41, 20, 538, DateTimeKind.Utc).AddTicks(504));
+                value: new DateTime(2026, 3, 25, 15, 38, 21, 572, DateTimeKind.Utc).AddTicks(435));
 
             migrationBuilder.UpdateData(
                 table: "Orders",
                 keyColumn: "Id",
                 keyValue: 4,
                 column: "OrderTime",
-                value: new DateTime(2026, 4, 2, 20, 47, 20, 538, DateTimeKind.Utc).AddTicks(505));
+                value: new DateTime(2026, 3, 25, 15, 44, 21, 572, DateTimeKind.Utc).AddTicks(437));
 
             migrationBuilder.UpdateData(
                 table: "Orders",
                 keyColumn: "Id",
                 keyValue: 5,
                 column: "OrderTime",
-                value: new DateTime(2026, 4, 2, 20, 43, 20, 538, DateTimeKind.Utc).AddTicks(506));
+                value: new DateTime(2026, 3, 25, 15, 40, 21, 572, DateTimeKind.Utc).AddTicks(440));
 
             migrationBuilder.UpdateData(
                 table: "Orders",
                 keyColumn: "Id",
                 keyValue: 6,
                 column: "OrderTime",
-                value: new DateTime(2026, 4, 2, 20, 45, 20, 538, DateTimeKind.Utc).AddTicks(508));
+                value: new DateTime(2026, 3, 25, 15, 42, 21, 572, DateTimeKind.Utc).AddTicks(441));
 
             migrationBuilder.UpdateData(
                 table: "Orders",
                 keyColumn: "Id",
                 keyValue: 7,
                 column: "OrderTime",
-                value: new DateTime(2026, 4, 2, 20, 45, 20, 538, DateTimeKind.Utc).AddTicks(511));
+                value: new DateTime(2026, 3, 25, 15, 42, 21, 572, DateTimeKind.Utc).AddTicks(443));
 
             migrationBuilder.UpdateData(
                 table: "Orders",
                 keyColumn: "Id",
                 keyValue: 10,
                 column: "OrderTime",
-                value: new DateTime(2026, 4, 2, 20, 49, 20, 538, DateTimeKind.Utc).AddTicks(515));
+                value: new DateTime(2026, 3, 25, 15, 46, 21, 572, DateTimeKind.Utc).AddTicks(447));
 
             migrationBuilder.UpdateData(
                 table: "Orders",
                 keyColumn: "Id",
                 keyValue: 11,
                 column: "OrderTime",
-                value: new DateTime(2026, 4, 2, 20, 40, 20, 538, DateTimeKind.Utc).AddTicks(499));
+                value: new DateTime(2026, 3, 25, 15, 37, 21, 572, DateTimeKind.Utc).AddTicks(430));
 
             migrationBuilder.UpdateData(
                 table: "Orders",
                 keyColumn: "Id",
                 keyValue: 12,
                 column: "OrderTime",
-                value: new DateTime(2026, 4, 2, 20, 19, 20, 538, DateTimeKind.Utc).AddTicks(501));
+                value: new DateTime(2026, 3, 25, 15, 16, 21, 572, DateTimeKind.Utc).AddTicks(432));
 
             migrationBuilder.UpdateData(
                 table: "Orders",
                 keyColumn: "Id",
                 keyValue: 13,
                 column: "OrderTime",
-                value: new DateTime(2026, 4, 2, 20, 49, 20, 538, DateTimeKind.Utc).AddTicks(502));
+                value: new DateTime(2026, 3, 25, 15, 46, 21, 572, DateTimeKind.Utc).AddTicks(434));
 
             migrationBuilder.AddForeignKey(
                 name: "FK_NonWorkingDate_Restaurants_RestaurantId",

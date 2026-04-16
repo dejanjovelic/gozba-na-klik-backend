@@ -97,7 +97,7 @@ namespace gozba_na_klik_backend.Services
             {
                 // Check if any of today's working hours include the current time
                 bool isWorkingNow = courier.WorkingHours?
-                    .Any(wh => wh.DayOfTheWeek == currentDay &&
+                    .Any(wh => wh.DayOfTheWeek.ToString() == currentDay.ToString() &&
                                currentTime >= wh.StartingTime &&
                                currentTime <= wh.EndingTime)
                     ?? false;

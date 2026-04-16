@@ -13,7 +13,7 @@ namespace gozba_na_klik_backend.Services.Mappings
 
             CreateMap<Restaurant, RestaurantDto>();
 
-            CreateMap<Restaurant, RestaurantShortenDto>();
+            CreateMap<Restaurant, RestaurantBasicDataDto>();
 
             CreateMap<CreateRestaurantDto, Restaurant>();
             CreateMap<UpdateRestaurantDto, Restaurant>()

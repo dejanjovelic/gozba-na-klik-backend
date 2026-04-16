@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using gozba_na_klik_backend.Domain;
+using System.Text.Json.Serialization;
 
 namespace gozba_na_klik_backend.Model
 {

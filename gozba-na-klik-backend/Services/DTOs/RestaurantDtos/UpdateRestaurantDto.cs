@@ -25,7 +25,7 @@ namespace gozba_na_klik_backend.Services.DTOs.RestaurantDtos
         [Required]
         public int Capacity { get; set; }
 
-        public double AverageRating { get; set; }
+        public double? AverageRating { get; set; }
         public string? RestaurantImageUrl { get; set; }
         public bool IsCreated { get; set; }
 

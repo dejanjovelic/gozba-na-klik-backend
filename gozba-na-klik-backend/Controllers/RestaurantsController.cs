@@ -46,7 +46,7 @@ namespace gozba_na_klik_backend.Controllers
         [Authorize(Roles = "Administrator")]
         //GET api/restaurants
         [HttpGet]
-        public async Task<ActionResult<List<RestaurantShortenDto>>> GetAllRestaurantsAsync()
+        public async Task<ActionResult<List<RestaurantBasicDataDto>>> GetAllRestaurantsAsync()
         {
             return Ok(await _restaurantService.GetAllRestaurantsAsync());
         }
@@ -54,7 +54,7 @@ namespace gozba_na_klik_backend.Controllers
         [Authorize(Roles = "RestaurantOwner")]
         //GET api/restaurants/by-owner?ownerId=5
         [HttpGet("by-owner")]
-        public async Task<ActionResult<List<RestaurantShortenDto>>> GetAllRestaurantsByOwnerIdAsync([FromQuery] string ownerId)
+        public async Task<ActionResult<List<RestaurantBasicDataDto>>> GetAllRestaurantsByOwnerIdAsync([FromQuery] string ownerId)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return Ok(await _restaurantService.GetAllRestaurantsByOwnerIdAsync(userId, ownerId));
@@ -76,6 +76,14 @@ namespace gozba_na_klik_backend.Controllers
             return Ok( await _restaurantService.GetRestaurantWithWorkingDaysAndNonWorkingDaysAsync(userId, id));
         }
 
+        //GET api/restaurants/5/basic-data
+        [Authorize(Roles = "Administrator")]
+        [HttpGet("{id}/basic-data")]
+        public async Task<ActionResult<RestaurantBasicDataDto>> GetRestaurantBasicDataByIdAsync(int id) 
+        {
+            return Ok(await _restaurantService.GetRestaurantBasicDataByIdAsync(id));
+        }
+
         //GET api/restaurants/sortTypes
         [HttpGet("sortTypes")]
         public ActionResult GetAllSortTypes()
@@ -86,7 +94,7 @@ namespace gozba_na_klik_backend.Controllers
         //POST api/restaurants
         [Authorize(Roles = "Administrator")]
         [HttpPost]
-        public async Task<ActionResult<RestaurantShortenDto>> CreateRestaurantAsync(CreateRestaurantDto restaurantDto)
+        public async Task<ActionResult<RestaurantBasicDataDto>> CreateRestaurantAsync([FromBody] CreateRestaurantDto restaurantDto)
         {
             if (!ModelState.IsValid)
             {
@@ -98,7 +106,7 @@ namespace gozba_na_klik_backend.Controllers
         //PUT api/restaurants/8
         [Authorize(Roles = "Administrator, RestaurantOwner")]
         [HttpPut("{id}")]
-        public async Task<ActionResult<RestaurantShortenDto>> UpdateRestaurantAsync(int id, UpdateRestaurantDto updateRestaurantDto) 
+        public async Task<ActionResult<RestaurantBasicDataDto>> UpdateRestaurantAsync(int id, [FromBody] UpdateRestaurantDto updateRestaurantDto) 
         {
             if (!ModelState.IsValid) 
             {

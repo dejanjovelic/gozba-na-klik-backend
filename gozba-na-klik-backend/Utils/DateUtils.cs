@@ -1,4 +1,6 @@
-﻿namespace gozba_na_klik_backend.Utils
+﻿using gozba_na_klik_backend.Domain;
+
+namespace gozba_na_klik_backend.Utils
 {
     public static class DateUtils
     {

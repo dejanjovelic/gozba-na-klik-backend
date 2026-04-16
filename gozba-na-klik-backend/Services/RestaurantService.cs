@@ -69,20 +69,20 @@ namespace gozba_na_klik_backend.Services
             return await _restaurantRepository.GetAllRestaurantsPaginatedAsync(page, pageSize);
         }
 
-        public async Task<List<RestaurantShortenDto>> GetAllRestaurantsAsync()
+        public async Task<List<RestaurantBasicDataDto>> GetAllRestaurantsAsync()
         {
             _logger.LogInformation("fetching all resturants from database.");
             List<Restaurant> restaurantsFromDb = await _restaurantRepository.GetAllRestaurantsAsync();
-            return restaurantsFromDb.Select(_mapper.Map<RestaurantShortenDto>).ToList();
+            return restaurantsFromDb.Select(_mapper.Map<RestaurantBasicDataDto>).ToList();
         }
 
-        public async Task<List<RestaurantShortenDto>> GetAllRestaurantsByOwnerIdAsync(string userId, string ownerId)
+        public async Task<List<RestaurantBasicDataDto>> GetAllRestaurantsByOwnerIdAsync(string userId, string ownerId)
         {
             ValidateRestaurantOwnership(userId, ownerId);
 
             _logger.LogInformation($"fetching all owners (owner Id: {ownerId}) resturants from database.");
             List<Restaurant> restaurantsFromDb = await _restaurantRepository.GetAllRestaurantsByOwnerIdAsync(ownerId);
-            return restaurantsFromDb.Select(_mapper.Map<RestaurantShortenDto>).ToList();
+            return restaurantsFromDb.Select(_mapper.Map<RestaurantBasicDataDto>).ToList();
         }
 
         public async Task<RestaurantWithMealsDto> GetRestaurantWithMealsAsync(int restaurantId)
@@ -99,6 +99,12 @@ namespace gozba_na_klik_backend.Services
             return _mapper.Map<RestaurantWithWorkingHoursAndNonWokingDaysDto>(restaurant);
         }
 
+        public async Task<RestaurantBasicDataDto> GetRestaurantBasicDataByIdAsync(int id) 
+        {
+            Restaurant restaurant = await _restaurantRepository.GetRestaurantByIdAsync(id);
+            return _mapper.Map<RestaurantBasicDataDto>(restaurant);
+        }
+
         public List<RestaurantSortTypeOptionDto> GetAllSortTypes()
         {
             List<RestaurantSortTypeOptionDto> restaurantSortTypeOptions = new List<RestaurantSortTypeOptionDto>();
@@ -110,7 +116,7 @@ namespace gozba_na_klik_backend.Services
             return restaurantSortTypeOptions;
         }
 
-        public async Task<RestaurantShortenDto> CreateRestaurantAsync(CreateRestaurantDto restaurantDto)
+        public async Task<RestaurantBasicDataDto> CreateRestaurantAsync(CreateRestaurantDto restaurantDto)
         {
             await ValidateRestaurantOwnerExistenceAsync(restaurantDto.RestaurantOwnerId);
 
@@ -118,10 +124,10 @@ namespace gozba_na_klik_backend.Services
             newRestaurant.IsCreated = false;
 
             Restaurant createdRestaurant = await _restaurantRepository.CreateRestaurantAsync(newRestaurant);
-            return _mapper.Map<RestaurantShortenDto>(createdRestaurant);
+            return _mapper.Map<RestaurantBasicDataDto>(createdRestaurant);
         }
 
-        public async Task<RestaurantShortenDto> UpdateRestaurantAsync(int resturantId, ClaimsPrincipal claimsPrincipal, UpdateRestaurantDto updateRestaurantDto)
+        public async Task<RestaurantBasicDataDto> UpdateRestaurantAsync(int resturantId, ClaimsPrincipal claimsPrincipal, UpdateRestaurantDto updateRestaurantDto)
         {
             _logger.LogInformation("Starting update for restaurant with Id: {RestaurantId}", resturantId);
             await ValidateRestaurantOwnerExistenceAsync(updateRestaurantDto.RestaurantOwnerId);
@@ -157,7 +163,7 @@ namespace gozba_na_klik_backend.Services
                 await _unitOfWork.CommitAsync();
 
                 _logger.LogInformation("Restaurant {RestaurantId} successfully updated.", restaurant.Id);
-                return _mapper.Map<RestaurantShortenDto>(restaurant);
+                return _mapper.Map<RestaurantBasicDataDto>(restaurant);
             }
             catch (Exception)
             {
@@ -211,7 +217,7 @@ namespace gozba_na_klik_backend.Services
             var today = DateTime.Now.DayOfWeek;
 
             var todayHours = restaurant.WorkingHours
-                .FirstOrDefault(w => w.DayOfTheWeek == today);
+                .FirstOrDefault(w => w.DayOfTheWeek.ToString() == today.ToString());
 
             if (todayHours == null)
                 return false;

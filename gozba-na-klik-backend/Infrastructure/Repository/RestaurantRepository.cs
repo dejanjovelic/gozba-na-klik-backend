@@ -28,6 +28,7 @@ namespace gozba_na_klik_backend.Infrastructure.Repository
         public async Task<PaginatedListDto<Restaurant>> GetAllRestaurantsPaginatedAsync(int page, int pageSize)
         {
             IQueryable<Restaurant> restaurants = _context.Restaurants
+                .Where(r=>r.IsCreated != false)
                 .OrderBy(restaurant => restaurant.Id);
 
             int pageIndex = page - 1;
@@ -77,6 +78,7 @@ namespace gozba_na_klik_backend.Infrastructure.Repository
         public async Task<PaginatedListDto<Restaurant>> GetAllFilteredAndSortedAndPagedAsync(RestaurantFilterDto restaurantFilter, int sortType, int page, int pageSize)
         {
             IQueryable<Restaurant> restaurants = _context.Restaurants
+                .Where(r=>r.IsCreated != false)
                 .OrderBy(restaurant => restaurant.Id);
 
             restaurants = FilterRestaurants(restaurants, restaurantFilter);

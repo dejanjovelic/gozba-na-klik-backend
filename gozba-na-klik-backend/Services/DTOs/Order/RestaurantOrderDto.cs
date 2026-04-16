@@ -1,9 +1,8 @@
-﻿using gozba_na_klik_backend.Services.DTOs.Order;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
-namespace gozba_na_klik_backend.Services.DTOs.RestaurantDtos
+namespace gozba_na_klik_backend.Services.DTOs.Order
 {
-    public class RestaurantOrderDTO
+    public class RestaurantOrderDto
     {
         public int OrderId { get; set; }
         public string RestaurantName { get; set; }
