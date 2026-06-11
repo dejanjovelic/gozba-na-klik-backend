@@ -44,9 +44,8 @@ namespace gozba_na_klik_backend.Services
 
         }
 
-        public async Task UpdateRestaurantWorkingHoursAsync(int restaurantId, List<UpdateWorkingHoursDto> workingHoursDtos)
+        public async Task UpdateRestaurantWorkingHoursAsync(Restaurant restaurant, List<UpdateWorkingHoursDto> workingHoursDtos)
         {
-            Restaurant restaurant = await GetRestaurantOrThrowAsync(restaurantId);
             await _unitOfWork.BeginTransactionAsync();
 
             try
@@ -55,7 +54,20 @@ namespace gozba_na_klik_backend.Services
 
                 List<WorkingHours> workingHours = _mapper.Map<List<WorkingHours>>(workingHoursDtos);
 
-                workingHours.ForEach(wh => wh.RestaurantId = restaurantId);
+                foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+                {
+                    if (!workingHours.Any(wh => wh.DayOfTheWeek == day))
+                    {
+                        workingHours.Add(new WorkingHours 
+                        { 
+                            DayOfTheWeek = day, 
+                            StartingTime = null, 
+                            EndingTime = null,
+                            IsRestaurantOpen = false,
+                            RestaurantId = restaurant.Id
+                        });
+                    }
+                }
 
                 await _workingHoursRepository.UpdateRestaurantWorkingHoursAsync(workingHours);
 
@@ -69,17 +81,5 @@ namespace gozba_na_klik_backend.Services
                 throw;
             }
         }
-
-        private async Task<Restaurant> GetRestaurantOrThrowAsync(int id)
-        {
-            Restaurant restaurant = await _restaurantRepository.GetRestaurantByIdAsync(id);
-            if (restaurant == null)
-            {
-                throw new NotFoundException($"The restaurant wit Id: {id} not found.");
-            }
-            return restaurant;
-        }
-
-
     }
 }

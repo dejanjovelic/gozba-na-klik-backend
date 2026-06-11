@@ -20,11 +20,14 @@ namespace gozba_na_klik_backend.Infrastructure.Repository
                 .ToListAsync();
         }
 
-        public async Task<List<NonWorkingDate>> CreateRestaurantNonWorkingDatesAsync(List<NonWorkingDate> nonWorkingDates)
+        public async Task CreateRestaurantNonWorkingDatesAsync(List<NonWorkingDate> nonWorkingDates)
         {
             _context.NonWorkingDates.AddRange(nonWorkingDates);
-            await _context.SaveChangesAsync();
-            return nonWorkingDates;
+        }
+
+        public async Task DeleteRestaurantNonWorkingDatesAsync(List<NonWorkingDate> nonWorkingDates) 
+        {
+            _context.RemoveRange(nonWorkingDates);
         }
     }
 }

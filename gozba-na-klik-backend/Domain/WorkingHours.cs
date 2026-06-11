@@ -7,8 +7,9 @@ namespace gozba_na_klik_backend.Model
     {
         public int Id { get; set; }
         public DayOfWeek DayOfTheWeek { get; set; }
-        public TimeSpan StartingTime { get; set; }
-        public TimeSpan EndingTime { get; set; }
+        public TimeSpan? StartingTime { get; set; }
+        public TimeSpan? EndingTime { get; set; }
+        public bool? IsRestaurantOpen { get; set; }
         public int? RestaurantId { get; set; }
         public string? CourierId { get; set; }
 

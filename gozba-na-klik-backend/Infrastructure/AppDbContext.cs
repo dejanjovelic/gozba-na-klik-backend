@@ -1153,7 +1153,8 @@ namespace gozba_na_klik_backend.Infrastructure
                             RestaurantId = 5,
                             DayOfTheWeek = DayOfWeek.Monday,
                             StartingTime = new TimeSpan(8, 0, 0),
-                            EndingTime = new TimeSpan(16, 0, 0)
+                            EndingTime = new TimeSpan(16, 0, 0),
+                            IsRestaurantOpen = true
                         },
                         new WorkingHours
                         {
@@ -1161,7 +1162,8 @@ namespace gozba_na_klik_backend.Infrastructure
                             RestaurantId = 5,
                             DayOfTheWeek = DayOfWeek.Tuesday,
                             StartingTime = new TimeSpan(8, 0, 0),
-                            EndingTime = new TimeSpan(16, 0, 0)
+                            EndingTime = new TimeSpan(16, 0, 0),
+                            IsRestaurantOpen = true
                         },
                         new WorkingHours
                         {
@@ -1169,7 +1171,8 @@ namespace gozba_na_klik_backend.Infrastructure
                             RestaurantId = 5,
                             DayOfTheWeek = DayOfWeek.Wednesday,
                             StartingTime = new TimeSpan(8, 0, 0),
-                            EndingTime = new TimeSpan(16, 0, 0)
+                            EndingTime = new TimeSpan(16, 0, 0),
+                            IsRestaurantOpen = true
                         },
                         new WorkingHours
                         {
@@ -1177,7 +1180,8 @@ namespace gozba_na_klik_backend.Infrastructure
                             RestaurantId = 5,
                             DayOfTheWeek = DayOfWeek.Thursday,
                             StartingTime = new TimeSpan(8, 0, 0),
-                            EndingTime = new TimeSpan(16, 0, 0)
+                            EndingTime = new TimeSpan(16, 0, 0),
+                            IsRestaurantOpen = true
                         },
                         new WorkingHours
                         {
@@ -1185,7 +1189,8 @@ namespace gozba_na_klik_backend.Infrastructure
                             RestaurantId = 6,
                             DayOfTheWeek = DayOfWeek.Monday,
                             StartingTime = new TimeSpan(9, 0, 0),
-                            EndingTime = new TimeSpan(17, 0, 0)
+                            EndingTime = new TimeSpan(17, 0, 0),
+                            IsRestaurantOpen = true
                         },
                         new WorkingHours
                         {
@@ -1193,7 +1198,8 @@ namespace gozba_na_klik_backend.Infrastructure
                             RestaurantId = 6,
                             DayOfTheWeek = DayOfWeek.Tuesday,
                             StartingTime = new TimeSpan(9, 0, 0),
-                            EndingTime = new TimeSpan(17, 0, 0)
+                            EndingTime = new TimeSpan(17, 0, 0),
+                            IsRestaurantOpen = true
                         },
                         new WorkingHours
                         {
@@ -1201,7 +1207,8 @@ namespace gozba_na_klik_backend.Infrastructure
                             RestaurantId = 6,
                             DayOfTheWeek = DayOfWeek.Wednesday,
                             StartingTime = new TimeSpan(9, 0, 0),
-                            EndingTime = new TimeSpan(17, 0, 0)
+                            EndingTime = new TimeSpan(17, 0, 0),
+                            IsRestaurantOpen = true
                         },
                         new WorkingHours
                         {
@@ -1209,7 +1216,8 @@ namespace gozba_na_klik_backend.Infrastructure
                             RestaurantId = 6,
                             DayOfTheWeek = DayOfWeek.Thursday,
                             StartingTime = new TimeSpan(9, 0, 0),
-                            EndingTime = new TimeSpan(17, 0, 0)
+                            EndingTime = new TimeSpan(17, 0, 0),
+                            IsRestaurantOpen = true
                         }
                 );
 

@@ -1,6 +1,8 @@
 ﻿using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Services.DTOs;
+using gozba_na_klik_backend.Services.DTOs.NonWorkingDateDtos;
 using gozba_na_klik_backend.Services.DTOs.RestaurantDtos;
+using gozba_na_klik_backend.Services.DTOs.WorkingHoursDtos;
 using gozba_na_klik_backend.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -51,8 +53,8 @@ namespace gozba_na_klik_backend.Controllers
             return Ok(await _restaurantService.GetAllRestaurantsAsync());
         }
 
-        [Authorize(Roles = "RestaurantOwner")]
         //GET api/restaurants/by-owner?ownerId=5
+        [Authorize(Roles = "RestaurantOwner")]
         [HttpGet("by-owner")]
         public async Task<ActionResult<List<RestaurantBasicDataDto>>> GetAllRestaurantsByOwnerIdAsync([FromQuery] string ownerId)
         {
@@ -70,16 +72,16 @@ namespace gozba_na_klik_backend.Controllers
         //GET api/restaurants/5/with-working-time
         [Authorize(Roles = "RestaurantOwner")]
         [HttpGet("{id}/with-working-time")]
-        public async Task<ActionResult<RestaurantWithWorkingHoursAndNonWokingDaysDto>> GetRestaurantWithWorkingDaysAndNonWorkingDaysAsync(int id) 
-        { 
+        public async Task<ActionResult<RestaurantWithWorkingHoursAndNonWokingDaysDto>> GetRestaurantWithWorkingDaysAndNonWorkingDaysAsync(int id)
+        {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return Ok( await _restaurantService.GetRestaurantWithWorkingDaysAndNonWorkingDaysAsync(userId, id));
+            return Ok(await _restaurantService.GetRestaurantWithWorkingDaysAndNonWorkingDaysAsync(userId, id));
         }
 
         //GET api/restaurants/5/basic-data
         [Authorize(Roles = "Administrator")]
         [HttpGet("{id}/basic-data")]
-        public async Task<ActionResult<RestaurantBasicDataDto>> GetRestaurantBasicDataByIdAsync(int id) 
+        public async Task<ActionResult<RestaurantBasicDataDto>> GetRestaurantBasicDataByIdAsync(int id)
         {
             return Ok(await _restaurantService.GetRestaurantBasicDataByIdAsync(id));
         }
@@ -104,20 +106,62 @@ namespace gozba_na_klik_backend.Controllers
         }
 
         //PUT api/restaurants/8
-        [Authorize(Roles = "Administrator, RestaurantOwner")]
+        [Authorize(Roles = "RestaurantOwner")]
         [HttpPut("{id}")]
-        public async Task<ActionResult<RestaurantBasicDataDto>> UpdateRestaurantAsync(int id, [FromBody] UpdateRestaurantDto updateRestaurantDto) 
+        public async Task<ActionResult<RestaurantBasicDataDto>> UpdateRestaurantAsync(int id, [FromBody] UpdateRestaurantDto updateRestaurantDto)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            return Ok(await _restaurantService.UpdateRestaurantAsync(id, User, updateRestaurantDto));
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return Ok(await _restaurantService.UpdateRestaurantAsync(userId, id, updateRestaurantDto));
+        }
+
+        //PUT api/restaurants/5/basic-data
+        [Authorize(Roles = "Administrator, RestaurantOwner")]
+        [HttpPut("{restaurantId}/basic-data")]
+        public async Task<ActionResult<RestaurantBasicDataDto>> UpdateRestaurantBasicDataAsync(int restaurantId, [FromBody] UpdateRestaurantBasicDataDto updateRestaurantBasicDataDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            return Ok(await _restaurantService.UpdateRestaurantBasicDataAsync(User, restaurantId, updateRestaurantBasicDataDto));
+        }
+
+
+        //PUT api/restaurants/5/working-hours
+        [Authorize(Roles = "RestaurantOwner")]
+        [HttpPut("{restaurantId}/working-hours")]
+        public async Task<ActionResult<RestaurantWithWorkingHoursAndNonWokingDaysDto>> UpdateRestaurantWorkingHoursAsync(int restaurantId, [FromBody] List<UpdateWorkingHoursDto> newWorkingHours)
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return Ok(await _restaurantService.UpdateRestaurantWorkingHoursAsync(userId, restaurantId, newWorkingHours));
+        }
+
+        //PUT api/restaurants/5/non-working-dates
+        [Authorize(Roles = "RestaurantOwner")]
+        [HttpPut("{restaurantId}/non-working-dates")]
+        public async Task<ActionResult<RestaurantWithWorkingHoursAndNonWokingDaysDto>> UpdateRestaurantNonWorkingDatesAsync(int restaurantId, [FromBody] List<CreateNonWorkingDateDto> nonWorkingDatesDtos)
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return Ok(await _restaurantService.UpdateRestaurantNonWorkingDatesAsync(userId, restaurantId, nonWorkingDatesDtos));
+        }
+
+        //PUT api/restaurants/5/image-url
+        [Authorize(Roles = "RestaurantOwner")]
+        [HttpPatch("{restaurantId}/image-url")]
+        public async Task<ActionResult> UpdateRestaurantImageUrlAsync(int restaurantId, [FromBody] UpdateRestaurantImageUrlDto updateRestaurantImageUrlDto) 
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await _restaurantService.UpdateRestaurantImageUrlAsync(userId, restaurantId, updateRestaurantImageUrlDto);
+            return NoContent();
         }
 
         //GET /api/restaurants/days-of-the-week
         [HttpGet("days-of-the-week")]
-        public ActionResult<IEnumerable<string>> GetDaysOfTheWeek() 
+        public ActionResult<IEnumerable<string>> GetDaysOfTheWeek()
         {
             return Ok(_restaurantService.GetDaysOfTheWeek());
         }

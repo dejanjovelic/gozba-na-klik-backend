@@ -1,6 +1,8 @@
 ﻿using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Services.DTOs;
+using gozba_na_klik_backend.Services.DTOs.NonWorkingDateDtos;
 using gozba_na_klik_backend.Services.DTOs.RestaurantDtos;
+using gozba_na_klik_backend.Services.DTOs.WorkingHoursDtos;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -17,11 +19,15 @@ namespace gozba_na_klik_backend.Services.IServices
         Task<RestaurantWithWorkingHoursAndNonWokingDaysDto> GetRestaurantWithWorkingDaysAndNonWorkingDaysAsync(string userId, int restaurantId);
         List<RestaurantSortTypeOptionDto> GetAllSortTypes();
         Task<RestaurantBasicDataDto> CreateRestaurantAsync(CreateRestaurantDto restaurantDto);
-        Task<RestaurantBasicDataDto> UpdateRestaurantAsync(int resturantId, ClaimsPrincipal claimsPrincipal, UpdateRestaurantDto updateRestaurantDto);
+        Task<RestaurantWithWorkingHoursAndNonWokingDaysDto> UpdateRestaurantAsync(string userId, int resturantId, UpdateRestaurantDto updateRestaurantDto);
         Task UpdateRestaurantAverageRatingAsync(int restaurantId);
         Task DeleteRestaurantAsync(int id);
         IEnumerable<string> GetDaysOfTheWeek();
         bool IsRestaurantOpen(Restaurant restaurant);
         Task<RestaurantBasicDataDto> GetRestaurantBasicDataByIdAsync(int id);
+        Task<RestaurantWithWorkingHoursAndNonWokingDaysDto> UpdateRestaurantWorkingHoursAsync(string userId, int restaurantId, List<UpdateWorkingHoursDto> newWorkingHours);
+        Task<RestaurantWithWorkingHoursAndNonWokingDaysDto> UpdateRestaurantNonWorkingDatesAsync(string userId, int restaurantId, List<CreateNonWorkingDateDto> nonWorkingDates);
+        Task<RestaurantBasicDataDto> UpdateRestaurantBasicDataAsync(ClaimsPrincipal claimsPrincipal, int resturantId, UpdateRestaurantBasicDataDto updateRestaurantBasicDataDto);
+        Task UpdateRestaurantImageUrlAsync(string userId, int restaurantId, UpdateRestaurantImageUrlDto updateRestaurantImageUrlDto);
     }
 }

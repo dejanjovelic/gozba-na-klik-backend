@@ -6,6 +6,6 @@ namespace gozba_na_klik_backend.Services.IServices
     public interface IWorkingHoursService
     {
         Task<List<WorkingHoursDto>> GetAllByRestaurantIdAsync(int restaurantId);
-        Task UpdateRestaurantWorkingHoursAsync(int restaurantId, List<UpdateWorkingHoursDto> workingHours);
+        Task UpdateRestaurantWorkingHoursAsync(Restaurant restaurant, List<UpdateWorkingHoursDto> workingHours);
     }
 }

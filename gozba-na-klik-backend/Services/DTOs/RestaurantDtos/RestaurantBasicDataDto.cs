@@ -11,5 +11,6 @@
         public string? RestaurantImageUrl { get; set; }
         public string RestaurantOwnerId { get; set; }
         public bool IsCreated { get; set; }
+        public double? AverageRating { get; set; }
     }
 }

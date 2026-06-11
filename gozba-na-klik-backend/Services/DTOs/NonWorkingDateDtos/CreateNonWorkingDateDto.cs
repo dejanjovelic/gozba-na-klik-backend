@@ -6,7 +6,7 @@ namespace gozba_na_klik_backend.Services.DTOs.NonWorkingDateDtos
     {
         [Required]
         public DateTime Date { get; set; }
-        
+
         [Required]
         public int RestaurantId { get; set; }
     }
