@@ -2,7 +2,6 @@
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Services.DTOs.CourierDtos;
 using gozba_na_klik_backend.Services.DTOs.Order;
-using gozba_na_klik_backend.Services.DTOs.RestaurantDtos;
 
 namespace gozba_na_klik_backend.Services.Mappings
 {
@@ -10,7 +9,7 @@ namespace gozba_na_klik_backend.Services.Mappings
     {
         public OrderProfile()
         {
-            CreateMap<Order, RestaurantOrderDTO>()
+            CreateMap<Order, RestaurantOrderDto>()
                 .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.ApplicationUser.Name + " " + src.Customer.ApplicationUser.Surname))
                 .ForMember(dest => dest.CustomerAddress, opt => opt.MapFrom(src => src.DeliveryAddress.Street + " " + src.DeliveryAddress.StreetNumber + ", " + src.DeliveryAddress.City))

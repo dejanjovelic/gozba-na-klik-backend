@@ -1,21 +1,24 @@
 
+using gozba_na_klik_backend.Controllers.Middleware;
+using gozba_na_klik_backend.Domain.IRepositories;
+using gozba_na_klik_backend.Infrastructure;
+using gozba_na_klik_backend.Infrastructure.Repository;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
 using gozba_na_klik_backend.Services;
+using gozba_na_klik_backend.Services.BackgroundServices;
 using gozba_na_klik_backend.Services.IServices;
+using gozba_na_klik_backend.Services.Mappings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
-using gozba_na_klik_backend.Services.BackgroundServices;
-using gozba_na_klik_backend.Services.Mappings;
-using gozba_na_klik_backend.Controllers.Middleware;
-using gozba_na_klik_backend.Infrastructure;
-using gozba_na_klik_backend.Infrastructure.Repository;
+
 
 namespace gozba_na_klik_backend
 {
@@ -69,6 +72,11 @@ namespace gozba_na_klik_backend
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IInvoiceService, InvoiceService>();
             builder.Services.AddScoped<IPdfGeneratorService, PdfGeneratorService>();
+            builder.Services.AddScoped<IWorkingHoursRepository, WorkingHoursRepository>();
+            builder.Services.AddScoped<IWorkingHoursService, WorkingHoursService>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<INonWorkingDateRepository, NonWorkingDateRepository>();
+            builder.Services.AddScoped<INonWorkingDateService, NonWorkingDateService>();
 
 
             builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
@@ -86,12 +94,15 @@ namespace gozba_na_klik_backend
                 cfg.AddProfile<AllergenProfile>();
                 cfg.AddProfile<OrderMealProfile>();
                 cfg.AddProfile<ApplicationUserProfile>();
-                cfg.AddProfile<RestauranOwnerProfile>();
+                cfg.AddProfile<RestaurantOwnerProfile>();
                 cfg.AddProfile<AddressProfile>();
                 cfg.AddProfile<CreditCardProfile>();
                 cfg.AddProfile<InvoiceProfile>();
                 cfg.AddProfile<OrderReviewProfile>();
+                cfg.AddProfile<WorkingHoursProfile>();
+                cfg.AddProfile<NonWorkingDateProfile>();
             });
+
 
             // Adding Authentication
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -172,6 +183,15 @@ namespace gozba_na_klik_backend
                     }
                   });
             });
+
+            // Postavljanje Serilog-a
+            var logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(builder.Configuration)
+                .Enrich.FromLogContext()
+                .CreateLogger();
+            builder.Logging.ClearProviders();
+            builder.Logging.AddSerilog(logger);
+
 
             var app = builder.Build();
 

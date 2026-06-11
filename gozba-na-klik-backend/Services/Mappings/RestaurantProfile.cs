@@ -12,6 +12,15 @@ namespace gozba_na_klik_backend.Services.Mappings
                 .ForMember(dest => dest.MealsOnMenu, opt => opt.MapFrom(src => src.MealsOnMenu));
 
             CreateMap<Restaurant, RestaurantDto>();
+
+            CreateMap<Restaurant, RestaurantBasicDataDto>();
+
+            CreateMap<CreateRestaurantDto, Restaurant>();
+            CreateMap<UpdateRestaurantDto, Restaurant>()
+                .ForMember(dest => dest.WorkingHours, opt => opt.Ignore())
+                .ForMember(dest => dest.NonWorkingDates, opt => opt.Ignore());
+
+            CreateMap<Restaurant, RestaurantWithWorkingHoursAndNonWokingDaysDto>();
         }
     }
 }

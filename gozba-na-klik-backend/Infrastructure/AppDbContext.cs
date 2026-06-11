@@ -1,4 +1,5 @@
-﻿using gozba_na_klik_backend.Model;
+﻿using gozba_na_klik_backend.Domain;
+using gozba_na_klik_backend.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,8 @@ namespace gozba_na_klik_backend.Infrastructure
         public DbSet<RestaurantOwner> RestaurantOwners { get; set; }
         public DbSet<OrderReview> OrderReviews { get; set; }
         public DbSet<CreditCard> CreditCards { get; set; }
+        public DbSet<WorkingHours> WorkingHours { get; set; }
+        public DbSet<NonWorkingDate> NonWorkingDates { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -388,7 +391,8 @@ namespace gozba_na_klik_backend.Infrastructure
                      Capacity = 60,
                      AverageRating = 6.5,
                      RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760980868/1701656104-Le-Petiti-Bistro-Blue-Centar-13_adciqg.jpg",
-                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh24"
+                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh24",
+                     IsCreated = true
                  },
                  new Restaurant
                  {
@@ -400,7 +404,8 @@ namespace gozba_na_klik_backend.Infrastructure
                      Capacity = 80,
                      AverageRating = 9.5,
                      RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981334/caption_e52wiq.jpg",
-                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh24"
+                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh24",
+                     IsCreated = true
                  },
                  new Restaurant
                  {
@@ -412,7 +417,8 @@ namespace gozba_na_klik_backend.Infrastructure
                      Capacity = 40,
                      AverageRating = 8.2,
                      RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981371/348s_o6zhl9.jpg",
-                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh24"
+                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh24",
+                     IsCreated = true
                  },
                  new Restaurant
                  {
@@ -424,7 +430,8 @@ namespace gozba_na_klik_backend.Infrastructure
                      Capacity = 100,
                      AverageRating = 3.8,
                      RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981740/348s_jvrtl3.jpg",
-                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh24"
+                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh24",
+                     IsCreated = true
                  },
                  new Restaurant
                  {
@@ -436,7 +443,8 @@ namespace gozba_na_klik_backend.Infrastructure
                      Capacity = 50,
                      AverageRating = 5,
                      RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981837/AC9h4noKhAJV-_f5ucmgN7g1uu9vls7RQwFmyblYG2NoZPvK95_Go_jejqToiFswNCJ4-_fS2fTYgpCI5WdS_gfmLhjPLdx3iAPbXUCdeikQHC9o-ZPvLnI8UwM-jWS6mxXZ_bgEMXao_s680-w680-h510-rw_jdbfsp.webp",
-                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh25"
+                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh25",
+                     IsCreated = true
                  },
                  new Restaurant
                  {
@@ -448,7 +456,8 @@ namespace gozba_na_klik_backend.Infrastructure
                      Capacity = 90,
                      AverageRating = 5,
                      RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981920/LaDama_10881_20_1_ojaujg.jpg",
-                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh25"
+                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh25",
+                     IsCreated = true
                  },
                  new Restaurant
                  {
@@ -460,7 +469,8 @@ namespace gozba_na_klik_backend.Infrastructure
                      Capacity = 70,
                      AverageRating = 5,
                      RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981760/im-65599456_e7zznz.jpg",
-                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh26"
+                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh26",
+                     IsCreated = true
                  },
                  new Restaurant
                  {
@@ -472,7 +482,8 @@ namespace gozba_na_klik_backend.Infrastructure
                      Capacity = 85,
                      AverageRating = 5,
                      RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760982086/5dc498fe695b58645d6f1dbc_jexb15.png",
-                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh27"
+                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh27",
+                     IsCreated = true
                  },
                  new Restaurant
                  {
@@ -484,7 +495,8 @@ namespace gozba_na_klik_backend.Infrastructure
                      Capacity = 45,
                      AverageRating = 8,
                      RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981871/images_yybf2j.jpg",
-                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh27"
+                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh27",
+                     IsCreated = true
                  },
                  new Restaurant
                  {
@@ -496,7 +508,8 @@ namespace gozba_na_klik_backend.Infrastructure
                      Capacity = 60,
                      AverageRating = 9,
                      RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985797/a-chef-is-cooking-in-his-restaurants-kitchen_gfpjj0.jpg",
-                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh28"
+                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh28",
+                     IsCreated = true
                  },
                  new Restaurant
                  {
@@ -508,7 +521,8 @@ namespace gozba_na_klik_backend.Infrastructure
                      Capacity = 55,
                      AverageRating = 7,
                      RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985725/premium_photo-1661883237884-263e8de8869b_fhmc5u.jpg",
-                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh29"
+                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh29",
+                     IsCreated = true
                  },
                  new Restaurant
                  {
@@ -520,7 +534,8 @@ namespace gozba_na_klik_backend.Infrastructure
                      Capacity = 75,
                      AverageRating = 5,
                      RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760981672/348s_gedljh.jpg",
-                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh30"
+                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh30",
+                     IsCreated = true
                  },
                  new Restaurant
                  {
@@ -532,7 +547,8 @@ namespace gozba_na_klik_backend.Infrastructure
                      Capacity = 65,
                      AverageRating = 5.4,
                      RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985883/348s_fheyvs.jpg",
-                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh31"
+                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh31",
+                     IsCreated = true
                  },
                  new Restaurant
                  {
@@ -544,7 +560,8 @@ namespace gozba_na_klik_backend.Infrastructure
                      Capacity = 80,
                      AverageRating = 6.7,
                      RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985977/348s_pumoab.jpg",
-                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh32"
+                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh32",
+                     IsCreated = true
                  },
                  new Restaurant
                  {
@@ -556,7 +573,8 @@ namespace gozba_na_klik_backend.Infrastructure
                      Capacity = 95,
                      AverageRating = 8.6,
                      RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760986014/ejhsj8xcmjuwdsi8qdmj.jpg",
-                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh33"
+                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh33",
+                     IsCreated = true
                  },
                  new Restaurant
                  {
@@ -568,7 +586,8 @@ namespace gozba_na_klik_backend.Infrastructure
                      Capacity = 70,
                      AverageRating = 5,
                      RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985649/Most_Beautiful_Restaurants_scotland_December23_PR_Global_pafswr.jpg",
-                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh32"
+                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh32",
+                     IsCreated = true
                  },
                  new Restaurant
                  {
@@ -580,7 +599,8 @@ namespace gozba_na_klik_backend.Infrastructure
                      Capacity = 60,
                      AverageRating = 5,
                      RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760970771/slikaRestorana1_hibuiy.png",
-                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh28"
+                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh28",
+                     IsCreated = true
                  },
                  new Restaurant
                  {
@@ -592,7 +612,8 @@ namespace gozba_na_klik_backend.Infrastructure
                      Capacity = 100,
                      AverageRating = 5,
                      RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760985542/07best-restaurants-nashville15-jbkq-videoSixteenByNineJumbo1600_ns15cb.jpg",
-                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh28"
+                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh28",
+                     IsCreated = true
                  },
                  new Restaurant
                  {
@@ -604,7 +625,8 @@ namespace gozba_na_klik_backend.Infrastructure
                      Capacity = 50,
                      AverageRating = 5,
                      RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760986076/ix3atyp8yzjh6a25r2ms.jpg",
-                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh29"
+                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh29",
+                     IsCreated = true
                  },
                  new Restaurant
                  {
@@ -616,7 +638,8 @@ namespace gozba_na_klik_backend.Infrastructure
                      Capacity = 40,
                      AverageRating = 5,
                      RestaurantImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1760986113/Hakkaiza-industrial-restaurant-design2_vyopcv.jpg",
-                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh30"
+                     RestaurantOwnerId = "r1a2b3c4-d5e6-7890-ab12-cd34ef56gh30",
+                     IsCreated = true
                  }
              );
 
@@ -662,9 +685,6 @@ namespace gozba_na_klik_backend.Infrastructure
                 new Meal { Id = 39, MealName = "Soufflé", Description = "French dessert with chocolate or vanilla.", Price = 6.5, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764955206/images_qgzazn.webp", RestaurantId = 9 },
                 new Meal { Id = 40, MealName = "Paneer Curry", Description = "Indian curry with paneer cheese cubes.", Price = 9.0, MealImageUrl = "https://res.cloudinary.com/dsgans7nh/image/upload/v1764955297/butter_paneer_curry_98394_16x9_n044l0.jpg", RestaurantId = 10 }
                 );
-
-
-
 
             modelBuilder.Entity("MealAllergens").HasData(
                 // Jelo 1: Stuffed Peppers (Id=1) - Pšenica (1), Celer (22)
@@ -1092,10 +1112,133 @@ namespace gozba_na_klik_backend.Infrastructure
 
             );
 
+            //CREDIT CARDS SEED DATA
             modelBuilder.Entity<CreditCard>().HasData(
-                new CreditCard { Id = 1, Bank = "Banca Intesa", CardNumber = "1234 5678 1478 5296", OwnerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01", Brand = CardBrand.Visa, CardHolderFirstName = "Marko", CardHolderLastName = "Markovic" },
-                new CreditCard { Id = 2, Bank = "OTP Banka", CardNumber = "1234 5678 1478 5297", OwnerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01", Brand = CardBrand.Mastercard, CardHolderFirstName = "Jelena", CardHolderLastName = "Jovanovic" },
-                new CreditCard { Id = 3, Bank = "MOBI Banka", CardNumber = "1234 5678 1478 5298", OwnerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02", Brand = CardBrand.Dina, CardHolderFirstName = "Petar", CardHolderLastName = "Petrovic" }
+                new CreditCard
+                {
+                    Id = 1,
+                    Bank = "Banca Intesa",
+                    CardNumber = "1234 5678 1478 5296",
+                    OwnerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01",
+                    Brand = CardBrand.Visa,
+                    CardHolderFirstName = "Marko",
+                    CardHolderLastName = "Markovic"
+                },
+                new CreditCard
+                {
+                    Id = 2,
+                    Bank = "OTP Banka",
+                    CardNumber = "1234 5678 1478 5297",
+                    OwnerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh01",
+                    Brand = CardBrand.Mastercard,
+                    CardHolderFirstName = "Jelena",
+                    CardHolderLastName = "Jovanovic"
+                },
+                new CreditCard
+                {
+                    Id = 3,
+                    Bank = "MOBI Banka",
+                    CardNumber = "1234 5678 1478 5298",
+                    OwnerId = "f1a2b3c4-d5e6-7890-ab12-cd34ef56gh02",
+                    Brand = CardBrand.Dina,
+                    CardHolderFirstName = "Petar",
+                    CardHolderLastName = "Petrovic"
+                }
+                );
+
+            modelBuilder.Entity<WorkingHours>().HasData(
+                        new WorkingHours
+                        {
+                            Id = 1,
+                            RestaurantId = 5,
+                            DayOfTheWeek = DayOfWeek.Monday,
+                            StartingTime = new TimeSpan(8, 0, 0),
+                            EndingTime = new TimeSpan(16, 0, 0)
+                        },
+                        new WorkingHours
+                        {
+                            Id = 2,
+                            RestaurantId = 5,
+                            DayOfTheWeek = DayOfWeek.Tuesday,
+                            StartingTime = new TimeSpan(8, 0, 0),
+                            EndingTime = new TimeSpan(16, 0, 0)
+                        },
+                        new WorkingHours
+                        {
+                            Id = 3,
+                            RestaurantId = 5,
+                            DayOfTheWeek = DayOfWeek.Wednesday,
+                            StartingTime = new TimeSpan(8, 0, 0),
+                            EndingTime = new TimeSpan(16, 0, 0)
+                        },
+                        new WorkingHours
+                        {
+                            Id = 4,
+                            RestaurantId = 5,
+                            DayOfTheWeek = DayOfWeek.Thursday,
+                            StartingTime = new TimeSpan(8, 0, 0),
+                            EndingTime = new TimeSpan(16, 0, 0)
+                        },
+                        new WorkingHours
+                        {
+                            Id = 5,
+                            RestaurantId = 6,
+                            DayOfTheWeek = DayOfWeek.Monday,
+                            StartingTime = new TimeSpan(9, 0, 0),
+                            EndingTime = new TimeSpan(17, 0, 0)
+                        },
+                        new WorkingHours
+                        {
+                            Id = 6,
+                            RestaurantId = 6,
+                            DayOfTheWeek = DayOfWeek.Tuesday,
+                            StartingTime = new TimeSpan(9, 0, 0),
+                            EndingTime = new TimeSpan(17, 0, 0)
+                        },
+                        new WorkingHours
+                        {
+                            Id = 7,
+                            RestaurantId = 6,
+                            DayOfTheWeek = DayOfWeek.Wednesday,
+                            StartingTime = new TimeSpan(9, 0, 0),
+                            EndingTime = new TimeSpan(17, 0, 0)
+                        },
+                        new WorkingHours
+                        {
+                            Id = 8,
+                            RestaurantId = 6,
+                            DayOfTheWeek = DayOfWeek.Thursday,
+                            StartingTime = new TimeSpan(9, 0, 0),
+                            EndingTime = new TimeSpan(17, 0, 0)
+                        }
+                );
+
+            //NON-WORKING DATES SEED DATA
+            modelBuilder.Entity<NonWorkingDate>().HasData(
+                         new NonWorkingDate
+                         {
+                             Id = 1,
+                             Date = new DateTime(2026, 4, 8, 0, 0, 0, DateTimeKind.Utc),
+                             RestaurantId = 5
+                         },
+                         new NonWorkingDate
+                         {
+                             Id = 2,
+                             Date = new DateTime(2026, 4, 9, 0, 0, 0, DateTimeKind.Utc),
+                             RestaurantId = 5
+                         },
+                         new NonWorkingDate
+                         {
+                             Id = 3,
+                             Date = new DateTime(2026, 4, 8, 0, 0, 0, DateTimeKind.Utc),
+                             RestaurantId = 6
+                         },
+                         new NonWorkingDate
+                         {
+                             Id = 4,
+                             Date = new DateTime(2026, 4, 9, 0, 0, 0, DateTimeKind.Utc),
+                             RestaurantId = 6
+                         }
                 );
         }
     }

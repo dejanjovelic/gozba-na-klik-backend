@@ -2,7 +2,7 @@ using gozba_na_klik_backend.Model;
 
 namespace gozba_na_klik_backend.Services.DTOs
 {
-    public class NewCreditCardDto
+    public class CreateCreditCardDto
     {
         public int Id { get; set; }
         public string Bank { get; set; } = string.Empty;

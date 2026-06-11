@@ -12,7 +12,13 @@ namespace gozba_na_klik_backend.Services.Mappings
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.ApplicationUser.UserName))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.ApplicationUser.Name))
                 .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.ApplicationUser.Surname));
-            CreateMap<Courier, NewCourierDto>();
+            
+            CreateMap<Courier, CreateCourierDto>();
+
+            CreateMap<Courier, CourierDto>()
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.ApplicationUser.UserName))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.ApplicationUser.Name))
+                .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.ApplicationUser.Surname));
         }
     }
 }

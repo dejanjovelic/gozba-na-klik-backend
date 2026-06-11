@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using gozba_na_klik_backend.Services.DTOs.RestaurantOwnerDtos;
 
 namespace gozba_na_klik_backend.Controllers
 {
@@ -30,6 +31,14 @@ namespace gozba_na_klik_backend.Controllers
                 return BadRequest(ModelState);
             }
             return Ok(await _restaurantOwnerService.CreateAsync(registrationDto));
+        }
+
+        //GET api/restaurantowners
+        [Authorize(Roles = "Administrator")]
+        [HttpGet]
+        public async Task<ActionResult<List<RestaurantOwnerShortResponseDto>>> GetAllAsync() 
+        {
+            return Ok(await _restaurantOwnerService.GetAllAsync());
         }
     }
 }

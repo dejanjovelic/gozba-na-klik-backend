@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using gozba_na_klik_backend.Domain;
+using System.Text.Json.Serialization;
 
 namespace gozba_na_klik_backend.Model
 {
@@ -10,6 +11,6 @@ namespace gozba_na_klik_backend.Model
         public TimeSpan EndingTime { get; set; }
         public int? RestaurantId { get; set; }
         public string? CourierId { get; set; }
-       
+
     }
 }

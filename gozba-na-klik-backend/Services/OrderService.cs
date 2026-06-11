@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using gozba_na_klik_backend.Services.DTOs;
 using gozba_na_klik_backend.Services.DTOs.CourierDtos;
 using gozba_na_klik_backend.Services.DTOs.Order;
-using gozba_na_klik_backend.Services.DTOs.RestaurantDtos;
 
 namespace gozba_na_klik_backend.Services
 {
@@ -57,7 +56,8 @@ namespace gozba_na_klik_backend.Services
             _invoiceRepository = invoiceRepository;
         }
 
-        public async Task<List<RestaurantOrderDTO>> GetOrdersByOwnerIdAsync(string ownerId, string? currentOwnerId)
+        public async Task<List<RestaurantOrderDto
+            >> GetOrdersByOwnerIdAsync(string ownerId, string? currentOwnerId)
         {
             if (ownerId != currentOwnerId)
             {
@@ -70,7 +70,7 @@ namespace gozba_na_klik_backend.Services
             }
 
             var orders = await _orderRepository.GetOrdersByOwnerIdAsync(ownerId);
-            return _mapper.Map<List<RestaurantOrderDTO>>(orders);
+            return _mapper.Map<List<RestaurantOrderDto>>(orders);
         }
 
         public async Task<List<CustomerOrderResponseDto>> GetActiveOrdersByCustomerIdAsync(ClaimsPrincipal userPrincipal)
@@ -117,7 +117,7 @@ namespace gozba_na_klik_backend.Services
         {
             var roles = GetUserRoles();
 
-            if (orderId == 0)
+            if (orderId <= 0)
             {
                 throw new BadRequestException("Invalid data.");
             }

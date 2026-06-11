@@ -98,12 +98,12 @@ namespace gozba_na_klik_backend_Tests
             var mockAuth = new Mock<IAuthService>();
 
             var mapper = new Mock<IMapper>();
-            mapper.Setup(m => m.Map<CreditCard>(It.IsAny<NewCreditCardDto>())).Returns((NewCreditCardDto d) => new CreditCard { Bank = d.Bank, CardNumber = d.CardNumber });
+            mapper.Setup(m => m.Map<CreditCard>(It.IsAny<CreateCreditCardDto>())).Returns((CreateCreditCardDto d) => new CreditCard { Bank = d.Bank, CardNumber = d.CardNumber });
             mapper.Setup(m => m.Map<CreditCardResponseDto>(It.IsAny<CreditCard>())).Returns((CreditCard cc) => new CreditCardResponseDto { Id = cc.Id, Bank = cc.Bank, CardNumber = Mask(cc.CardNumber) });
 
             var service = new CustomerService(mockCustomerRepo.Object, mockAllergen.Object, mockAddress.Object, mockCreditRepo.Object, mockAuth.Object, mapper.Object);
 
-            var dto = new NewCreditCardDto { Bank = "BankX", CardNumber = "1111222233334444" };
+            var dto = new CreateCreditCardDto { Bank = "BankX", CardNumber = "1111222233334444" };
 
             var result = await service.CreateCreditCardAsync("cust-1", dto, "cust-1");
 
@@ -134,7 +134,7 @@ namespace gozba_na_klik_backend_Tests
 
             var service = new CustomerService(mockCustomerRepo.Object, mockAllergen.Object, mockAddress.Object, mockCreditRepo.Object, mockAuth.Object, mapper.Object);
 
-            var dto = new NewCreditCardDto { Id = 5, Bank = "NewBank", CardNumber = "9999888877776666" };
+            var dto = new CreateCreditCardDto { Id = 5, Bank = "NewBank", CardNumber = "9999888877776666" };
 
             var result = await service.UpdateCreditCardAsync("cust-1", 5, dto, "cust-1");
 

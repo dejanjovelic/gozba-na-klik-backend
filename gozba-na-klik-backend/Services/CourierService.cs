@@ -21,16 +21,23 @@ namespace gozba_na_klik_backend.Services
         private readonly IAuthService _authService;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CourierService(ICourierRepository courierRepository, IAuthService authService, IMapper mapper, UserManager<ApplicationUser> userManager)
+        public CourierService(
+            ICourierRepository courierRepository,
+            IAuthService authService, IMapper mapper,
+            UserManager<ApplicationUser> userManager,
+            IUnitOfWork unitOfWork
+            )
         {
             _courierRepository = courierRepository;
             _authService = authService;
             _mapper = mapper;
             _userManager = userManager;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<NewCourierDto> CreateAsync(RegistrationDto registrationDto)
+        public async Task<CreateCourierDto> CreateAsync(RegistrationDto registrationDto)
         {
             AuthResponseDto authResponseDto = await _authService.RegisterUserAsync(registrationDto, "Courier");
             Courier courier = new Courier
@@ -41,7 +48,7 @@ namespace gozba_na_klik_backend.Services
             await _courierRepository.CreateAsync(courier);
             courier = await _courierRepository.GetByIdAsync(authResponseDto.AplicationUserId);
             var roles = await _userManager.GetRolesAsync(courier.ApplicationUser);
-            var result = _mapper.Map<NewCourierDto>(courier);
+            var result = _mapper.Map<CreateCourierDto>(courier);
             result.Role = roles.FirstOrDefault();
 
             return result;
@@ -50,46 +57,59 @@ namespace gozba_na_klik_backend.Services
         public async Task<CourierDto> GetByIdAsync(string courierId, string? ownerId)
         {
             ValidateInputData(courierId, ownerId);
+            Courier courier = await GetCourierOrThrow(courierId);
 
-            var courier = await _courierRepository.GetByIdAsync(courierId);
-
-            if (courier == null)
-            {
-                throw new NotFoundException("Courier not found.");
-            }
-            return new CourierDto
-            {
-                Id = courier.ApplicationUser.Id,
-                Username = courier.ApplicationUser.UserName,
-                Name = courier.ApplicationUser.Name,
-                Surname = courier.ApplicationUser.Surname,
-                WorkingHours = courier.WorkingHours.Select(wh => new WorkingHoursDto
-                {
-                    DayOfTheWeek = wh.DayOfTheWeek.ToString(),
-                    StartingTime = wh.StartingTime.ToString(@"hh\:mm\:ss"),
-                    EndingTime = wh.EndingTime.ToString(@"hh\:mm\:ss")
-                }).ToList()
-            };
+            return _mapper.Map<CourierDto>(courier);
         }
 
         public async Task UpdateWorkingHoursAsync(string courierId, List<WorkingHours> workingHours, string? ownerId)
         {
             ValidateInputData(courierId, ownerId);
+            Courier courier = await GetCourierOrThrow(courierId);
 
-            var courier = await _courierRepository.GetByIdAsync(courierId);
+            await _unitOfWork.BeginTransactionAsync();
 
-            if (courier == null)
+            try
             {
-                throw new NotFoundException("Courier not found.");
-            }
+                await _courierRepository.DeleteWorkingHoursAsync(courier.WorkingHours);
 
-            if (courier.WorkingHours.Count != 0) 
-            { 
-                // TO DO Treba da ih obrise
+                workingHours.ForEach(wh => wh.CourierId = courierId);
+
+                await _courierRepository.UpdateWorkingHoursAsync(workingHours);
+
+                await _unitOfWork.SaveAsync();
+                await _unitOfWork.CommitAsync();
             }
-            
-                await _courierRepository.UpdateWorkingHoursAsync(courier, workingHours);
-                        
+            catch (Exception)
+            {
+                await _unitOfWork.RollbackAsync();
+                throw;
+            }
+        }
+
+        public async Task UpdateCourierStatusAsync()
+        {
+            var now = DateTime.Now;
+            var currentDay = now.DayOfWeek;
+            var currentTime = now.TimeOfDay;
+            List<Courier> couriers = await _courierRepository.GetAllAsync();
+            foreach (var courier in couriers)
+            {
+                // Check if any of today's working hours include the current time
+                bool isWorkingNow = courier.WorkingHours?
+                    .Any(wh => wh.DayOfTheWeek.ToString() == currentDay.ToString() &&
+                               currentTime >= wh.StartingTime &&
+                               currentTime <= wh.EndingTime)
+                    ?? false;
+
+                courier.Active = isWorkingNow;
+            }
+            await _courierRepository.UpdateCourierStatusAsync(couriers);
+        }
+
+        public async Task<List<Courier>> GetAllAsync()
+        {
+            return await _courierRepository.GetAllAsync();
         }
 
         private static void ValidateInputData(string courierId, string? ownerId)
@@ -105,13 +125,16 @@ namespace gozba_na_klik_backend.Services
             }
         }
 
-        public async Task UpdateCourierStatusAsync()
+        private async Task<Courier> GetCourierOrThrow(string id)
         {
-            await _courierRepository.UpdateCourierStatusAsync();
-        }
-        public async Task<List<Courier>> GetAllAsync()
-        {
-            return await _courierRepository.GetAllAsync();
+            var courier = await _courierRepository.GetByIdAsync(id);
+
+            if (courier == null)
+            {
+                throw new NotFoundException($"Courier with Id: {id} not found.");
+            }
+
+            return courier;
         }
     }
 }

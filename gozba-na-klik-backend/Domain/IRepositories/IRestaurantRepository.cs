@@ -7,9 +7,15 @@ namespace gozba_na_klik_backend.Model.IRepositories
     {
         Task<List<Restaurant>> GetTopRatedRestaurantsAsync();
         Task<PaginatedListDto<Restaurant>> GetAllRestaurantsPaginatedAsync(int page, int pageSize);
+        Task<List<Restaurant>> GetAllRestaurantsAsync();
+        Task<List<Restaurant>> GetAllRestaurantsByOwnerIdAsync(string ownerId);
+        Task<Restaurant> GetRestaurantByIdAsync(int id);
         Task<PaginatedListDto<Restaurant>> GetAllFilteredAndSortedAndPagedAsync(RestaurantFilterDto restaurantFilter, int sortType, int page, int pageSize);
         Task<int> CountAllRestaurantsAsync();
-        Task<Restaurant> GetRestaurantByIdAsync(int id);
-        Task UpdateRestaurantAverageRatingAsync(int restaurantId);
+        Task<Restaurant> CreateRestaurantAsync(Restaurant newRestaurant);
+        Task UpdateRestaurantAsync(Restaurant restaurant);
+        Task DeleteRestaurantAsync(Restaurant restaurant);
+        Task<bool> RestaurantExistsAsync(int id);
+      
     }
 }

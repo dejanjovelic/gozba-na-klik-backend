@@ -1,4 +1,4 @@
-﻿namespace gozba_na_klik_backend.Services.DTOs
+﻿namespace gozba_na_klik_backend.Services.DTOs.WorkingHoursDtos
 {
     public class WorkingHoursDto
     {

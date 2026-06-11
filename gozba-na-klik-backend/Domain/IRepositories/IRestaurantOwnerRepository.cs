@@ -5,6 +5,8 @@ namespace gozba_na_klik_backend.Model.IRepositories
     public interface IRestaurantOwnerRepository
     {
         Task<RestaurantOwner> CreateAsync(RestaurantOwner restaurantOwner);
-        Task<RestaurantOwner> GetById(string restaurantOwnerId);
+        Task<List<RestaurantOwner>> GetAllAsync();
+        Task<RestaurantOwner> GetByIdAsync(string restaurantOwnerId);
+        Task<bool> RestaurantOwnerExistsByIdAsync(string id);
     }
 }
