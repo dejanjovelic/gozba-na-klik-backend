@@ -187,7 +187,8 @@ namespace gozba_na_klik_backend.Services
                                 restaurant.Capacity != null &&
                                 !string.IsNullOrWhiteSpace(restaurant.Description) &&
                                 restaurant.Id > 0 &&
-                                restaurant.WorkingHours.Count > 0;
+                                restaurant.WorkingHours.Any(wh => wh.StartingTime != new TimeSpan(00, 00, 00)) &&
+                                restaurant.WorkingHours.Any(wh => wh.EndingTime != new TimeSpan(00,00,00));
         }
 
         public async Task<RestaurantBasicDataDto> UpdateRestaurantBasicDataAsync(ClaimsPrincipal claimsPrincipal, int resturantId, UpdateRestaurantBasicDataDto updateRestaurantBasicDataDto)
