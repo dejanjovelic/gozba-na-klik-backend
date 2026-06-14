@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
+using gozba_na_klik_backend.Controllers;
+using gozba_na_klik_backend.Infrastructure;
 using gozba_na_klik_backend.Infrastructure.Repository;
 using gozba_na_klik_backend.Model;
 using gozba_na_klik_backend.Model.IRepositories;
 using gozba_na_klik_backend.Services.DTOs;
+using gozba_na_klik_backend.Services.DTOs.NonWorkingDateDtos;
 using gozba_na_klik_backend.Services.DTOs.RestaurantDtos;
+using gozba_na_klik_backend.Services.DTOs.WorkingHoursDtos;
 using gozba_na_klik_backend.Services.Exceptions;
 using gozba_na_klik_backend.Services.IServices;
 using gozba_na_klik_backend.Utils;
@@ -15,6 +19,7 @@ using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using ZstdSharp;
+using ZstdSharp.Unsafe;
 
 namespace gozba_na_klik_backend.Services
 {
@@ -99,7 +104,7 @@ namespace gozba_na_klik_backend.Services
             return _mapper.Map<RestaurantWithWorkingHoursAndNonWokingDaysDto>(restaurant);
         }
 
-        public async Task<RestaurantBasicDataDto> GetRestaurantBasicDataByIdAsync(int id) 
+        public async Task<RestaurantBasicDataDto> GetRestaurantBasicDataByIdAsync(int id)
         {
             Restaurant restaurant = await _restaurantRepository.GetRestaurantByIdAsync(id);
             return _mapper.Map<RestaurantBasicDataDto>(restaurant);
@@ -122,38 +127,40 @@ namespace gozba_na_klik_backend.Services
 
             Restaurant newRestaurant = _mapper.Map<Restaurant>(restaurantDto);
             newRestaurant.IsCreated = false;
-
             Restaurant createdRestaurant = await _restaurantRepository.CreateRestaurantAsync(newRestaurant);
+            List<UpdateWorkingHoursDto> workingHours = new List<UpdateWorkingHoursDto>();
+            foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+            {
+                workingHours.Add(new UpdateWorkingHoursDto
+                {
+                    DayOfTheWeek = day,
+                    EndingTime = null,
+                    StartingTime = null,
+                    RestaurantId = createdRestaurant.Id
+                });
+            }
+            await _workingHoursService.UpdateRestaurantWorkingHoursAsync(createdRestaurant, workingHours);
             return _mapper.Map<RestaurantBasicDataDto>(createdRestaurant);
         }
 
-        public async Task<RestaurantBasicDataDto> UpdateRestaurantAsync(int resturantId, ClaimsPrincipal claimsPrincipal, UpdateRestaurantDto updateRestaurantDto)
+        public async Task<RestaurantWithWorkingHoursAndNonWokingDaysDto> UpdateRestaurantAsync(string userId, int resturantId, UpdateRestaurantDto updateRestaurantDto)
         {
             _logger.LogInformation("Starting update for restaurant with Id: {RestaurantId}", resturantId);
-            await ValidateRestaurantOwnerExistenceAsync(updateRestaurantDto.RestaurantOwnerId);
             await _unitOfWork.BeginTransactionAsync();
+
             try
             {
                 ValidateMatchingIds(resturantId, updateRestaurantDto.Id);
 
-                ApplicationUser user = await _userManager.GetUserAsync(claimsPrincipal);
-                _logger.LogInformation("User {UserId} initiated update for restaurant {RestaurantId}", user.Id, resturantId);
-
                 Restaurant restaurant = await GetRestaurantOrThrowAsync(resturantId);
                 _logger.LogInformation("Updating restaurant with Id: {RestaurantId} using DTO: {@UpdateDto}", restaurant.Id, updateRestaurantDto);
 
-                if (await _userManager.IsInRoleAsync(user, "RestaurantOwner"))
-                {
-                    ValidateRestaurantOwnership(user.Id, updateRestaurantDto.RestaurantOwnerId, "You do not have permission to update working hours or non-woking days.");
-
-                    _logger.LogInformation("Updating working hours for restaurant {RestaurantId}", updateRestaurantDto.Id);
-                    await _workingHoursService.UpdateRestaurantWorkingHoursAsync(updateRestaurantDto.Id, updateRestaurantDto.WorkingHours);
-
-                    _logger.LogInformation("Updating non-working dates for restaurant {RestaurantId}", updateRestaurantDto.Id);
-                    await _nonWorkingDateService.CreateRestaurantNonWorkingDatesAsync(updateRestaurantDto.Id, updateRestaurantDto.NonWorkingDates);
-                }
+                ValidateRestaurantOwnership(userId, restaurant.RestaurantOwnerId);
 
                 _mapper.Map(updateRestaurantDto, restaurant);
+
+                _logger.LogInformation("Validating restaurant data completeness before publishing. RestaurantId={RestaurantId}", restaurant.Id);
+                restaurant.IsCreated = IsRestaurantDataComplete(restaurant);
 
                 _logger.LogInformation("Recalculating average rating for restaurant {RestaurantId}", restaurant.Id);
                 await UpdateRestaurantAverageRatingAsync(restaurant.Id);
@@ -163,7 +170,7 @@ namespace gozba_na_klik_backend.Services
                 await _unitOfWork.CommitAsync();
 
                 _logger.LogInformation("Restaurant {RestaurantId} successfully updated.", restaurant.Id);
-                return _mapper.Map<RestaurantBasicDataDto>(restaurant);
+                return _mapper.Map<RestaurantWithWorkingHoursAndNonWokingDaysDto>(restaurant);
             }
             catch (Exception)
             {
@@ -172,12 +179,91 @@ namespace gozba_na_klik_backend.Services
             }
         }
 
+        private static bool IsRestaurantDataComplete(Restaurant restaurant)
+        {
+            return !string.IsNullOrWhiteSpace(restaurant.Name) &&
+                                !string.IsNullOrWhiteSpace(restaurant.Address) &&
+                                !string.IsNullOrWhiteSpace(restaurant.City) &&
+                                restaurant.Capacity != null &&
+                                !string.IsNullOrWhiteSpace(restaurant.Description) &&
+                                restaurant.Id > 0 &&
+                                restaurant.WorkingHours.Any(wh => wh.StartingTime != new TimeSpan(00, 00, 00)) &&
+                                restaurant.WorkingHours.Any(wh => wh.EndingTime != new TimeSpan(00,00,00));
+        }
+
+        public async Task<RestaurantBasicDataDto> UpdateRestaurantBasicDataAsync(ClaimsPrincipal claimsPrincipal, int resturantId, UpdateRestaurantBasicDataDto updateRestaurantBasicDataDto)
+        {
+            ApplicationUser user = await _userManager.GetUserAsync(claimsPrincipal);
+            Restaurant restaurant = await GetRestaurantOrThrowAsync(resturantId);
+
+            if (await _userManager.IsInRoleAsync(user, "RestaurantOwner"))
+            {
+                ValidateRestaurantOwnership(user.Id, restaurant.RestaurantOwnerId);
+            }
+
+            _mapper.Map(updateRestaurantBasicDataDto, restaurant);
+            await _restaurantRepository.UpdateRestaurantAsync(restaurant);
+            return _mapper.Map<RestaurantBasicDataDto>(restaurant);
+        }
+
+        public async Task<RestaurantWithWorkingHoursAndNonWokingDaysDto> UpdateRestaurantImageAsync(string userId, int restaurantId, string restaurantImageUrl)
+        {
+            Restaurant restaurant = await GetRestaurantOrThrowAsync(restaurantId);
+            ValidateRestaurantOwnership(userId, restaurant.RestaurantOwnerId);
+            restaurant.RestaurantImageUrl = restaurantImageUrl;
+            await _restaurantRepository.UpdateRestaurantAsync(restaurant);
+            return _mapper.Map<RestaurantWithWorkingHoursAndNonWokingDaysDto>(restaurant);
+        }
+
+        public async Task<RestaurantWithWorkingHoursAndNonWokingDaysDto> UpdateRestaurantWorkingHoursAsync(string userId, int restaurantId, List<UpdateWorkingHoursDto> newWorkingHours)
+        {
+            Restaurant restaurant = await GetRestaurantOrThrowAsync(restaurantId);
+            ValidateRestaurantOwnership(userId, restaurant.RestaurantOwnerId);
+            await _workingHoursService.UpdateRestaurantWorkingHoursAsync(restaurant, newWorkingHours);
+            return _mapper.Map<RestaurantWithWorkingHoursAndNonWokingDaysDto>(restaurant);
+        }
+
+        public async Task<RestaurantWithWorkingHoursAndNonWokingDaysDto> UpdateRestaurantNonWorkingDatesAsync(string userId, int restaurantId, List<CreateNonWorkingDateDto> nonWorkingDatesDtos)
+        {
+            await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                Restaurant restaurant = await GetRestaurantOrThrowAsync(restaurantId);
+                ValidateRestaurantOwnership(userId, restaurant.RestaurantOwnerId);
+
+                await _nonWorkingDateService.DeleteRestaurantNonWorkingDatesAsync(restaurant, nonWorkingDatesDtos);
+                await _nonWorkingDateService.CreateRestaurantNonWorkingDatesAsync(restaurant, nonWorkingDatesDtos);
+
+                await _unitOfWork.SaveAsync();
+                await _unitOfWork.CommitAsync();
+
+                return _mapper.Map<RestaurantWithWorkingHoursAndNonWokingDaysDto>(restaurant);
+            }
+            catch (Exception)
+            {
+                await _unitOfWork.RollbackAsync();
+                throw;
+            }
+        }
+
+        public async Task UpdateRestaurantImageUrlAsync(string userId, int restaurantId, UpdateRestaurantImageUrlDto updateRestaurantImageUrlDto)
+        {
+            Restaurant restaurant = await GetRestaurantOrThrowAsync(restaurantId);
+            ValidateRestaurantOwnership(userId, restaurant.RestaurantOwnerId);
+            if (string.IsNullOrWhiteSpace(updateRestaurantImageUrlDto.RestaurantImageUrl))
+            {
+                throw new BadRequestException("Invalid restaurant image url data.");
+            }
+
+            restaurant.RestaurantImageUrl = updateRestaurantImageUrlDto.RestaurantImageUrl;
+            await _restaurantRepository.UpdateRestaurantAsync(restaurant);
+        }
+
         private void ValidateMatchingIds(int routeId, int dtoId)
         {
             if (routeId != dtoId)
             {
                 throw new BadRequestException($"Route ID ({routeId}) does not match DTO ID ({dtoId}).");
-
             }
         }
 
@@ -270,6 +356,5 @@ namespace gozba_na_klik_backend.Services
             _logger.LogInformation($"Restaurant found.");
             return restaurant;
         }
-
     }
 }

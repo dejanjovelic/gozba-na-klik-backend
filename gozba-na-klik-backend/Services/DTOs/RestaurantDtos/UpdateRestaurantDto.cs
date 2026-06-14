@@ -26,13 +26,16 @@ namespace gozba_na_klik_backend.Services.DTOs.RestaurantDtos
         public int Capacity { get; set; }
 
         public double? AverageRating { get; set; }
+
         public string? RestaurantImageUrl { get; set; }
+
         public bool IsCreated { get; set; }
 
         [Required]
         public string RestaurantOwnerId { get; set; }
 
         public List<UpdateWorkingHoursDto>? WorkingHours { get; set; } = new List<UpdateWorkingHoursDto>();
+
         public List<CreateNonWorkingDateDto>? NonWorkingDates { get; set; } = new List<CreateNonWorkingDateDto>();
 
     }

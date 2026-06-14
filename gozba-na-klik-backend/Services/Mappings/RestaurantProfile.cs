@@ -16,11 +16,12 @@ namespace gozba_na_klik_backend.Services.Mappings
             CreateMap<Restaurant, RestaurantBasicDataDto>();
 
             CreateMap<CreateRestaurantDto, Restaurant>();
-            CreateMap<UpdateRestaurantDto, Restaurant>()
-                .ForMember(dest => dest.WorkingHours, opt => opt.Ignore())
-                .ForMember(dest => dest.NonWorkingDates, opt => opt.Ignore());
+
+            CreateMap<UpdateRestaurantDto, Restaurant>();
 
             CreateMap<Restaurant, RestaurantWithWorkingHoursAndNonWokingDaysDto>();
+
+            CreateMap<UpdateRestaurantBasicDataDto, Restaurant>();
         }
     }
 }

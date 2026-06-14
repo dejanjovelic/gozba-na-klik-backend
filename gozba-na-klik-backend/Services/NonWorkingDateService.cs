@@ -27,18 +27,27 @@ namespace gozba_na_klik_backend.Services
             return nonWorkingDates.Select(_mapper.Map<NonWorkingDateResponseDto>).ToList();
         }
 
-        public async Task<List<NonWorkingDateResponseDto>> CreateRestaurantNonWorkingDatesAsync(int restaurantId, List<CreateNonWorkingDateDto> createNonWorkingDatesDtos)
+        public async Task CreateRestaurantNonWorkingDatesAsync(Restaurant restaurant, List<CreateNonWorkingDateDto> createNonWorkingDatesDtos)
         {
-            bool restaurantExist = await _restaurantRepository.RestaurantExistsAsync(restaurantId);
-            if (!restaurantExist)
-            {
-                throw new NotFoundException($"The Restaurant with Id: {restaurantId} not found.");
-            }
+            var existingDates = new HashSet<DateTime>(restaurant.NonWorkingDates.Select(nwd => nwd.Date.Date));
 
-            List<NonWorkingDate> nonWorkingDates = _mapper.Map<List<NonWorkingDate>>(createNonWorkingDatesDtos);
+            List<NonWorkingDate> newNonWorkingDates = createNonWorkingDatesDtos
+                .Where(cnwd => !existingDates.Contains(cnwd.Date.Date))
+                .Select(cnwd => _mapper.Map<NonWorkingDate>(cnwd))
+                .ToList();
 
-            nonWorkingDates = await _nonWorkingDateRepository.CreateRestaurantNonWorkingDatesAsync(nonWorkingDates);
-            return _mapper.Map<List<NonWorkingDateResponseDto>>(nonWorkingDates);
+            await _nonWorkingDateRepository.CreateRestaurantNonWorkingDatesAsync(newNonWorkingDates);
+        }
+
+        public async Task DeleteRestaurantNonWorkingDatesAsync(Restaurant restaurant, List<CreateNonWorkingDateDto> createNonWorkingDateDtos)
+        {
+            var newDates = new HashSet<DateTime>(createNonWorkingDateDtos.Select(nwd => nwd.Date.Date));
+
+            List<NonWorkingDate> existingNonWorkingDates = restaurant.NonWorkingDates
+                .Where(nwd => !newDates.Contains(nwd.Date.Date))
+                .ToList();
+
+            await _nonWorkingDateRepository.DeleteRestaurantNonWorkingDatesAsync(existingNonWorkingDates);
         }
     }
 }
